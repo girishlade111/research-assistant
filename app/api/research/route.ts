@@ -110,6 +110,7 @@ export async function POST(request: Request): Promise<Response> {
         mode: body.mode ?? "pro",
         userModelId: body.model,
         maxSources: 6,
+        files: body.files,
       },
       apiKeys
     );

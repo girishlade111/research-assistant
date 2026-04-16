@@ -42,6 +42,14 @@ export interface SearchOptions {
   provider?: SearchProvider;
 }
 
+// ── Files ──────────────────────────────────────────────────────
+
+export interface FileContext {
+  fileName: string;
+  fileType: string;
+  content: string;
+}
+
 // ── Model Routing ──────────────────────────────────────────────
 
 export interface ResolvedModel {
@@ -137,6 +145,7 @@ export interface ResearchOptions {
   userModelId?: string;
   maxSources?: number;
   maxTokens?: number;
+  files?: FileContext[];
 }
 
 export type StreamCallback = (chunk: string, done: boolean) => void;
@@ -148,6 +157,7 @@ export interface ResearchRequest {
   mode: SearchMode;
   model?: string;
   stream?: boolean;
+  files?: FileContext[];
 }
 
 export interface ResearchApiResponse {

@@ -17,6 +17,7 @@ import type {
   ResearchResult,
   ResponseSection,
 } from "@/lib/engine/types";
+import { ParsedFile } from "@/lib/engine/file-parser";
 
 // ── SSE Stream Reader ──────────────────────────────────────────
 
@@ -165,12 +166,12 @@ export default function HomePage() {
   }, [clearHistory]);
 
   // ── Submit Handler ───────────────────────────────────────────
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (files: ParsedFile[] = []) => {
     if (!query.trim() || isLoading) return;
 
     // ── Check Cache First ──────────────────────────────────────
     const cached = getCached(query, mode, selectedModel);
-    if (cached) {
+    if (cached && files.length === 0) {
       const allSections = toResponseSections(cached);
       setFullResult(cached);
       setHasResponse(true);
@@ -208,6 +209,7 @@ export default function HomePage() {
           mode,
           model: selectedModel,
           stream: true,
+          files,
         }),
         signal: abort.signal,
       });

@@ -141,7 +141,9 @@ export async function runResearch(
   // ── Step 4: Build Context ────────────────────────────────────
   const context = buildContext(
     searchResults,
-    options.maxTokens ?? TOKEN_LIMITS.contextWindow
+    options.files || [],
+    options.maxTokens ?? TOKEN_LIMITS.contextWindow,
+    enhanced.enhanced
   );
 
   // ── Step 5: Generate Answer (with fallback) ──────────────────
