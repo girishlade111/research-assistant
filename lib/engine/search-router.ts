@@ -1,85 +1,159 @@
-import type { SearchResult, SearchOptions, SearchProvider, ApiKeys } from "./types";
-import { sonarSearch } from "./providers/sonar";
+import type { SearchResult, SearchOptions, ApiKeys } from "./types";
+import { nvidiaComplete } from "./providers/nvidia";
 import { openrouterComplete } from "./providers/openrouter";
 
-// ── OpenRouter LLM-Based Search Fallback ───────────────────────
+// ── Search Result Parser ───────────────────────────────────────
+// Both NVIDIA and OpenRouter return generated text → parse into SearchResult[]
 
-async function searchViaOpenRouter(
-  apiKey: string,
-  query: string,
-  maxResults: number
-): Promise<SearchResult[]> {
-  const response = await openrouterComplete(apiKey, {
-    model: "google/gemma-3-27b-it",
-    messages: [
-      {
-        role: "system",
-        content: `You are a research search engine. Given a query, return a JSON object with a "results" array of ${maxResults} relevant search results. Each result must have: title (string), url (string), snippet (string), domain (string). Return ONLY valid JSON.`,
-      },
-      {
-        role: "user",
-        content: `Find relevant academic and technical sources for: "${query}"`,
-      },
-    ],
-    maxTokens: 1024,
-    temperature: 0.3,
-    jsonMode: true,
-  });
-
+function parseGeneratedResults(content: string, maxResults: number): SearchResult[] {
+  // Try JSON first
   try {
-    const parsed = JSON.parse(response.content);
-    const items: unknown[] = Array.isArray(parsed) ? parsed : parsed.results ?? [];
-
+    const fence = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const raw = fence ? fence[1] : content;
+    const parsed = JSON.parse(raw);
+    const items: unknown[] = Array.isArray(parsed) ? parsed : parsed.results ?? parsed.sources ?? [];
     return items.slice(0, maxResults).map((r: unknown, i: number) => {
       const item = r as Record<string, string>;
       return {
         title: item.title ?? `Source ${i + 1}`,
         url: item.url ?? "",
-        snippet: item.snippet ?? "",
-        domain: item.domain ?? "",
-        relevanceScore: 1 - i * 0.1,
+        snippet: item.snippet ?? item.summary ?? item.description ?? "",
+        domain: item.domain ?? extractDomain(item.url ?? ""),
+        relevanceScore: 1 - i * 0.08,
       };
     });
   } catch {
-    return [];
+    // Fall back to line-by-line parsing of numbered lists
+    const lines = content.split("\n").filter(Boolean);
+    const results: SearchResult[] = [];
+    for (const line of lines) {
+      const urlMatch = line.match(/https?:\/\/[^\s)"<>]+/);
+      if (urlMatch) {
+        const url = urlMatch[0];
+        results.push({
+          title: extractTitleFromUrl(url),
+          url,
+          snippet: line.replace(url, "").replace(/^\s*[\-\*\d.]+\s*/, "").trim().slice(0, 250),
+          domain: extractDomain(url),
+          relevanceScore: 1 - results.length * 0.08,
+        });
+      }
+      if (results.length >= maxResults) break;
+    }
+    return results;
   }
 }
 
+function extractDomain(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return ""; }
+}
+
+function extractTitleFromUrl(url: string): string {
+  try {
+    const path = new URL(url).pathname;
+    const segments = path.split("/").filter(Boolean);
+    const last = segments[segments.length - 1] ?? "";
+    return last.replace(/[-_]/g, " ").replace(/\.\w+$/, "").trim() || extractDomain(url);
+  } catch { return url; }
+}
+
+// ── Search system prompt ───────────────────────────────────────
+
+function buildSearchMessages(query: string, maxResults: number, mode: string) {
+  return [
+    {
+      role: "system" as const,
+      content: `You are a research search engine assistant. Generate ${maxResults} highly relevant search result entries for the given query.
+      
+Mode: ${mode === "deep" ? "Academic/in-depth" : mode === "corpus" ? "Scientific literature" : "Professional research"}
+
+Return ONLY a valid JSON array of ${maxResults} objects. Each object MUST have:
+- "title": descriptive title of the source
+- "url": a plausible, realistic URL (e.g. https://arxiv.org/..., https://docs.example.com/..., https://en.wikipedia.org/wiki/...)
+- "snippet": 1-2 sentence excerpt summarizing what that source says about the topic
+- "domain": the domain name only (e.g. "arxiv.org")
+
+Focus on high-quality, authoritative sources: Wikipedia, arXiv, official docs, major news, research papers, technical blogs.
+Return ONLY the JSON array, no extra text.`,
+    },
+    {
+      role: "user" as const,
+      content: `Research query: "${query}"`,
+    },
+  ];
+}
+
+// ── NVIDIA-powered Search ──────────────────────────────────────
+// Uses a fast/balanced model to generate structured search results
+
+async function searchViaNvidia(
+  apiKey: string,
+  query: string,
+  maxResults: number,
+  mode: string
+): Promise<SearchResult[]> {
+  const response = await nvidiaComplete(apiKey, {
+    model: "abacusai/dracarys-llama-3.1-70b-instruct",   // fast, balanced
+    messages: buildSearchMessages(query, maxResults, mode),
+    maxTokens: 1500,
+    temperature: 0.4,
+  });
+  return parseGeneratedResults(response.content, maxResults);
+}
+
+// ── OpenRouter-powered Search ─────────────────────────────────
+// Uses Llama 3.3 70B (free) as primary; GLM-4.5 Air as secondary
+
+async function searchViaOpenRouter(
+  apiKey: string,
+  query: string,
+  maxResults: number,
+  mode: string
+): Promise<SearchResult[]> {
+  const response = await openrouterComplete(apiKey, {
+    model: "meta-llama/llama-3.3-70b-instruct:free",
+    messages: buildSearchMessages(query, maxResults, mode),
+    maxTokens: 1500,
+    temperature: 0.4,
+    jsonMode: true,
+  });
+  return parseGeneratedResults(response.content, maxResults);
+}
+
 // ── Public API: Search with Fallback ───────────────────────────
+// Primary: NVIDIA NIM → Fallback: OpenRouter
 
 export async function searchWithFallback(
   options: SearchOptions,
   apiKeys: ApiKeys
-): Promise<{ results: SearchResult[]; provider: SearchProvider }> {
+): Promise<{ results: SearchResult[]; provider: "nvidia" | "openrouter" }> {
   const { query, maxResults, mode } = options;
 
-  // Primary: Perplexity Sonar
-  if (apiKeys.perplexityKey) {
+  // Primary: NVIDIA NIM search
+  if (apiKeys.nvidiaKey) {
     try {
-      const results = await sonarSearch(apiKeys.perplexityKey, {
-        query,
-        maxResults,
-        model: mode === "deep" ? "sonar-pro" : "sonar",
-        recencyFilter: mode === "corpus" ? "month" : "week",
-      });
+      const results = await searchViaNvidia(apiKeys.nvidiaKey, query, maxResults, mode);
       if (results.length > 0) {
-        return { results, provider: "perplexity" };
+        console.log("[search-router] NVIDIA search OK:", results.length, "results");
+        return { results, provider: "nvidia" };
       }
     } catch (err) {
-      console.warn("[search-router] Sonar failed, trying OpenRouter fallback:", err);
+      console.warn("[search-router] NVIDIA search failed, trying OpenRouter:", err);
     }
   }
 
   // Fallback: OpenRouter LLM-based search
   if (apiKeys.openrouterKey) {
     try {
-      const results = await searchViaOpenRouter(apiKeys.openrouterKey, query, maxResults);
+      const results = await searchViaOpenRouter(apiKeys.openrouterKey, query, maxResults, mode);
+      console.log("[search-router] OpenRouter search OK:", results.length, "results");
       return { results, provider: "openrouter" };
     } catch (err) {
-      console.warn("[search-router] OpenRouter search fallback also failed:", err);
+      console.warn("[search-router] OpenRouter search also failed:", err);
     }
   }
 
   // Both failed — return empty
-  return { results: [], provider: "perplexity" };
+  console.warn("[search-router] All search providers failed, returning empty");
+  return { results: [], provider: "openrouter" };
 }

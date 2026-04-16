@@ -14,12 +14,11 @@ function getApiKeys(): ApiKeys {
   return {
     nvidiaKey: process.env.NVIDIA_API_KEY,
     openrouterKey: process.env.OPENROUTER_API_KEY,
-    perplexityKey: process.env.PERPLEXITY_API_KEY,
   };
 }
 
 function hasAnyKey(keys: ApiKeys): boolean {
-  return !!(keys.nvidiaKey || keys.openrouterKey || keys.perplexityKey);
+  return !!(keys.nvidiaKey || keys.openrouterKey);
 }
 
 // ── Streaming Response (SSE) ───────────────────────────────────
@@ -127,7 +126,7 @@ export async function POST(request: Request): Promise<Response> {
         {
           success: false,
           error:
-            "No API keys configured. Set NVIDIA_API_KEY, OPENROUTER_API_KEY, or PERPLEXITY_API_KEY in your environment.",
+            "No API keys configured. Set NVIDIA_API_KEY or OPENROUTER_API_KEY in your environment.",
         } satisfies ResearchApiResponse,
         { status: 503 }
       );

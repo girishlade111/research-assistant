@@ -12,9 +12,9 @@ export type IntentType =
 
 // ── Providers ──────────────────────────────────────────────────
 
-export type ModelProvider = "nvidia" | "openrouter" | "perplexity";
+export type ModelProvider = "nvidia" | "openrouter";
 
-export type SearchProvider = "perplexity" | "openrouter";
+export type SearchProvider = "nvidia" | "openrouter";
 
 // ── Task Types (for model routing) ─────────────────────────────
 
@@ -240,7 +240,6 @@ export interface ResearchApiResponse {
 export interface ApiKeys {
   nvidiaKey?: string;
   openrouterKey?: string;
-  perplexityKey?: string;
 }
 
 // ── Response Section (UI-compatible) ───────────────────────────

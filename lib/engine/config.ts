@@ -4,7 +4,6 @@ import type { ResolvedModel } from "./types";
 
 export const NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1";
 export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
-export const PERPLEXITY_BASE_URL = "https://api.perplexity.ai";
 
 // ── Retry Configuration ────────────────────────────────────────
 
@@ -174,8 +173,8 @@ export const AGENT_MODEL_MAP: Record<
     fallback: "openai/gpt-oss-120b:free",
   },
   search: {
-    primary: "perplexity/sonar",            // handled directly by sonar.ts
-    fallback: "meta-llama/llama-3.3-70b-instruct:free",
+    primary: "abacusai/dracarys-llama-3.1-70b-instruct",   // NVIDIA NIM search
+    fallback: "meta-llama/llama-3.3-70b-instruct:free",     // OpenRouter fallback
   },
   analysis: {
     primary: "deepseek-ai/deepseek-v3.2",

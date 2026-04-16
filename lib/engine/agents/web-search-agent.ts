@@ -2,8 +2,8 @@ import type { ApiKeys, AgentResult, AgentContext } from "../types";
 import { searchWithFallback } from "../search-router";
 
 // ── Web Search Agent ───────────────────────────────────────────
-// Role: Fetch real-time web data via Perplexity Sonar (fallback: OpenRouter)
-// Output: { sources[], summaries[] }
+// Role: Fetch research data via NVIDIA NIM (primary) or OpenRouter (fallback)
+// No Perplexity required — uses LLM-generated structured search results
 
 export async function runWebSearchAgent(
   context: Pick<AgentContext, "query" | "enhanced_query">,
@@ -35,10 +35,12 @@ export async function runWebSearchAgent(
     return {
       agent: "web-search-agent",
       output: { sources, summaries, raw_results: results },
-      model_used: provider === "perplexity" ? "perplexity/sonar-pro" : "openrouter/search",
+      model_used: provider === "nvidia"
+        ? "abacusai/dracarys-llama-3.1-70b-instruct"
+        : "meta-llama/llama-3.3-70b-instruct",
       provider,
       durationMs: Date.now() - start,
-      isFallback: provider !== "perplexity",
+      isFallback: provider !== "nvidia",
     };
   } catch (err) {
     return {

@@ -12,7 +12,7 @@ const AGENT_CONFIG: Record<
   "web-search-agent": {
     label: "Web Search",
     icon: "🌐",
-    defaultModel: "Perplexity Sonar",
+    defaultModel: "Dracarys Llama 3.1 70B",
   },
   "query-intelligence-agent": {
     label: "Query Intelligence",

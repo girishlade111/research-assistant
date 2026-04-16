@@ -410,7 +410,7 @@ export default function HomePage() {
                   Research <span className="text-gradient">Smarter</span>
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  7-agent parallel AI system — Query · Search · Analysis · Fact-Check · Code · Report
+                  7-agent parallel AI system — NVIDIA NIM + OpenRouter · Query · Search · Analysis · Fact-Check · Code · Report
                 </p>
               </motion.div>
             )}

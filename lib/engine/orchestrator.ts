@@ -57,7 +57,7 @@ export async function runResearch(
   // ═══════════════════════════════════════════════════════════
 
   emit({ agent: "query-intelligence-agent", status: "running", model: "moonshotai/kimi-k2-thinking", provider: "nvidia" });
-  emit({ agent: "web-search-agent", status: "running", model: "perplexity/sonar-pro", provider: "perplexity" });
+  emit({ agent: "web-search-agent", status: "running", model: "abacusai/dracarys-llama-3.1-70b-instruct", provider: "nvidia" });
 
   const [queryResult, searchResult] = await Promise.all([
     runQueryIntelligenceAgent(query, options.mode, apiKeys).then(r => {
