@@ -111,13 +111,13 @@ export async function runSimpleChat(
         onChunk(content, false);
         onChunk("", true);
       }
-    } catch (err) {
-      throw new Error(`Chat response failed: ${err instanceof Error ? err.message : String(err)}`);
+    } catch {
+      // OpenRouter also failed — will fall through to error below
     }
   }
 
   if (!content) {
-    throw new Error("No API key available to generate response");
+    throw new Error("All providers failed. Please check your API keys or try again.");
   }
 
   const durationMs = Date.now() - startTime;
