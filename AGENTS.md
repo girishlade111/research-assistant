@@ -40,6 +40,6 @@ The system follows a three-phase execution model managed by `orchestrator.ts`:
 | :--- | :--- |
 | **System Context** | 32,768 Tokens |
 | **Max Report** | 16,384 Tokens |
-| **Per-Agent Cap** | 8,192 Tokens |
+
 
 
