@@ -33,28 +33,42 @@ function extractCodeBlock(content: string): { language: string; code: string } {
 // ── Helper to render text with markdown links ────────────────
 
 function renderContent(text: string) {
-  // Regex to match [Link Text](URL)
-  const parts = text.split(/(\[[\s\S]*?\]\(https?:\/\/[^\s\)]+\))/g);
-  
-  return parts.map((part, index) => {
-    const match = part.match(/\[([\s\S]*?)\]\((https?:\/\/[^\s\)]+)\)/);
-    if (match) {
-      const linkText = match[1];
-      const url = match[2];
-      return (
-        <a
-          key={index}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 font-medium text-primary hover:text-primary/80 underline underline-offset-4 decoration-primary/30 hover:decoration-primary/60 transition-all cursor-pointer"
-        >
-          {linkText}
-        </a>
-      );
+  // Improved Regex to match markdown links [text](url) including bold/emojis
+  const linkRegex = /\[([\s\S]*?)\]\((https?:\/\/[^\s\)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    // Push text before the match
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
     }
-    return part;
-  });
+
+    const linkText = match[1];
+    const url = match[2];
+
+    parts.push(
+      <a
+        key={match.index}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 font-bold text-primary hover:text-primary/80 underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70 transition-all cursor-pointer bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10 hover:bg-primary/10"
+      >
+        {linkText.replace(/\*\*/g, "")} {/* Remove bold markdown for cleaner UI inside the link */}
+      </a>
+    );
+
+    lastIndex = linkRegex.lastIndex;
+  }
+
+  // Push remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
 }
 
 export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
