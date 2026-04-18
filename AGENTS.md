@@ -8,7 +8,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 This manifesto defines the roles and orchestration rules for the ResAgent multi-agent system.
 
-## 🛰️ Agent Registry
 
 | Agent | Purpose | Primary Model |
 | :--- | :--- | :--- |
