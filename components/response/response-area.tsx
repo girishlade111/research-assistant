@@ -161,7 +161,7 @@ function CodeBlock({ content }: { content: string }) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-[#0A0D15]">
+    <div className="overflow-hidden rounded-xl border border-border/60 bg-[#0D1225]">
       {/* Header bar */}
       <div className="flex items-center justify-between border-b border-border/40 bg-accent/50 px-4 py-2">
         <span className="font-mono text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">

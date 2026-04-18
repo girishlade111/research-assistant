@@ -702,7 +702,7 @@ export default function HomePage() {
                   </div>
                   {/* Card 3 */}
                   <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <Database className="w-6 h-6 text-[#D4A574]" />
+                    <Database className="w-6 h-6 text-[#C9A84C]" />
                     <h4 className="font-heading text-lg text-foreground">Agentic Architectures</h4>
                     <p className="font-sans text-sm text-muted-foreground">Latest survey on orchestrating multi-LLM systems effectively.</p>
                   </div>

@@ -4,7 +4,8 @@
       "Bash(npx tsc:*)",
       "Bash(npx next:*)",
       "Bash(wc -l \"/c/Users/a/OneDrive/Desktop/reaserch agent/research-agent/components/\"*/*.tsx)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(python3:*)"
     ]
   }
 }

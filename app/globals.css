@@ -44,40 +44,42 @@
   --color-glow: var(--glow);
   --color-glass: var(--glass);
   --color-glass-border: var(--glass-border);
+  --color-accent-gold: var(--accent-gold);
 }
 
-/* ── Dark Centered Platform - Amber Night Theme ───────────────── */
+/* ── Midnight Indigo + Gold — Premium Dark Theme ─────────────── */
 :root {
-  --background: #000000;
-  --foreground: #FFFFFF;
-  --card: #0a0a0a;
-  --card-foreground: #FFFFFF;
-  --popover: #111111;
-  --popover-foreground: #FFFFFF;
-  --primary: #FF9800; /* accent_primary */
-  --primary-foreground: #000000;
-  --secondary: #708DA9; /* accent_secondary */
+  --background: #0A0F1E;
+  --foreground: #F1F5F9;
+  --card: #111827;
+  --card-foreground: #F1F5F9;
+  --popover: #1E293B;
+  --popover-foreground: #F1F5F9;
+  --primary: #6366F1;
+  --primary-foreground: #FFFFFF;
+  --secondary: #818CF8;
   --secondary-foreground: #FFFFFF;
-  --muted: #111111;
-  --muted-foreground: #9CA3AF;
-  --accent: #111111;
-  --accent-foreground: #FFFFFF;
-  --destructive: #D44040;
-  --border: #333333; /* border_dark */
-  --input: #111111;
-  --ring: #FF9800;
-  --radius: 0.5rem; /* rounded.lg = 8px */
-  --sidebar: #111111;
-  --sidebar-foreground: #9CA3AF;
-  --sidebar-primary: #FF9800;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #222222;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #222222;
-  --sidebar-ring: #FF9800;
-  --glow: #FF9800;
-  --glass: rgba(17, 17, 17, 0.7);
-  --glass-border: rgba(51, 51, 51, 0.5);
+  --muted: #111827;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #F1F5F9;
+  --destructive: #F87171;
+  --border: #1E293B;
+  --input: #111827;
+  --ring: #6366F1;
+  --radius: 0.625rem;
+  --sidebar: #0E1529;
+  --sidebar-foreground: #94A3B8;
+  --sidebar-primary: #6366F1;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1E293B;
+  --sidebar-accent-foreground: #F1F5F9;
+  --sidebar-border: #1E293B;
+  --sidebar-ring: #6366F1;
+  --glow: #6366F1;
+  --glass: rgba(17, 24, 39, 0.75);
+  --glass-border: rgba(30, 41, 59, 0.6);
+  --accent-gold: #C9A84C;
 }
 
 @layer base {
@@ -92,16 +94,16 @@
     @apply font-sans;
   }
 
-  /* Professional Themed Scrollbars */
+  /* Refined Scrollbars */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-[#333333] hover:bg-[#FF9800] transition-colors;
+    @apply rounded-full bg-[#334155] hover:bg-[#6366F1] transition-colors;
   }
 }
 
@@ -111,13 +113,13 @@
   }
 
   .glass-card {
-    background: #0a0a0a;
-    border: 1px solid #333333;
+    background: #111827;
+    border: 1px solid rgba(30, 41, 59, 0.8);
   }
 
   .glass-strong {
-    background: #111111;
-    border: 1px solid #333333;
+    background: #1E293B;
+    border: 1px solid rgba(51, 65, 85, 0.6);
   }
 
   /* ── Decorative Streaks ────────────────────────────────────── */
@@ -131,52 +133,58 @@
   .streak-1 {
     position: absolute;
     width: 60vw;
-    height: 4px;
-    background: #FF9800;
+    height: 3px;
+    background: #6366F1;
     top: 25%;
     left: 15%;
     transform: rotate(10deg);
-    filter: blur(40px);
-    opacity: 0.6;
+    filter: blur(50px);
+    opacity: 0.4;
   }
   .streak-2 {
     position: absolute;
     width: 50vw;
-    height: 6px;
-    background: #708DA9;
+    height: 4px;
+    background: #818CF8;
     top: 65%;
     left: 45%;
     transform: rotate(-5deg);
-    filter: blur(50px);
-    opacity: 0.5;
+    filter: blur(60px);
+    opacity: 0.3;
   }
   .streak-3 {
     position: absolute;
     width: 40vw;
-    height: 5px;
-    background: #D4A574;
+    height: 3px;
+    background: #C9A84C;
     top: 85%;
     left: -5%;
     transform: rotate(15deg);
-    filter: blur(45px);
-    opacity: 0.4;
+    filter: blur(55px);
+    opacity: 0.25;
   }
 
   /* ── Premium Glow Effects ──────────────────────────────────── */
-  .amber-glow {
+  .primary-glow {
     box-shadow:
-      0 0 40px -10px rgba(255, 152, 0, 0.25),
-      0 0 80px -20px rgba(255, 152, 0, 0.1);
+      0 0 40px -10px rgba(99, 102, 241, 0.3),
+      0 0 80px -20px rgba(99, 102, 241, 0.12);
+  }
+
+  .gold-glow {
+    box-shadow:
+      0 0 50px -12px rgba(99, 102, 241, 0.25),
+      0 0 100px -25px rgba(201, 168, 76, 0.1);
   }
 
   /* ── Premium Gradients ─────────────────────────────────────── */
   .text-gradient {
-    background: linear-gradient(135deg, #FFFFFF 0%, #9CA3AF 100%);
+    background: linear-gradient(135deg, #F1F5F9 0%, #818CF8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .border-shine {
     position: relative;
   }
@@ -188,10 +196,10 @@
     padding: 1px;
     background: linear-gradient(
       135deg,
-      rgba(255, 152, 0, 0.15),
+      rgba(99, 102, 241, 0.2),
       transparent 40%,
       transparent 60%,
-      rgba(112, 141, 169, 0.1)
+      rgba(201, 168, 76, 0.12)
     );
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
