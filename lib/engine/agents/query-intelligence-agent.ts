@@ -8,24 +8,26 @@ import { TOKEN_LIMITS } from "../config";
 // Primary: moonshotai/kimi-k2-thinking (nvidia)
 // Fallback: openai/gpt-oss-120b (openrouter)
 
-const SYSTEM_PROMPT = `You are a Query Intelligence Agent that transforms user queries into comprehensive research blueprints for a multi-agent pipeline (Analysis, Summary, Fact-Check, Coding, Report agents).
+const SYSTEM_PROMPT = `You are a Query Intelligence Agent that transforms user queries into research blueprints for a multi-agent pipeline. 
+
+CRITICAL: Adapt your depth and length to the complexity of the query. For complex topics, generate comprehensive directives. For simple queries, remain concise and direct.
 
 OUTPUT REQUIREMENTS:
-1. **enhanced_query** (800+ words): Multi-section research directive with ### headers, **bold terms**, bullet points. Cover: background context, scope definition, stakeholder analysis, analytical angles (technical, economic, risk, comparative, future), and depth expectations.
+1. **enhanced_query**: A structured research directive. For complex topics, use ### headers and expand on context and analytical angles. For simple topics, provide a clear, brief directive.
 2. **intent**: Classify as coding|research|comparison|explanation|factual|general
-3. **subtopics** (10 items): Each a self-contained research vector with 2-3 sentence description. Cover: technical details, applications, risks, comparisons, future outlook, case studies, data/statistics, ethics/regulation.
-4. **key_concepts** (10 items): Technical definitions (2-3 sentences each) with relevance to the topic.
-5. **search_terms** (8 items): Optimized search vectors with Boolean operators and domain-specific terminology.
+3. **subtopics**: Self-contained research vectors with short descriptions. Provide only as many as needed to cover the topic (e.g., 2-3 for simple queries, 6-8 for complex ones).
+4. **key_concepts**: Relevant definitions. Only provide what is genuinely necessary.
+5. **search_terms**: Optimized search vectors with Boolean operators. Provide 3-8 depending on scope.
 
-FORMAT: Use **bold labels** for every list item. Use ### headers in enhanced_query.
+FORMAT: Use **bold labels** for every list item. Use ### headers in enhanced_query if size warrants it.
 
 Return ONLY valid JSON (no markdown fences):
 {
-  "enhanced_query": "800+ word research directive with ### headers and **bold key points**",
+  "enhanced_query": "A research directive sized appropriately for the query complexity",
   "intent": "coding|research|comparison|explanation|factual|general",
-  "subtopics": ["**Subtopic 1: [Title]** — 2-3 sentence description", "...10 total"],
-  "key_concepts": ["**[Term]** — 2-3 sentence definition and relevance", "...10 total"],
-  "search_terms": ["**[Focus]** — search query with Boolean operators", "...8 total"]
+  "subtopics": ["**Subtopic 1: [Title]** — Short description", "...number appropriate to scope"],
+  "key_concepts": ["**[Term]** — Short definition", "...number appropriate to scope"],
+  "search_terms": ["**[Focus]** — Optimized search query", "...number appropriate to scope"]
 }`;
 
 export async function runQueryIntelligenceAgent(

@@ -48,6 +48,7 @@ export interface AgentContext {
   enhanced_query: string;
   intent: IntentType;
   subtopics: string[];
+  search_terms: string[];
   web_results: SearchResult[];
   file_context: FileContext[];
   conversationHistory?: LLMMessage[];
@@ -99,9 +100,11 @@ export interface SearchResult {
 
 export interface SearchOptions {
   query: string;
+  enhanced_query?: string;
   mode: SearchMode;
   maxResults: number;
   provider?: SearchProvider;
+  search_terms?: string[];
 }
 
 // ── Files ──────────────────────────────────────────────────────

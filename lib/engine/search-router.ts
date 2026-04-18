@@ -59,13 +59,16 @@ function extractTitleFromUrl(url: string): string {
 
 // ── Search system prompt ───────────────────────────────────────
 
-function buildSearchMessages(query: string, maxResults: number, mode: string) {
+function buildSearchMessages(query: string, searchTerms: string[], maxResults: number, mode: string) {
+  const termsText = searchTerms.length > 0 ? `Optimized search terms to explore: ${searchTerms.join(", ")}` : "";
+  
   return [
     {
       role: "system" as const,
       content: `You are a research search engine assistant. Generate ${maxResults} highly relevant search result entries for the given query.
       
 Mode: ${mode === "deep" ? "Academic/in-depth" : mode === "corpus" ? "Scientific literature" : "Professional research"}
+${termsText}
 
 Return ONLY a valid JSON array of ${maxResults} objects. Each object MUST have:
 - "title": descriptive title of the source
@@ -89,12 +92,13 @@ Return ONLY the JSON array, no extra text.`,
 async function searchViaNvidia(
   apiKey: string,
   query: string,
+  searchTerms: string[],
   maxResults: number,
   mode: string
 ): Promise<SearchResult[]> {
   const response = await nvidiaComplete(apiKey, {
     model: "abacusai/dracarys-llama-3.1-70b-instruct",   // fast, balanced
-    messages: buildSearchMessages(query, maxResults, mode),
+    messages: buildSearchMessages(query, searchTerms, maxResults, mode),
     maxTokens: 1500,
     temperature: 0.4,
   });
@@ -107,12 +111,13 @@ async function searchViaNvidia(
 async function searchViaOpenRouter(
   apiKey: string,
   query: string,
+  searchTerms: string[],
   maxResults: number,
   mode: string
 ): Promise<SearchResult[]> {
   const response = await openrouterComplete(apiKey, {
     model: "meta-llama/llama-3.3-70b-instruct:free",
-    messages: buildSearchMessages(query, maxResults, mode),
+    messages: buildSearchMessages(query, searchTerms, maxResults, mode),
     maxTokens: 1500,
     temperature: 0.4,
     jsonMode: true,
@@ -132,7 +137,13 @@ export async function searchWithFallback(
   // Primary: NVIDIA NIM search
   if (apiKeys.nvidiaKey) {
     try {
-      const results = await searchViaNvidia(apiKeys.nvidiaKey, query, maxResults, mode);
+      const results = await searchViaNvidia(
+        apiKeys.nvidiaKey,
+        options.enhanced_query || options.query,
+        options.search_terms || [],
+        options.maxResults,
+        mode
+      );
       if (results.length > 0) {
         console.log("[search-router] NVIDIA search OK:", results.length, "results");
         return { results, provider: "nvidia" };
@@ -142,14 +153,22 @@ export async function searchWithFallback(
     }
   }
 
-  // Fallback: OpenRouter LLM-based search
+  // Fallback: OpenRouter search
   if (apiKeys.openrouterKey) {
     try {
-      const results = await searchViaOpenRouter(apiKeys.openrouterKey, query, maxResults, mode);
-      console.log("[search-router] OpenRouter search OK:", results.length, "results");
-      return { results, provider: "openrouter" };
-    } catch (err) {
-      console.warn("[search-router] OpenRouter search also failed:", err);
+      const results = await searchViaOpenRouter(
+        apiKeys.openrouterKey,
+        options.enhanced_query || options.query,
+        options.search_terms || [],
+        options.maxResults,
+        mode
+      );
+      if (results.length > 0) {
+        console.log("[search-router] OpenRouter search OK:", results.length, "results");
+        return { results, provider: "openrouter" };
+      }
+    } catch (error) {
+      console.warn("[search-router] OpenRouter search failed:", error);
     }
   }
 

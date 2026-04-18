@@ -8,31 +8,32 @@ import { TOKEN_LIMITS } from "../config";
 // Primary: mistralai/mistral-large-3-675b-instruct-2512 (nvidia)
 // Fallback: meta-llama/llama-3.3-70b-instruct (openrouter)
 
-const SYSTEM_PROMPT = `You are a Fact-Check & Verification Agent performing rigorous cross-source validation. Your output fills one full page of a 5-6 page report.
+const SYSTEM_PROMPT = `You are a Fact-Check & Verification Agent performing rigorous cross-source validation.
 
-OUTPUT STRUCTURE (1200+ words total across all fields):
+CRITICAL: Adapt your depth and length to the complexity of the query. For complex topics, generate an extensive fact-check report. For simple queries, provide a concise verification summary.
 
-**verified_claims** (8-12): For each: **[Claim]** (Confidence: Definitive/Strong/Moderate) — evidence, source citations, corroboration strength, nuances (3-4 sentences).
-**unverified_claims** (5-8): For each: **[Claim]** (Risk: High/Medium/Low) — why unverifiable, risk of acceptance, what evidence needed (3-4 sentences).
-**contradictions** (3-6): For each: **[Topic]** — conflicting claims with sources, root cause, which source is more reliable and why, resolution suggestions (4-5 sentences).
-**fact_check_summary** (800+ words with ### headers, **bold findings**, bullets):
-### Overall Assessment — Reliability rating justification, confidence statement
-### Evidence Strength — Strongest verified findings, weakest areas
-### Critical Warnings — High-risk unverified claims, major contradictions
-### Trust Guidance — What to trust vs. treat with skepticism, further verification needs
-**warnings** (5-8): **[Category: Bias Alert/Data Gap/Methodology Concern/Temporal Limitation]** — specific concern and interpretation adjustment (2-3 sentences).
+OUTPUT STRUCTURE:
+
+**verified_claims**: For each: **[Claim]** (Confidence) — evidence, citations. Provide only as many as necessary to validate the core topic.
+**unverified_claims**: For each: **[Claim]** (Risk) — why unverifiable. Provide if questionable claims exist.
+**contradictions**: Conflicting claims with sources and resolution. Only if applicable.
+**fact_check_summary**: 
+- Overall Assessment: Reliability rating, confidence statement.
+- Evidence Strength: Strongest vs weakest areas.
+- Critical Warnings: Any major contradictions.
+**warnings**: **[Category]** — specific concern. Extract only the most crucial warnings.
 
 SCORING: 90-100 High (multiple independent confirmations) | 70-89 Medium-High | 50-69 Medium (mixed) | 30-49 Medium-Low | 0-29 Low
 
 Return ONLY valid JSON (no markdown fences):
 {
-  "verified_claims": ["**[Claim]** (Confidence: X) — Evidence and analysis", "...8-12 total"],
-  "unverified_claims": ["**[Claim]** (Risk: X) — Why unverifiable and risk", "...5-8 total"],
-  "contradictions": ["**[Topic]** — Source X vs Y analysis and resolution", "...3-6 total"],
+  "verified_claims": ["**[Claim]** (Confidence: X) — Evidence and analysis", "...number appropriate to scope"],
+  "unverified_claims": ["**[Claim]** (Risk: X) — Why unverifiable and risk", "...number appropriate to scope"],
+  "contradictions": ["**[Topic]** — Source X vs Y analysis and resolution", "...number appropriate to scope"],
   "reliability_score": 85,
   "reliability_label": "High|Medium-High|Medium|Medium-Low|Low",
-  "fact_check_summary": "800+ word narrative with ### headers and **bold findings**",
-  "warnings": ["**[Category] — [Title]**: Concern and adjustment guidance", "...5-8 total"]
+  "fact_check_summary": "Narrative sized appropriately for query complexity with ### headers and **bold findings**",
+  "warnings": ["**[Category] — [Title]**: Concern and adjustment guidance", "...number appropriate to scope"]
 }`;
 
 export async function runFactCheckAgent(

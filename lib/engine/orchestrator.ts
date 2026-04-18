@@ -164,70 +164,77 @@ export async function runResearch(
   const disabled = options.disabledAgents || [];
 
   // ═══════════════════════════════════════════════════════════
-  // PHASE 1: Query Intelligence + Web Search (parallel)
+  // PHASE 1: Query Intelligence (First)
   // ═══════════════════════════════════════════════════════════
 
   emit({ agent: "query-intelligence-agent", status: "running", model: "moonshotai/kimi-k2-thinking", provider: "nvidia" });
+
+  const queryResult = await (disabled.includes("query-intelligence-agent")
+    ? Promise.resolve({
+        agent: "query-intelligence-agent",
+        output: { intent: "general" as const, subtopics: [], search_terms: [] },
+        model_used: "none",
+        provider: "none",
+        durationMs: 0,
+        isFallback: false,
+        error: "skipped",
+        enhanced_query: query,
+        subtopics: [],
+        search_terms: [],
+      } as AgentResult & { enhanced_query: string; subtopics: string[]; search_terms: string[] }).then((r) => { emit({ agent: r.agent, status: "skipped" }); return r; })
+    : runQueryIntelligenceAgent(query, options.mode, apiKeys).then(r => {
+        emit({
+          agent: "query-intelligence-agent",
+          status: r.error ? "failed" : "done",
+          model: r.model_used,
+          provider: r.provider,
+          durationMs: r.durationMs,
+          isFallback: r.isFallback,
+          error: r.error,
+        });
+        return r;
+      }));
+
+  const enhancedQuery = (queryResult as any).enhanced_query || query;
+  const subtopics = (queryResult as any).subtopics || [];
+  const searchTerms = (queryResult as any).search_terms || [];
+
+  // ═══════════════════════════════════════════════════════════
+  // PHASE 1.5: Web Search (Second, using optimized terms)
+  // ═══════════════════════════════════════════════════════════
+
   emit({ agent: "web-search-agent", status: "running", model: "abacusai/dracarys-llama-3.1-70b-instruct", provider: "nvidia" });
 
-  const [queryResult, searchResult] = await Promise.all([
-    disabled.includes("query-intelligence-agent")
-      ? Promise.resolve({
-          agent: "query-intelligence-agent",
-          output: { intent: "general", subtopics: [] },
-          model_used: "none",
-          provider: "none",
-          durationMs: 0,
-          isFallback: false,
-          error: "skipped",
-          enhanced_query: query,
-          subtopics: [],
-        } as AgentResult & { enhanced_query: string; subtopics: string[] }).then((r) => { emit({ agent: r.agent, status: "skipped" }); return r; })
-      : runQueryIntelligenceAgent(query, options.mode, apiKeys).then(r => {
-          emit({
-            agent: "query-intelligence-agent",
-            status: r.error ? "failed" : "done",
-            model: r.model_used,
-            provider: r.provider,
-            durationMs: r.durationMs,
-            isFallback: r.isFallback,
-            error: r.error,
-          });
-          return r;
-        }),
-    (MODE_CONFIG[options.mode].maxSources > 0 && !disabled.includes("web-search-agent")) ? runWebSearchAgent(
-      { query, enhanced_query: query },
-      options.mode,
-      apiKeys
-    ).then(r => {
-      emit({
-        agent: "web-search-agent",
-        status: r.error ? "failed" : "done",
-        model: r.model_used,
-        provider: r.provider,
-        durationMs: r.durationMs,
-        isFallback: r.isFallback,
-        error: r.error,
-      });
-      return r;
-    }) : Promise.resolve({
+  const searchResult = await ((MODE_CONFIG[options.mode].maxSources > 0 && !disabled.includes("web-search-agent")) ? runWebSearchAgent(
+    { query, enhanced_query: enhancedQuery, search_terms: searchTerms },
+    options.mode,
+    apiKeys
+  ).then(r => {
+    emit({
       agent: "web-search-agent",
-      output: { sources: [], summaries: [], raw_results: [] },
-      model_used: "none",
-      provider: "none",
-      durationMs: 0,
-      isFallback: false,
-      error: disabled.includes("web-search-agent") ? "skipped" : undefined,
-    } as AgentResult).then((r) => { 
-        if (disabled.includes("web-search-agent")) emit({ agent: r.agent, status: "skipped" }); 
-        return r; 
-    }),
-  ]);
+      status: r.error ? "failed" : "done",
+      model: r.model_used,
+      provider: r.provider,
+      durationMs: r.durationMs,
+      isFallback: r.isFallback,
+      error: r.error,
+    });
+    return r;
+  }) : Promise.resolve({
+    agent: "web-search-agent",
+    output: { sources: [], summaries: [], raw_results: [] },
+    model_used: "none",
+    provider: "none",
+    durationMs: 0,
+    isFallback: false,
+    error: disabled.includes("web-search-agent") ? "skipped" : undefined,
+  } as AgentResult).then((r) => { 
+      if (disabled.includes("web-search-agent")) emit({ agent: r.agent, status: "skipped" }); 
+      return r; 
+  }));
 
   // Build shared AgentContext from Phase 1 outputs
   const webResults: SearchResult[] = (searchResult.output.raw_results as SearchResult[]) ?? [];
-  const enhancedQuery = (queryResult as any).enhanced_query || query;
-  const subtopics = (queryResult as any).subtopics || [];
   const intent = (queryResult.output.intent as ResearchResult["metadata"]["intent"]) ||
     enhanceQuery(query, options.mode).intent;
 
@@ -236,6 +243,7 @@ export async function runResearch(
     enhanced_query: enhancedQuery,
     intent,
     subtopics,
+    search_terms: searchTerms,
     web_results: webResults,
     file_context: options.files || [],
     conversationHistory: options.conversationHistory,

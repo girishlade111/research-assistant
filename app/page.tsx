@@ -491,14 +491,15 @@ export default function HomePage() {
             {/* Hero */}
             {showHero && (
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8 mt-[12vh] text-center md:mt-[18vh]"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="text-center"
               >
-                <h1 className="mb-3 text-3xl font-bold tracking-tight md:text-5xl">
-                  Neural <span className="text-gradient">Lens</span>
+                <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
+                  Research <span className="indigo-text-gradient">Assistant</span>
                 </h1>
-                <p className="text-base text-muted-foreground/80 md:text-lg">
+                <p className="text-base text-muted-foreground/80 md:text-lg max-w-lg mx-auto">
                   Ask anything — from quick queries to deep AI-orchestrated reports.
                 </p>
               </motion.div>
@@ -522,7 +523,7 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="mt-2"
+                  className="mt-2 glass-card rounded-2xl p-4 shimmer-active"
                 >
                   <AgentStatusPanel agents={agentStatuses} />
                 </motion.div>
@@ -651,7 +652,7 @@ export default function HomePage() {
             animate={{ y: 0, opacity: 1 }}
             className="w-full max-w-3xl relative z-10 pointer-events-auto"
           >
-            <div className={`rounded-[2rem] p-3 md:p-4 transition-all duration-500 ${showHero ? "glass-strong shadow-2xl glow-lg" : "glass shadow-2xl glow-md"}`}>
+            <div className={`rounded-[2rem] p-3 md:p-4 transition-all duration-500 ${showHero ? "glass-card indigo-glow" : "glass shadow-2xl"}`}>
               <SearchInput
                 value={query}
                 onChange={setQuery}

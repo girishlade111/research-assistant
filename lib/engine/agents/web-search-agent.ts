@@ -6,7 +6,7 @@ import { searchWithFallback } from "../search-router";
 // No Perplexity required — uses LLM-generated structured search results
 
 export async function runWebSearchAgent(
-  context: Pick<AgentContext, "query" | "enhanced_query">,
+  context: Pick<AgentContext, "query" | "enhanced_query" | "search_terms">,
   mode: "pro" | "deep" | "corpus",
   apiKeys: ApiKeys
 ): Promise<AgentResult> {

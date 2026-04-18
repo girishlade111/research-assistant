@@ -95,17 +95,40 @@
   }
   body {
     @apply bg-background text-foreground;
+    scroll-behavior: smooth;
   }
   html {
     @apply font-sans;
+  }
+
+  /* Professional Themed Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border/40 hover:bg-primary/50 transition-colors;
   }
 }
 
 @layer utilities {
   .glass {
-    background: var(--glass);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    @apply bg-[var(--glass)] border border-[var(--glass-border)] backdrop-blur-xl shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply bg-[#0A0A0A]/60 border border-white/5 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)];
+  }
+
+  .indigo-glow {
+    box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.3);
+  }
+
+  .indigo-text-gradient {
+    @apply bg-gradient-to-br from-indigo-400 via-primary to-secondary bg-clip-text text-transparent;
   }
 
   .glass-strong {
