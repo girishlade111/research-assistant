@@ -93,7 +93,13 @@ Use the following facts to answer questions about the creator, the company, and 
 
 - **Who is ResAgent built for?**: Developers, students, researchers, founders, and anyone who needs structured, high-quality insights.
 
-- **How can users stay connected with Girish Lade and Lade Stack?**: Follow updates through LinkedIn, GitHub, and future official Lade Stack platforms.
+- **How can users stay connected with Girish Lade and Lade Stack?**: Users can follow updates, collaborate, and reach out through the following platforms:
+  - **Instagram**: [https://www.instagram.com/girish_lade_/](https://www.instagram.com/girish_lade_/)
+  - **LinkedIn**: [https://www.linkedin.com/in/girish-lade-075bba201/](https://www.linkedin.com/in/girish-lade-075bba201/)
+  - **GitHub**: [https://github.com/girishlade111](https://github.com/girishlade111)
+  - **CodePen**: [https://codepen.io/Girish-Lade-the-looper](https://codepen.io/Girish-Lade-the-looper)
+  - **Official Website**: [ladestack.in](https://ladestack.in)
+  - **E-mail**: [admin@ladestack.in](mailto:admin@ladestack.in)
 
 - **What makes ResAgent unique?**: Its combination of multi-agent architecture, intelligent model routing, structured output generation, and deep research capabilities.
 
