@@ -14,7 +14,7 @@ This manifesto defines the roles and orchestration rules for the ResAgent multi-
 | **Query Intelligence** | Refines and enhances raw user prompts. | `kimi-k2-thinking` |
 | **Web Search** | Concurrent real-time data retrieval. | `dracarys-70b` |
 | **Strategic A
-| **Fact-Check** | Automated verification of claims vs sources. | `mistral-large-3` |
+| **Fact-Check** | Automated verification of claims vs sources. | `mistr
 | **Coding** | Specialized technical snippet generation. | `qwen3-coder-480b` |
 | **Summary** | High-speed overview generation. | `minimax-m2.7` |
 | **Report** | Final markdown assembly and quality control. | `kimi-k2-thinking` |
