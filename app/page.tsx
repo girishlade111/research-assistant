@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Database, FileText, Globe } from "lucide-react";
 import { Sidebar, MobileMenuButton } from "@/components/layout/sidebar";
 import { SearchInput } from "@/components/search/search-input";
 import { SearchControls } from "@/components/search/search-controls";
@@ -477,6 +478,12 @@ export default function HomePage() {
       />
 
       <main className="flex min-h-dvh flex-1 flex-col relative">
+        <div className="streak-container">
+          <div className="streak-1" />
+          <div className="streak-2" />
+          <div className="streak-3" />
+        </div>
+
         {/* Header with Menu Button (Desktop & Mobile) */}
         {!sidebarOpen && (
           <div className="flex items-center px-4 py-3 absolute top-0 left-0 z-20">
@@ -496,11 +503,11 @@ export default function HomePage() {
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
-                <h1 className="mb-5 text-4xl font-bold tracking-[-0.02em] md:text-6xl leading-[1.1]">
-                  Research <span className="text-gradient">Agent</span>
+                <h1 className="mb-5 text-4xl font-heading font-bold tracking-[-0.02em] md:text-5xl leading-[1.1]">
+                  What do you want to <span className="text-gradient">research?</span>
                 </h1>
-                <p className="text-base text-muted-foreground/70 md:text-lg max-w-md mx-auto leading-relaxed">
-                  From quick queries to deep, multi-agent research reports.
+                <p className="text-base text-muted-foreground md:text-lg max-w-md mx-auto leading-relaxed">
+                  Powered by deep reasoning and multi-agent coordination.
                 </p>
               </motion.div>
             )}
@@ -670,6 +677,38 @@ export default function HomePage() {
                 />
               </div>
             </div>
+
+            {/* Verified Sources Grid */}
+            {showHero && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="mt-12 w-full"
+              >
+                <h3 className="font-heading text-lg text-foreground mb-6">Verified Sources</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Card 1 */}
+                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
+                    <FileText className="w-6 h-6 text-secondary" />
+                    <h4 className="font-heading text-lg text-foreground">Attention Is All You Need</h4>
+                    <p className="font-sans text-sm text-muted-foreground">Foundational paper introducing the transformer architecture.</p>
+                  </div>
+                  {/* Card 2 */}
+                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
+                    <Globe className="w-6 h-6 text-primary" />
+                    <h4 className="font-heading text-lg text-foreground">Reinforcement Learning</h4>
+                    <p className="font-sans text-sm text-muted-foreground">Sutton & Barto&apos;s definitive text on RL and agent coordination.</p>
+                  </div>
+                  {/* Card 3 */}
+                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
+                    <Database className="w-6 h-6 text-[#D4A574]" />
+                    <h4 className="font-heading text-lg text-foreground">Agentic Architectures</h4>
+                    <p className="font-sans text-sm text-muted-foreground">Latest survey on orchestrating multi-LLM systems effectively.</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </main>

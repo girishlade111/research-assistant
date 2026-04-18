@@ -34,7 +34,6 @@ export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
   if (sections.length === 0) return null;
 
   // Track which heading we're under for styling child elements
-  let lastHeading = "";
 
   return (
     <motion.div
@@ -44,9 +43,10 @@ export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
     >
       <div className="space-y-4">
         {sections.map((section, i) => {
-          if (section.type === "heading") lastHeading = section.content;
-          const isAccentSection = ACCENT_HEADINGS.has(lastHeading) && section.type !== "heading";
-          const isReferences = REFERENCE_HEADINGS.has(lastHeading);
+          const previousHeadings = sections.slice(0, i + 1).filter(s => s.type === "heading");
+          const currentHeading = previousHeadings.length > 0 ? previousHeadings[previousHeadings.length - 1].content : "";
+          const isAccentSection = ACCENT_HEADINGS.has(currentHeading) && section.type !== "heading";
+          const isReferences = REFERENCE_HEADINGS.has(currentHeading);
 
           return (
             <motion.div
