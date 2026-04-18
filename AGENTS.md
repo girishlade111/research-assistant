@@ -15,11 +15,7 @@ This manifesto defines the roles and orchestration rules for the ResAgent multi-
 | **Web Search** | Concurrent real-time data retrieval. | `dracarys-70b` |
 | **Strategic A
 | **Fact-Check** | Automated verification of claims vs sources. | `mistr
-| **Coding** | Specialized technical snippet generation. | `qwen3-coder-480b` |
-| **Summary** | High-speed overview generation. | `minimax-m2.7` |
-| **Report** | Final markdown assembly and quality control. | `kimi-k2-thinking` |
-
-## 🧬 Orchestration Logic
+| **Coding** | Specialized technical snippet generation. | 
 
 The system follows a three-phase execution model managed by `orchestrator.ts`:
 
