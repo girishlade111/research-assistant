@@ -69,10 +69,96 @@ export function renderContent(text: string) {
   return <ReactMarkdown components={markdownComponents}>{text}</ReactMarkdown>;
 }
 
+const ResponseSectionItem = React.memo(function ResponseSectionItem({ 
+  section, 
+  index, 
+  isAccentSection, 
+  isReferences 
+}: { 
+  section: ResponseSection; 
+  index: number; 
+  isAccentSection: boolean; 
+  isReferences: boolean; 
+}) {
+  return (
+    <motion.div
+      custom={index}
+      initial="hidden"
+      animate="visible"
+      variants={sectionVariants}
+    >
+      {/* Heading */}
+      {section.type === "heading" && (
+        <h3
+          className={`text-lg font-semibold ${
+            ACCENT_HEADINGS.has(section.content)
+              ? "text-gradient"
+              : "text-foreground"
+          }`}
+        >
+          {section.content}
+        </h3>
+      )}
+
+      {/* Paragraph */}
+      {section.type === "paragraph" && (
+        <div className="leading-[1.75] text-muted-foreground/90 whitespace-pre-wrap">
+          {renderContent(section.content)}
+        </div>
+      )}
+
+      {/* Bullet list */}
+      {section.type === "bullets" && section.items && (
+        <ul className={`space-y-2 ${isReferences ? "pl-2" : "pl-4"}`}>
+          {section.items.map((item, j) => (
+            <motion.li
+              key={j}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                delay: index * 0.15 + j * 0.08,
+                duration: 0.3,
+              }}
+              className={`flex items-start gap-2 text-sm ${
+                isReferences
+                  ? "font-mono text-xs text-muted-foreground/80"
+                  : isAccentSection
+                    ? "text-foreground/90"
+                    : "text-muted-foreground"
+              }`}
+            >
+              {!isReferences && (
+                <span
+                  className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
+                    isAccentSection ? "bg-chart-2" : "bg-primary"
+                  }`}
+                />
+              )}
+              {isReferences ? (
+                <span className="break-all">{renderContent(item)}</span>
+              ) : (
+                renderContent(item)
+              )}
+            </motion.li>
+          ))}
+        </ul>
+      )}
+
+      {/* Code block */}
+      {section.type === "code" && (
+        <CodeBlock content={section.content} />
+      )}
+
+      {/* Fact-check block */}
+      {section.type === "fact_check" && (
+        <FactCheckBlock content={section.content} />
+      )}
+    </motion.div>
+  );
+});
+
 export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
   if (sections.length === 0) return null;
-
-  // Track which heading we're under for styling child elements
 
   return (
     <motion.div
@@ -88,80 +174,13 @@ export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
           const isReferences = REFERENCE_HEADINGS.has(currentHeading);
 
           return (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={sectionVariants}
-            >
-              {/* Heading */}
-              {section.type === "heading" && (
-                <h3
-                  className={`text-lg font-semibold ${
-                    ACCENT_HEADINGS.has(section.content)
-                      ? "text-gradient"
-                      : "text-foreground"
-                  }`}
-                >
-                  {section.content}
-                </h3>
-              )}
-
-              {/* Paragraph */}
-              {section.type === "paragraph" && (
-                <div className="leading-[1.75] text-muted-foreground/90 whitespace-pre-wrap">
-                  {renderContent(section.content)}
-                </div>
-              )}
-
-              {/* Bullet list */}
-              {section.type === "bullets" && section.items && (
-                <ul className={`space-y-2 ${isReferences ? "pl-2" : "pl-4"}`}>
-                  {section.items.map((item, j) => (
-                    <motion.li
-                      key={j}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        delay: i * 0.15 + j * 0.08,
-                        duration: 0.3,
-                      }}
-                      className={`flex items-start gap-2 text-sm ${
-                        isReferences
-                          ? "font-mono text-xs text-muted-foreground/80"
-                          : isAccentSection
-                            ? "text-foreground/90"
-                            : "text-muted-foreground"
-                      }`}
-                    >
-                      {!isReferences && (
-                        <span
-                          className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
-                            isAccentSection ? "bg-chart-2" : "bg-primary"
-                          }`}
-                        />
-                      )}
-                      {isReferences ? (
-                        <span className="break-all">{renderContent(item)}</span>
-                      ) : (
-                        renderContent(item)
-                      )}
-                    </motion.li>
-                  ))}
-                </ul>
-              )}
-
-              {/* Code block */}
-              {section.type === "code" && (
-                <CodeBlock content={section.content} />
-              )}
-
-              {/* Fact-check block */}
-              {section.type === "fact_check" && (
-                <FactCheckBlock content={section.content} />
-              )}
-            </motion.div>
+            <ResponseSectionItem 
+              key={i} 
+              section={section} 
+              index={i} 
+              isAccentSection={isAccentSection} 
+              isReferences={isReferences} 
+            />
           );
         })}
       </div>
