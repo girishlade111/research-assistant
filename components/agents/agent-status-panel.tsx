@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import type { AgentName, AgentStatus } from "@/lib/engine/types";
+import type { AgentName, AgentState, AgentStatus } from "@/lib/engine/types";
 
 // ── Agent Display Config ───────────────────────────────────────
 
@@ -47,15 +47,6 @@ const AGENT_CONFIG: Record<
 };
 
 // ── Types ──────────────────────────────────────────────────────
-
-export interface AgentState {
-  status: AgentStatus;
-  model?: string;
-  provider?: string;
-  durationMs?: number;
-  isFallback?: boolean;
-  error?: string;
-}
 
 interface AgentStatusPanelProps {
   agents: Partial<Record<AgentName, AgentState>>;
