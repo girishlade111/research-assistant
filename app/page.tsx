@@ -286,10 +286,10 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
               animate={{ opacity: 1 }}
               className={`mt-3 rounded-2xl p-6 border-shine ${isSimpleChat ? "glass" : "glass-strong"}`}
             >
-              <p className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
+              <div className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
                 {renderContent(message.streamingText)}
                 <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse bg-primary rounded-full" />
-              </p>
+              </div>
             </motion.div>
           )}
 
@@ -311,9 +311,9 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
               animate={{ opacity: 1, y: 0 }}
               className="glass mt-3 rounded-2xl p-6 border-shine"
             >
-              <p className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
+              <div className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
                 {renderContent(message.fullResult.overview)}
-              </p>
+              </div>
               <div className="mt-4 flex items-center gap-2 text-[11px] text-muted-foreground border-t border-border/50 pt-3">
                 <span className="rounded-md bg-accent px-2 py-0.5 font-mono">
                   {message.fullResult.metadata.model.split("/").pop()}
