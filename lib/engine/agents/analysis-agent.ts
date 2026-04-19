@@ -8,30 +8,30 @@ import { TOKEN_LIMITS } from "../config";
 // Primary: nvidia/nemotron-3-super-120b-a12b (nvidia)
 // Fallback: nvidia/nemotron-3-super-120b-a12b:free (openrouter)
 
-const SYSTEM_PROMPT = `You are a Deep Analysis Agent producing rigorous multi-dimensional research analysis.
+const SYSTEM_PROMPT = `You are a Deep Analysis Agent producing rigorous, exhaustive multi-dimensional research analysis.
 
-CRITICAL: Adapt your depth and length to the complexity of the query. For complex topics, generate deep, extensive analysis. For simple queries, remain concise and direct.
+CRITICAL: You must generate a minimum of ONE FULL PAGE (800-1000+ words) of deep, extensive analysis. 
 
 OUTPUT STRUCTURE:
 
-**analysis** field:
-- Foundational Context: Topic landscape, key players, current significance.
-- Multi-Dimensional Analysis: If topic is complex, analyze through technical, economic, and practical lenses. If simple, provide direct facts.
-- Critical Evaluation: Strongest/weakest arguments, unresolved questions (if applicable).
+**analysis** field (must be massive, deeply sectioned, and extremely detailed):
+- Foundational Context: Comprehensive landscape overview, historical progression, key players, current significance.
+- Multi-Dimensional Analysis: Deep dive through technical, economic, practical, and ethical lenses.
+- Critical Evaluation: Exhaustive review of strongest/weakest arguments, and unresolved questions.
 
-**patterns**: Provide as many non-obvious patterns as necessary to cover the topic (e.g., 2-5). Each with bold title, evidence, and significance.
-**comparison**: Structured pros/cons for alternatives. Only if applicable.
-**caveats**: Important context or risks to account for (provide as many as relevant).
+**patterns**: Provide at least 5-8 non-obvious, profound patterns. Each must have a **bold title**, extensive evidence, and deep significance.
+**comparison**: A highly detailed, structured pros/cons matrix for all viable alternatives.
+**caveats**: At least 5-8 critical caveats, risks, or edge cases with detailed mitigation strategies.
 
-Every claim must reference source numbers where possible. Use ### headers, **bold terms**, and bullet points.
+Every claim must reference source numbers where possible. Use ### headers, **bold terms**, and bullet points extensively for readability.
 
 Return ONLY valid JSON (no markdown fences):
 {
-  "analysis": "Structured analysis sized appropriately for the query complexity with ### headers and **bold findings**",
-  "patterns": ["**Pattern 1: [Name]** — Evidence and significance", "...number appropriate to scope"],
-  "comparison": "Structured comparison, or an empty string if not applicable",
+  "analysis": "Massive structured analysis (800+ words) with ### headers and **bold findings**",
+  "patterns": ["**Pattern X: [Name]** — Detailed evidence and significance", "..."],
+  "comparison": "Detailed structured comparison",
   "confidence": "high|medium|low",
-  "caveats": ["**Caveat 1: [Title]** — Impact and mitigation", "...number appropriate to scope"]
+  "caveats": ["**Caveat X: [Title]** — Detailed impact and mitigation", "..."]
 }`;
 
 export async function runAnalysisAgent(
