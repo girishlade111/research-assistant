@@ -95,6 +95,120 @@
             },
             {
               "type": "frame",
+              "id": "GeoUb",
+              "name": "nav",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jEbt7",
+                  "name": "nav1",
+                  "width": "fill_container",
+                  "fill": "#222222",
+                  "cornerRadius": "$rounded_sm",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "Y9Vrc",
+                      "name": "nav1icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "search",
+                      "iconFontFamily": "lucide",
+                      "fill": "$accent_primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "4LDQP",
+                      "name": "nav1text",
+                      "fill": "$foreground_inverse",
+                      "content": "New Search",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "5qiAY",
+                  "name": "nav2",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "tsSiG",
+                      "name": "nav2icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "history",
+                      "iconFontFamily": "lucide",
+                      "fill": "$foreground_muted"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VwpUD",
+                      "name": "nav2text",
+                      "fill": "$foreground_muted",
+                      "content": "History",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GbAkg",
+                  "name": "nav3",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "CP7Ug",
+                      "name": "nav3icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "settings",
+                      "iconFontFamily": "lucide",
+                      "fill": "$foreground_muted"
+                    },
+                    {
+                      "type": "text",
+                      "id": "eX3XC",
+                      "name": "nav3text",
+                      "fill": "$foreground_muted",
+                      "content": "Agent Settings",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "4NdFn",
               "name": "nav3",
               "width": "fill_container",
@@ -153,120 +267,6 @@
           "fontFamily": "Playfair Display",
           "fontSize": 24,
           "fontWeight": "bold"
-        },
-        {
-          "type": "frame",
-          "id": "GeoUb",
-          "name": "nav",
-          "width": "fill_container",
-          "layout": "vertical",
-          "gap": 16,
-          "children": [
-            {
-              "type": "frame",
-              "id": "jEbt7",
-              "name": "nav1",
-              "width": "fill_container",
-              "fill": "#222222",
-              "cornerRadius": "$rounded_sm",
-              "gap": 12,
-              "padding": [
-                12,
-                16
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon_font",
-                  "id": "Y9Vrc",
-                  "name": "nav1icon",
-                  "width": 20,
-                  "height": 20,
-                  "iconFontName": "search",
-                  "iconFontFamily": "lucide",
-                  "fill": "$accent_primary"
-                },
-                {
-                  "type": "text",
-                  "id": "4LDQP",
-                  "name": "nav1text",
-                  "fill": "$foreground_inverse",
-                  "content": "New Search",
-                  "fontFamily": "Inter",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "5qiAY",
-              "name": "nav2",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                16
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon_font",
-                  "id": "tsSiG",
-                  "name": "nav2icon",
-                  "width": 20,
-                  "height": 20,
-                  "iconFontName": "history",
-                  "iconFontFamily": "lucide",
-                  "fill": "$foreground_muted"
-                },
-                {
-                  "type": "text",
-                  "id": "VwpUD",
-                  "name": "nav2text",
-                  "fill": "$foreground_muted",
-                  "content": "History",
-                  "fontFamily": "Inter",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "GbAkg",
-              "name": "nav3",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                16
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon_font",
-                  "id": "CP7Ug",
-                  "name": "nav3icon",
-                  "width": 20,
-                  "height": 20,
-                  "iconFontName": "settings",
-                  "iconFontFamily": "lucide",
-                  "fill": "$foreground_muted"
-                },
-                {
-                  "type": "text",
-                  "id": "eX3XC",
-                  "name": "nav3text",
-                  "fill": "$foreground_muted",
-                  "content": "Agent Settings",
-                  "fontFamily": "Inter",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            }
-          ]
         }
       ]
     },
