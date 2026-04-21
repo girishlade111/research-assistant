@@ -37,9 +37,9 @@ const socialLinks = [
     name: "Website",
     url: "https://ladestack.in",
     icon: Globe,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
   },
   {
     name: "GitHub",
@@ -53,17 +53,17 @@ const socialLinks = [
     name: "LinkedIn",
     url: "https://www.linkedin.com/in/girish-lade-075bba201/",
     icon: LinkedinIcon,
-    color: "text-blue-600",
-    bg: "bg-blue-600/10",
-    border: "border-blue-600/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
   },
   {
     name: "Instagram",
     url: "https://www.instagram.com/girish_lade_/",
     icon: InstagramIcon,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
-    border: "border-pink-500/20",
+    color: "text-secondary",
+    bg: "bg-secondary/10",
+    border: "border-secondary/20",
   },
   {
     name: "CodePen",
@@ -77,9 +77,9 @@ const socialLinks = [
     name: "Email",
     url: "mailto:admin@ladestack.in",
     icon: Mail,
-    color: "text-red-500",
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
+    color: "text-[#BC7040]",
+    bg: "bg-[#BC7040]/10",
+    border: "border-[#BC7040]/20",
   },
 ];
 
@@ -127,4 +127,5 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
       </DialogContent>
     </Dialog>
   );
+}
 }

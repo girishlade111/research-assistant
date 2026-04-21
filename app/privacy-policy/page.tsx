@@ -46,7 +46,7 @@ export default function PrivacyPolicy() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="bg-background border border-border rounded-xl p-5 hover:border-primary/40 transition-colors">
                 <div className="flex items-center gap-2 mb-3">
-                  <UserCheck className="w-5 h-5 text-blue-500" />
+                  <UserCheck className="w-5 h-5 text-primary" />
                   <strong className="text-foreground text-lg">Voluntary Account Data</strong>
                 </div>
                 <ul className="text-sm space-y-2 list-none pl-0">
@@ -58,7 +58,7 @@ export default function PrivacyPolicy() {
 
               <div className="bg-background border border-border rounded-xl p-5 hover:border-primary/40 transition-colors">
                 <div className="flex items-center gap-2 mb-3">
-                  <Activity className="w-5 h-5 text-emerald-500" />
+                  <Activity className="w-5 h-5 text-primary" />
                   <strong className="text-foreground text-lg">Telemetry & Diagnostic Data</strong>
                 </div>
                 <ul className="text-sm space-y-2 list-none pl-0">
@@ -69,9 +69,9 @@ export default function PrivacyPolicy() {
               </div>
             </div>
 
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-5 mt-4">
-              <strong className="text-amber-500 flex items-center gap-2 text-lg mb-2"><FileWarning className="w-5 h-5"/> Crucial Note on Query Processing:</strong>
-              <p className="text-sm text-amber-500/90 leading-relaxed m-0">
+            <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-5 mt-4">
+              <strong className="text-secondary flex items-center gap-2 text-lg mb-2"><FileWarning className="w-5 h-5"/> Crucial Note on Query Processing:</strong>
+              <p className="text-sm text-secondary/90 leading-relaxed m-0">
                 The explicit textual queries, prompt configurations, and semantic parameters you submit to our AI engines are processed <strong>transiently</strong>. ResAgent does not permanently associate your distinct enterprise identity with specific semantic search trees unless explicit organizational history retention is toggled 'ON' by your administrator.
               </p>
             </div>
@@ -178,15 +178,15 @@ export default function PrivacyPolicy() {
             <p className="text-lg">We natively recognize and proactively enforce your sovereign data rights globally, adhering to the strictest interpretations of the <strong>GDPR (Europe), CCPA/CPRA (California), and SOC 2 Type II compliance frameworks</strong>.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="bg-accent/10 border-t-4 border-t-blue-500 rounded-b-xl p-5 shadow-sm">
+              <div className="bg-accent/10 border-t-4 border-t-primary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Access</strong>
                 <p className="text-sm mb-0">You may request a complete, cryptographic export (JSON/CSV) of all telemetry and configuration data associated with your enterprise identity within 72 hours.</p>
               </div>
-              <div className="bg-accent/10 border-t-4 border-t-red-500 rounded-b-xl p-5 shadow-sm">
+              <div className="bg-accent/10 border-t-4 border-t-[#BC7040] rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Erasure</strong>
                 <p className="text-sm mb-0">Often termed the "Right to be Forgotten." Demand the immediate, cascading, and mathematically irreversible destruction of your account and all associated telemetry.</p>
               </div>
-              <div className="bg-accent/10 border-t-4 border-t-amber-500 rounded-b-xl p-5 shadow-sm">
+              <div className="bg-accent/10 border-t-4 border-t-secondary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Restriction</strong>
                 <p className="text-sm mb-0">You hold the capability to temporarily halt our processing of your organizational data during an active legal dispute or audit investigation.</p>
               </div>

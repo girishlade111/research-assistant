@@ -849,7 +849,7 @@ export default function HomePage() {
                     <p className="font-sans text-sm text-muted-foreground">Sutton & Barto&apos;s definitive text on RL and agent coordination.</p>
                   </div>
                   <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <Database className="w-6 h-6 text-[#D4A853]" />
+                    <Database className="w-6 h-6 text-[#8C7040]" />
                     <h4 className="font-heading text-lg text-foreground">Agentic Architectures</h4>
                     <p className="font-sans text-sm text-muted-foreground">Latest survey on orchestrating multi-LLM systems effectively.</p>
                   </div>

@@ -24,9 +24,9 @@ const socialLinks = [
     name: "Website",
     url: "https://ladestack.in",
     icon: Globe,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
   },
   {
     name: "GitHub",
@@ -40,17 +40,17 @@ const socialLinks = [
     name: "LinkedIn",
     url: "https://www.linkedin.com/in/girish-lade-075bba201/",
     icon: LinkedinIcon,
-    color: "text-blue-600",
-    bg: "bg-blue-600/10",
-    border: "border-blue-600/20",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
   },
   {
     name: "Instagram",
     url: "https://www.instagram.com/girish_lade_/",
     icon: InstagramIcon,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
-    border: "border-pink-500/20",
+    color: "text-secondary",
+    bg: "bg-secondary/10",
+    border: "border-secondary/20",
   },
   {
     name: "CodePen",
@@ -64,9 +64,9 @@ const socialLinks = [
     name: "Email",
     url: "mailto:admin@ladestack.in",
     icon: Mail,
-    color: "text-red-500",
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
+    color: "text-[#BC7040]",
+    bg: "bg-[#BC7040]/10",
+    border: "border-[#BC7040]/20",
   },
 ];
 
@@ -99,8 +99,8 @@ export default function AboutUs() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-br from-accent/20 to-background border border-border/50 rounded-xl p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="p-3 bg-blue-500/10 w-fit rounded-lg">
-                <Network className="w-6 h-6 text-blue-500" />
+              <div className="p-3 bg-primary/10 w-fit rounded-lg">
+                <Network className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-bold text-foreground">Distributed Intelligence</h3>
               <ul className="text-sm text-muted-foreground leading-relaxed space-y-2 list-none pl-0">
@@ -116,8 +116,8 @@ export default function AboutUs() {
             </div>
 
             <div className="bg-gradient-to-br from-accent/20 to-background border border-border/50 rounded-xl p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="p-3 bg-emerald-500/10 w-fit rounded-lg">
-                <Zap className="w-6 h-6 text-emerald-500" />
+              <div className="p-3 bg-primary/10 w-fit rounded-lg">
+                <Zap className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-bold text-foreground">Hyper-Optimized Velocity</h3>
               <ul className="text-sm text-muted-foreground leading-relaxed space-y-2 list-none pl-0">
@@ -133,8 +133,8 @@ export default function AboutUs() {
             </div>
 
             <div className="bg-gradient-to-br from-accent/20 to-background border border-border/50 rounded-xl p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="p-3 bg-amber-500/10 w-fit rounded-lg">
-                <ShieldCheck className="w-6 h-6 text-amber-500" />
+              <div className="p-3 bg-secondary/10 w-fit rounded-lg">
+                <ShieldCheck className="w-6 h-6 text-secondary" />
               </div>
               <h3 className="text-xl font-bold text-foreground">Verifiable Accuracy</h3>
               <ul className="text-sm text-muted-foreground leading-relaxed space-y-2 list-none pl-0">
