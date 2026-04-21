@@ -72,7 +72,7 @@ function StatusIcon({ status }: { status: AgentStatus }) {
         animate={{ scale: 1 }}
         className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/20"
       >
-        <svg className="h-2.5 w-2.5 text-teal-300" viewBox="0 0 12 12" fill="none">
+        <svg className="h-2.5 w-2.5 text-primary" viewBox="0 0 12 12" fill="none">
           <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </motion.div>
@@ -80,8 +80,8 @@ function StatusIcon({ status }: { status: AgentStatus }) {
   }
   if (status === "failed") {
     return (
-      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#BC7040]/20">
-        <svg className="h-2.5 w-2.5 text-[#BC7040]" viewBox="0 0 12 12" fill="none">
+      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-destructive/20">
+        <svg className="h-2.5 w-2.5 text-destructive" viewBox="0 0 12 12" fill="none">
           <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       </div>
@@ -119,11 +119,11 @@ function AgentRow({
       animate={{ opacity: 1, y: 0 }}
       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all ${
         status === "running"
-          ? "bg-primary/6 border border-primary/15"
+          ? "bg-primary/10 border border-primary/20"
           : status === "done"
-            ? "bg-primary/4 border border-primary/10"
+            ? "bg-primary/5 border border-primary/10"
             : status === "failed"
-              ? "bg-[#BC7040]/5 border border-[#BC7040]/10"
+              ? "bg-destructive/10 border border-destructive/20"
               : "bg-transparent border border-transparent"
       }`}
     >
@@ -159,12 +159,12 @@ function AgentRow({
             )}
             <span className={`rounded px-1.5 py-0.5 text-[10px] font-mono ${
               status === "done"
-                ? "bg-primary/10 text-teal-300"
+                ? "bg-primary/15 text-primary font-bold"
                 : status === "running"
-                  ? "bg-primary/10 text-primary animate-pulse glow-sm"
+                  ? "bg-primary/20 text-primary animate-pulse glow-sm"
                   : status === "skipped"
                     ? "bg-muted text-muted-foreground"
-                    : "bg-[#BC7040]/10 text-[#BC7040]"
+                    : "bg-destructive/15 text-destructive font-bold"
             }`}>
               {status === "skipped" ? "skipped" : model}
             </span>

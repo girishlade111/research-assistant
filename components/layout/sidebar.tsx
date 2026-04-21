@@ -92,7 +92,7 @@ export function Sidebar({
         </div>
         <button
           onClick={onClose}
-          className="rounded-lg p-1.5 text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
+          className="rounded-lg p-1.5 text-muted-foreground/80 transition-colors hover:bg-accent hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -139,12 +139,12 @@ export function Sidebar({
         {history.length > 0 ? (
           <>
             <div className="mb-2 flex items-center justify-between px-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/60">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/80">
                 Recent
               </p>
               <button
                 onClick={onClearHistory}
-                className="rounded p-1 text-muted-foreground/40 hover:text-destructive transition-colors"
+                className="rounded p-1 text-muted-foreground/60 hover:text-destructive transition-colors"
                 title="Clear History"
               >
                 <Trash2 className="h-3 w-3" />
@@ -160,10 +160,10 @@ export function Sidebar({
                   }}
                   className="flex w-full flex-col items-start rounded-lg px-3 py-2 text-left transition-all hover:bg-accent/50 group"
                 >
-                  <span className="w-full truncate text-xs text-foreground/80 group-hover:text-primary transition-colors">
+                  <span className="w-full truncate text-xs text-foreground group-hover:text-primary transition-colors">
                     {entry.query}
                   </span>
-                  <span className="mt-0.5 text-[10px] text-muted-foreground/50">
+                  <span className="mt-0.5 text-[10px] text-muted-foreground/70">
                     {formatTimeAgo(entry.timestamp)} · {entry.mode}
                   </span>
                 </button>
@@ -171,7 +171,7 @@ export function Sidebar({
             </div>
           </>
         ) : (
-          <p className="px-3 py-4 text-xs text-muted-foreground/50 pt-4">
+          <p className="px-3 py-4 text-xs text-muted-foreground/70 pt-4">
             No history yet. Start researching!
           </p>
         )}
@@ -179,7 +179,7 @@ export function Sidebar({
 
       {/* Tools */}
       <div className="border-t border-border/40 pt-4">
-        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/60">
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground/80">
           Tools
         </p>
         <div className="space-y-1">
@@ -190,7 +190,7 @@ export function Sidebar({
                 if (item.id === "search") setQuickSearchOpen(true);
                 if (item.id === "graph") setCitationGraphOpen(true);
               }}
-              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-muted-foreground/70 transition-all hover:bg-accent/50 hover:text-foreground"
+              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-muted-foreground/90 transition-all hover:bg-accent/50 hover:text-foreground"
             >
               <item.icon className="h-4 w-4" />
               {item.label}
@@ -200,9 +200,9 @@ export function Sidebar({
 
         {/* Footer Links */}
         <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 px-3 pb-2">
-          <Link href="/about-us" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">About Us</Link>
-          <Link href="/privacy-policy" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">Privacy Policy</Link>
-          <Link href="/terms-and-conditions" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">Terms & Conditions</Link>
+          <Link href="/about-us" className="text-[11px] text-muted-foreground/70 hover:text-foreground transition-colors">About Us</Link>
+          <Link href="/privacy-policy" className="text-[11px] text-muted-foreground/70 hover:text-foreground transition-colors">Privacy Policy</Link>
+          <Link href="/terms-and-conditions" className="text-[11px] text-muted-foreground/70 hover:text-foreground transition-colors">Terms & Conditions</Link>
         </div>
       </div>
       

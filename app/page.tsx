@@ -174,12 +174,12 @@ function RoutingBadge({ complexity }: { complexity: "simple" | "research" | null
       className="mb-3 flex items-center gap-2"
     >
       {complexity === "simple" ? (
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-400/20 bg-teal-400/8 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-teal-300 uppercase">
-          <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[11px] font-bold tracking-wide text-primary uppercase">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
           Direct Response
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/8 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-primary uppercase">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[11px] font-bold tracking-wide text-primary uppercase">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
           Multi-Agent Research
         </span>
@@ -315,11 +315,11 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
                 {renderContent(message.fullResult.overview)}
               </div>
               <div className="mt-4 flex items-center gap-2 text-[11px] text-muted-foreground border-t border-border/50 pt-3">
-                <span className="rounded-md bg-accent px-2 py-0.5 font-mono">
+                <span className="rounded-md bg-accent px-2 py-0.5 font-mono text-foreground">
                   {message.fullResult.metadata.model.split("/").pop()}
                 </span>
                 {message.fullResult.metadata.durationMs > 0 && (
-                  <span className="text-muted-foreground/60">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s</span>
+                  <span className="text-muted-foreground/80">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s</span>
                 )}
               </div>
             </motion.div>
@@ -346,13 +346,13 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
                 {message.fullResult.metadata.model.split("/").pop()} ({message.fullResult.metadata.provider.toUpperCase()})
               </span>
               {message.fullResult.metadata.durationMs > 0 && (
-                <span className="text-muted-foreground/50">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s total</span>
+                <span className="text-muted-foreground/80">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s total</span>
               )}
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-primary border border-primary/15">
+              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-primary font-bold border border-primary/20">
                 {message.fullResult.metadata.intent}
               </span>
               {message.fullResult.agentResults && message.fullResult.agentResults.length > 0 && (
-                <span className="rounded-md bg-teal-500/10 px-2 py-0.5 text-teal-300 border border-teal-400/15">
+                <span className="rounded-md bg-primary/10 px-2 py-0.5 text-primary font-bold border border-primary/20">
                   {message.fullResult.agentResults.filter(r => !r.error || r.error === "skipped").length}/{message.fullResult.agentResults.length} agents OK
                 </span>
               )}
@@ -849,7 +849,7 @@ export default function HomePage() {
                     <p className="font-sans text-sm text-muted-foreground">Sutton & Barto&apos;s definitive text on RL and agent coordination.</p>
                   </div>
                   <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <Database className="w-6 h-6 text-[#8C7040]" />
+                    <Database className="w-6 h-6 text-secondary" />
                     <h4 className="font-heading text-lg text-foreground">Agentic Architectures</h4>
                     <p className="font-sans text-sm text-muted-foreground">Latest survey on orchestrating multi-LLM systems effectively.</p>
                   </div>

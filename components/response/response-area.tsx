@@ -102,7 +102,7 @@ const ResponseSectionItem = React.memo(function ResponseSectionItem({
 
       {/* Paragraph */}
       {section.type === "paragraph" && (
-        <div className="leading-[1.75] text-muted-foreground/90 whitespace-pre-wrap">
+        <div className="leading-[1.75] text-foreground/90 whitespace-pre-wrap">
           {renderContent(section.content)}
         </div>
       )}
@@ -121,10 +121,10 @@ const ResponseSectionItem = React.memo(function ResponseSectionItem({
               }}
               className={`flex items-start gap-2 text-sm ${
                 isReferences
-                  ? "font-mono text-xs text-muted-foreground/80"
+                  ? "font-mono text-xs text-muted-foreground"
                   : isAccentSection
                     ? "text-foreground/90"
-                    : "text-muted-foreground"
+                    : "text-foreground/80"
               }`}
             >
               {!isReferences && (
@@ -234,7 +234,7 @@ function CodeBlock({ content }: { content: string }) {
       </div>
       {/* Code */}
       <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
-        <code className="text-[#8C7040]/90 font-mono">{code}</code>
+        <code className="text-secondary/95 font-mono">{code}</code>
       </pre>
     </div>
   );
@@ -249,26 +249,26 @@ function FactCheckBlock({ content }: { content: string }) {
   const hasWarning = content.toLowerCase().includes("contradiction") || content.toLowerCase().includes("warning");
 
   const borderColor = isHigh
-    ? "border-primary/20"
+    ? "border-primary/30"
     : isMedium
-      ? "border-secondary/20"
-      : "border-[#BC7040]/20";
+      ? "border-secondary/30"
+      : "border-destructive/30";
 
   const bgColor = isHigh
-    ? "bg-primary/4"
+    ? "bg-primary/5"
     : isMedium
-      ? "bg-secondary/4"
-      : "bg-[#BC7040]/4";
+      ? "bg-secondary/5"
+      : "bg-destructive/5";
 
   return (
     <div className={`rounded-xl border p-4 ${borderColor} ${bgColor}`}>
       {hasWarning && (
-        <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-secondary">
+        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-secondary">
           <span>⚠️</span>
           <span>Contradictions detected</span>
         </div>
       )}
-      <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+      <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
         {content}
       </p>
     </div>

@@ -64,9 +64,9 @@ const socialLinks = [
     name: "Email",
     url: "mailto:admin@ladestack.in",
     icon: Mail,
-    color: "text-[#BC7040]",
-    bg: "bg-[#BC7040]/10",
-    border: "border-[#BC7040]/20",
+    color: "text-secondary",
+    bg: "bg-secondary/10",
+    border: "border-secondary/20",
   },
 ];
 
@@ -83,7 +83,7 @@ export default function AboutUs() {
           <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)]">
             <BrainCircuit className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl sm:text-6xl font-heading font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+          <h1 className="text-4xl sm:text-6xl font-heading font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/90">
             The ResAgent Initiative
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
