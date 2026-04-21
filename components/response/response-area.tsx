@@ -219,7 +219,7 @@ function CodeBlock({ content }: { content: string }) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-[#171717]">
+    <div className="overflow-hidden rounded-xl border border-border/60 bg-[#111111]">
       {/* Header bar */}
       <div className="flex items-center justify-between border-b border-border/40 bg-accent/50 px-4 py-2">
         <span className="font-mono text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
@@ -234,7 +234,7 @@ function CodeBlock({ content }: { content: string }) {
       </div>
       {/* Code */}
       <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
-        <code className="text-secondary/95 font-mono">{code}</code>
+        <code className="text-secondary font-mono">{code}</code>
       </pre>
     </div>
   );

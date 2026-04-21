@@ -77,9 +77,9 @@ const socialLinks = [
     name: "Email",
     url: "mailto:admin@ladestack.in",
     icon: Mail,
-    color: "text-[#BC7040]",
-    bg: "bg-[#BC7040]/10",
-    border: "border-[#BC7040]/20",
+    color: "text-secondary",
+    bg: "bg-secondary/10",
+    border: "border-secondary/20",
   },
 ];
 

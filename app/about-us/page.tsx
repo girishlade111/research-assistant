@@ -80,7 +80,7 @@ export default function AboutUs() {
           <Link href="/" className="absolute left-0 top-0 p-2 rounded-full hover:bg-accent transition-colors">
             <ArrowLeft className="w-6 h-6" />
           </Link>
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)]">
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
             <BrainCircuit className="w-10 h-10 text-primary" />
           </div>
           <h1 className="text-4xl sm:text-6xl font-heading font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/90">
@@ -231,7 +231,7 @@ export default function AboutUs() {
             
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10 relative z-10">
               <div className="flex flex-col items-center space-y-5">
-                <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-primary/20 to-primary/5 border-4 border-primary/30 shadow-[0_0_40px_rgba(var(--primary),0.15)]">
+                <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-primary/20 to-primary/5 border-4 border-primary/30 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
                   <span className="text-6xl font-heading font-extrabold text-primary drop-shadow-md">GL</span>
                 </div>
                 <div className="text-center lg:hidden">

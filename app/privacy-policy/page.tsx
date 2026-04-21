@@ -182,7 +182,7 @@ export default function PrivacyPolicy() {
                 <strong className="text-foreground block mb-2 text-lg">Right to Access</strong>
                 <p className="text-sm mb-0">You may request a complete, cryptographic export (JSON/CSV) of all telemetry and configuration data associated with your enterprise identity within 72 hours.</p>
               </div>
-              <div className="bg-accent/10 border-t-4 border-t-[#BC7040] rounded-b-xl p-5 shadow-sm">
+              <div className="bg-accent/10 border-t-4 border-t-secondary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Erasure</strong>
                 <p className="text-sm mb-0">Often termed the "Right to be Forgotten." Demand the immediate, cascading, and mathematically irreversible destruction of your account and all associated telemetry.</p>
               </div>
