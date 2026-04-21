@@ -1,19 +1,30 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad1" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#4F46E5"/>
-      <stop offset="50%" stop-color="#7C3AED"/>
-      <stop offset="100%" stop-color="#DB2777"/>
+    <linearGradient id="metallic-base" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2A2A2A"/>
+      <stop offset="50%" stop-color="#0C0C0C"/>
+      <stop offset="100%" stop-color="#000000"/>
     </linearGradient>
-    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="50%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
+    <linearGradient id="metallic-edge" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#404040"/>
+      <stop offset="50%" stop-color="#1A1A1A"/>
+      <stop offset="100%" stop-color="#606060"/>
+    </linearGradient>
+    <linearGradient id="chrome-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#A0A0A0"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
     </linearGradient>
   </defs>
-  <g transform="translate(256, 256)">
-    <path d="M0 -180 C 30 -50, 50 -30, 180 0 C 50 30, 30 50, 0 180 C -30 50, -50 30, -180 0 C -50 -30, -30 -50, 0 -180 Z" fill="url(#grad1)"/>
-    <path d="M0 -180 C 30 -50, 50 -30, 180 0 C 50 30, 30 50, 0 180 C -30 50, -50 30, -180 0 C -50 -30, -30 -50, 0 -180 Z" fill="url(#grad2)" transform="rotate(45) scale(0.7)"/>
-    <circle cx="0" cy="0" r="40" fill="#FFFFFF"/>
+  
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#metallic-base)"/>
+  
+  <g transform="translate(158, 158) scale(0.8)">
+    <path d="M40 240 V0 H140 C190 0 220 30 220 80 C220 120 195 145 160 155 L225 240 H165 L110 160 H85 V240 H40 Z" fill="url(#chrome-highlight)"/>
+    <circle cx="40" cy="240" r="16" fill="#FFFFFF"/>
+    <circle cx="40" cy="0" r="16" fill="#FFFFFF"/>
+    <circle cx="225" cy="240" r="16" fill="#FFFFFF"/>
+    <circle cx="140" cy="0" r="16" fill="#FFFFFF"/>
+    <circle cx="220" cy="80" r="16" fill="#FFFFFF"/>
   </g>
 </svg>
