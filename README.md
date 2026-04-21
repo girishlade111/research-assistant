@@ -19,34 +19,43 @@
 
 ## 🌟 Executive Summary
 
-**ResAgent** is not just a chatbot—it is a deeply orchestrated **multi-agent AI research system**. It leverages an array of specialized AI agents working concurrently to fetch, synthesize, analyze, and verify data. The final output is an exhaustive, beautifully formatted **4000-6000 word research report**, equipped with a comprehensive fact-check and coding implementation (when applicable). 
+**ResAgent** is a deeply orchestrated **multi-agent AI research system** built for scale and precision. By leveraging a network of specialized AI agents working concurrently, the system dynamically fetches, synthesizes, analyzes, and verifies complex data structures. 
 
-> **💡 Key Highlight:** ResAgent utilizes **dynamic model routing**, seamlessly falling back to high-capacity context models (up to **131,072 tokens**) if the primary endpoints encounter rate limits. This guarantees uninterrupted, massive report generation under heavy loads.
+The final output is an exhaustive, beautifully formatted **4000-6000 word research report**, complete with comprehensive fact-checks, citation graphs, and actionable code generation when requested.
+
+> **💡 Key Highlight:** ResAgent utilizes **Dynamic Model Routing**, seamlessly falling back to high-capacity context models (up to **131,072 tokens**) if the primary endpoints encounter rate limits. This guarantees uninterrupted, massive report generation under heavy network or processing loads.
 
 ---
 
-## 🚀 Core Features Breakdown
+## 🚀 Core Features & Capabilities
 
-*   **🌐 Intelligent Retrieval**: 
-    * Performs concurrent, heavily optimized web searches triggered by a dedicated Query Intelligence Agent rather than raw user input.
-*   **🤖 Specialized Fleet Operations**:
-    *   **Query Intelligence**: Automatically expands simple queries into massive, multi-layered research directives.
-    *   **Deep Analysis**: Uses advanced reasoning models (e.g., `NVIDIA/Nemotron-3-Super`) to extract profound, non-obvious patterns from raw data.
-    *   **Rigorous Fact-Checking**: Cross-references every retrieved claim, scoring reliability (0-100) and flagging potential contradictions.
-    *   **Production-Grade Coding**: Analyzes architecture and generates edge-case-handled code via `Qwen-3-Coder` when the intent is coding.
-    *   **Report Synthesis**: The master orchestrator (`MoonshotAI/Kimi-K2-Thinking`) compiles upstream data into a massive 6-8 chapter report.
-*   **📄 Multi-Modal Intake**: 
-    * Unified file parsing supporting `PDF` (pdf.js), `DOCX` (mammoth), `CSV` (PapaParse), and `Images` (Tesseract.js OCR).
-*   **🌊 Dynamic SSE Streaming**: 
-    * Highly optimized React frontend displaying real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the UI.
-*   **📊 Integrated Tool Modals**: 
-    * **Quick Search**, **Citation Graph**, and **Developer Profile** easily accessible directly from the application's sidebar, providing an immersed UX.
+### 🌐 Intelligent Data Retrieval
+*   **Targeted Augmentation**: Performs concurrent, heavily optimized web searches triggered by a dedicated Query Intelligence Agent rather than raw user input, resulting in highly relevant source aggregation.
+*   **Citation Mapping**: Builds visual relationship nodes across all referenced sources, enabling deep-dive verification.
+
+### 🤖 Specialized Fleet Operations
+*   **Query Intelligence Agent**: Automatically breaks down and expands simple user queries into massive, multi-layered research directives.
+*   **Deep Analysis Agent**: Uses advanced reasoning models (e.g., `NVIDIA/Nemotron-3-Super`) to extract profound, non-obvious patterns from raw data streams.
+*   **Rigorous Fact-Checking Agent**: Cross-references every retrieved claim against trusted web data, scoring reliability (0-100) and flagging potential contradictions or outdated facts.
+*   **Production-Grade Coding Agent**: Analyzes system architecture and generates edge-case-handled code snippets (e.g., via `Qwen-3-Coder`) when the primary intent is software development.
+*   **Master Synthesis Agent**: The orchestrator (`MoonshotAI/Kimi-K2-Thinking`) compiles all upstream data from the sub-agents into a massive 6-8 chapter report without losing context.
+
+### 📄 Multi-Modal Document Intake
+*   **Universal File Support**: Seamlessly parse complex user-uploaded documents to build local context constraints.
+    *   **PDFs**: Accelerated parsing via `pdf.js`.
+    *   **DOCX/Word**: Structure-preserving extraction via `mammoth`.
+    *   **Data Sheets**: Fast CSV handling via `PapaParse`.
+    *   **Images**: High-accuracy local OCR via `Tesseract.js`.
+
+### 🌊 Next-Gen UI & Streaming
+*   **Dynamic SSE Streaming**: Highly optimized React frontend displaying real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the main UI thread.
+*   **Interactive Tool Modals**: Features such as **Quick Search**, **Citation Graph**, and a customizable **Developer Profile** are easily accessible directly from the application's sidebar, providing an immersive User Experience.
 
 ---
 
 ## 🏗️ System Architecture & Flow (Deep Dive)
 
-The system operates on an advanced asynchronous state machine that forces extensive query analysis *before* execution to eliminate hallucinatory drift and ensure maximum depth.
+The system operates on an advanced asynchronous state machine. It forces extensive query analysis *before* execution to eliminate hallucinatory drift and ensure maximum research depth.
 
 ```mermaid
 graph TD
@@ -99,40 +108,45 @@ graph TD
 
 ## 🛠️ Developer Stack & Dependencies
 
-### **Frontend & UI**
-*   **Framework**: Next.js 16.2.4 (App Router, Turbopack)
-*   **UI Library**: React 19.2.4
-*   **Styling**: Tailwind CSS v4.0, clsx, tailwind-merge
-*   **Animations**: Framer Motion 12.38
-*   **Markdown Parsing**: React-Markdown 10.1 (Highly memoized to prevent re-renders)
-*   **Icons**: Lucide React
+### **Frontend & UI layer**
+*   **Core Framework**: `Next.js 16.2.4` (App Router configuration, powered by Turbopack)
+*   **UI Library**: `React 19.2.4` (Concurrent features enabled)
+*   **Styling Engine**: `Tailwind CSS v4.0`, utilizing `clsx` and `tailwind-merge` for dynamic classes.
+*   **Fluid Animations**: `Framer Motion 12.38`
+*   **Markdown Parsing**: `React-Markdown 10.1` (Heavily memoized to prevent expensive re-renders during high-speed SSE streaming)
+*   **Iconography**: `Lucide React`
 
-### **Backend & Engine**
-*   **Orchestration**: Custom asynchronous multi-agent pipeline (Node.js/Next.js API routes)
-*   **Primary AI Endpoints**: NVIDIA NIM (Integrate API)
-*   **Fallback AI Endpoints**: OpenRouter (Free tier models)
-*   **File Parsing**: `pdfjs-dist` (PDF), `mammoth` (Word/DOCX), `papaparse` (CSV), `tesseract.js` (Image OCR)
+### **Backend Orchestration & Engine**
+*   **Orchestration API**: Custom asynchronous multi-agent pipeline housed in Node.js/Next.js edge and serverless API routes.
+*   **Primary AI Infrastructure**: `NVIDIA NIM` (Integrate API for ultra-low latency inference)
+*   **Fallback AI Infrastructure**: `OpenRouter` (Free and enterprise tier models for redundancy)
+*   **Document Parsing Suite**: `pdfjs-dist` (PDF), `mammoth` (Word/DOCX), `papaparse` (CSV), `tesseract.js` (Image OCR via WebAssembly).
 
 ---
 
-## ⚙️ Configurations & Token Stats
+## ⚙️ System Configurations & Token Stats
 
-The engine is heavily optimized to manage massive context windows without failing.
+The engine is heavily optimized to manage massive context windows without failing. Below are the internal hard-coded thresholds:
 
 | Configuration Area | Specification | Description |
 | :--- | :--- | :--- |
-| **Max Global Context** | `131,072 Tokens` | Supports massive document ingestion via Llama 3.3 70B fallback. |
-| **Report Generation Budget** | `32,768 Tokens` | Ensures the Report Agent never truncates the final 6-page synthesis. |
-| **Agent Budget (Per Agent)** | `8,192 Tokens` | Strict budget enforcing deep, one-page minimal outputs per agent. |
-| **Fallback Race Timeout** | `60,000 ms` | Primary models are raced against fallbacks if slow, capping at 120s max. |
+| **Max Global Context** | `131,072 Tokens` | Supports massive document ingestion via Llama 3.3 70B fallback models. |
+| **Report Generation Budget** | `32,768 Tokens` | Ensures the Report Agent never truncates the final 6-page synthesis document. |
+| **Agent Budget (Per Agent)** | `8,192 Tokens` | Strict budget enforcing deep, one-page minimal outputs per sub-agent. |
+| **Fallback Race Timeout** | `60,000 ms` | Primary models are raced against fallbacks if slow, capping at an absolute 120s max. |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Local Development)
 
-Follow these instructions to spin up the local development environment.
+Follow these instructions to spin up the local development environment and run the orchestrator on your machine.
 
-### **1. Installation**
+### **1. System Requirements**
+*   `Node.js` v18.17.0 or higher
+*   `npm` v9.0 or higher
+*   Git
+
+### **2. Installation**
 Clone the repository and install the high-performance dependencies:
 ```bash
 git clone https://github.com/girishlade111/research-assistant.git
@@ -140,8 +154,8 @@ cd research-agent
 npm install
 ```
 
-### **2. Environment Configuration**
-The system relies on primary and fallback AI endpoints. Create a `.env.local` file in the root directory:
+### **3. Environment Configuration**
+The system relies on primary and fallback AI endpoints to function. Create a `.env.local` file in the root directory and add the following keys:
 ```env
 # REQUIRED: Primary high-speed reasoning endpoints
 NVIDIA_API_KEY=your_nvidia_nim_key_here
@@ -153,12 +167,12 @@ PERPLEXITY_API_KEY=your_perplexity_sonar_key_here
 OPENROUTER_API_KEY=your_openrouter_key_here
 ```
 
-### **3. Available Scripts**
+### **4. Running the Engine**
 Start the application using the ultra-fast Turbopack compiler:
 *   `npm run dev` — Starts the local development server on `http://localhost:3000`.
 *   `npm run build` — Generates the optimized production static and dynamic builds.
 *   `npm run start` — Boots the production server.
-*   `npm run lint` — Validates strict TypeScript and ESLint standards.
+*   `npm run lint` — Validates strict TypeScript and ESLint standards across the codebase.
 
 ---
 
@@ -167,22 +181,22 @@ Start the application using the ultra-fast Turbopack compiler:
 ```text
 research-agent/
 ├── app/
-│   ├── api/research/      # Primary SSE stream and orchestrator endpoint
-│   └── page.tsx           # React UI: Chat bubbles, Progressive Reveal, and State
+│   ├── api/research/      # Primary SSE stream and multi-agent orchestrator endpoint
+│   └── page.tsx           # React UI: Chat bubbles, Progressive Reveal, and global State
 ├── components/
-│   ├── agents/            # Agent status trackers and visual panels
-│   ├── profile/           # Developer profile modal ui
-│   ├── response/          # React-Markdown Memoized rendering & sources UI
+│   ├── agents/            # Agent status trackers and visual progression panels
+│   ├── profile/           # Developer profile modal UI
+│   ├── response/          # React-Markdown Memoized rendering & intelligence sources UI
 │   ├── search/            # Quick Search and Citation Graph modal UIs
 │   └── layout/            # Sidebar and responsive navigation wrappers
-├── hooks/                 # Custom React hooks (use-cache, use-debounce, etc)
+├── hooks/                 # Custom React hooks (use-cache, use-debounce, use-mobile)
 ├── lib/
-│   ├── engine/            # The Core Brain
+│   ├── engine/            # 🧠 The Core Brain
 │   │   ├── agents/        # System prompts and specific logic for all 6 agents
-│   │   ├── providers/     # Fetch handlers for NVIDIA and OpenRouter
+│   │   ├── providers/     # Fetch handlers and router logic for NVIDIA and OpenRouter
 │   │   ├── config.ts      # Global limits, timeouts, and Model Registries
 │   │   └── orchestrator.ts# Parallel execution and fallback race conditions
-│   └── utils.ts           # Global UI utilities
+│   └── utils.ts           # Global UI utilities and styling mergers
 ```
 
 ---
@@ -208,4 +222,4 @@ research-agent/
 
 ## 📄 License
 
-This project is private and proprietary. All rights reserved. Powered by the Lade Stack ecosystem.
+This project is private and proprietary. All rights reserved. Powered by the **Lade Stack** ecosystem.
