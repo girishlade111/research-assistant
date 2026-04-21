@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Home,
   Library,
@@ -11,14 +12,18 @@ import {
   X,
   Menu,
   Trash2,
+  User,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { HistoryEntry } from "@/hooks/use-cache";
+import { ProfileModal } from "@/components/profile/profile-modal";
+import { QuickSearchModal } from "@/components/search/quick-search-modal";
+import { CitationGraphModal } from "@/components/search/citation-graph-modal";
 
 const toolItems = [
-  { icon: Search, label: "Quick Search" },
-  { icon: GitBranch, label: "Citation Graph" },
+  { id: "search", icon: Search, label: "Quick Search" },
+  { id: "graph", icon: GitBranch, label: "Citation Graph" },
 ];
 
 interface SidebarProps {
@@ -55,6 +60,10 @@ export function Sidebar({
   activeView,
   onViewChange,
 }: SidebarProps) {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [quickSearchOpen, setQuickSearchOpen] = useState(false);
+  const [citationGraphOpen, setCitationGraphOpen] = useState(false);
+
   const navItems = [
     {
       icon: Home,
@@ -179,14 +188,29 @@ export function Sidebar({
           {toolItems.map((item) => (
             <button
               key={item.label}
+              onClick={() => {
+                if (item.id === "search") setQuickSearchOpen(true);
+                if (item.id === "graph") setCitationGraphOpen(true);
+              }}
               className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-muted-foreground/70 transition-all hover:bg-accent/50 hover:text-foreground"
             >
               <item.icon className="h-4 w-4" />
               {item.label}
             </button>
           ))}
+          <button
+            onClick={() => setProfileOpen(true)}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-muted-foreground/70 transition-all hover:bg-accent/50 hover:text-foreground"
+          >
+            <User className="h-4 w-4" />
+            Developer Profile
+          </button>
         </div>
       </div>
+      
+      <ProfileModal open={profileOpen} onOpenChange={setProfileOpen} />
+      <QuickSearchModal open={quickSearchOpen} onOpenChange={setQuickSearchOpen} />
+      <CitationGraphModal open={citationGraphOpen} onOpenChange={setCitationGraphOpen} />
     </div>
   );
 
