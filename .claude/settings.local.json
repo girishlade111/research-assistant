@@ -10,7 +10,9 @@
       "Bash(taskkill /PID 9228 /F)",
       "Bash(cmd //c \"taskkill /PID 9228 /F\")",
       "Bash(curl -s -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"hello\",\"mode\":\"pro\",\"model\":\"balanced-1\",\"stream\":false}')",
-      "Bash(cmd //c \"taskkill /F /IM node.exe\")"
+      "Bash(cmd //c \"taskkill /F /IM node.exe\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); const matches = Object.keys\\(icons\\).filter\\(k => k.toLowerCase\\(\\).includes\\('git'\\)\\); console.log\\(matches\\);\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\('Instagram:', 'Instagram' in icons\\); console.log\\('Linkedin:', 'Linkedin' in icons\\); console.log\\('Mail:', 'Mail' in icons\\); console.log\\('Globe:', 'Globe' in icons\\); console.log\\('ExternalLink:', 'ExternalLink' in icons\\); console.log\\('Code2:', 'Code2' in icons\\);\")"
     ]
   }
 }
