@@ -36,6 +36,7 @@
     *   **Report Synthesis**: The master orchestrator (`MoonshotAI/Kimi-K2-Thinking`) compiles upstream data into a massive 6-8 chapter report.
 *   **📄 Multi-Modal Intake**: Unified file parsing supporting `PDF` (pdf.js), `DOCX` (mammoth), `CSV` (PapaParse), and `Images` (Tesseract.js OCR).
 *   **🌊 Dynamic SSE Streaming**: Highly optimized React frontend displaying real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the UI.
+*   **📊 Integrated Tool Modals**: Quick Search, Citation Graph, and Developer Profile easily accessible directly from the sidebar.
 
 ---
 
@@ -140,7 +141,7 @@ Follow these instructions to spin up the local development environment.
 ### **1. Installation**
 Clone the repository and install the high-performance dependencies:
 ```bash
-git clone https://github.com/girishlade111/research-agent.git
+git clone https://github.com/girishlade111/research-assistant.git
 cd research-agent
 npm install
 ```
@@ -176,7 +177,9 @@ research-agent/
 │   └── page.tsx           # React UI: Chat bubbles, Progressive Reveal, and State
 ├── components/
 │   ├── agents/            # Agent status trackers and visual panels
+│   ├── profile/           # Developer profile modal ui
 │   ├── response/          # React-Markdown Memoized rendering & sources UI
+│   ├── search/            # Quick Search and Citation Graph modal UIs
 │   └── layout/            # Sidebar and responsive navigation wrappers
 ├── lib/
 │   ├── engine/            # The Core Brain
