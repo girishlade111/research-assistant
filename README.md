@@ -205,7 +205,7 @@ research-agent/
 [![Email](https://img.shields.io/badge/Email-admin@ladestack.in-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:admin@ladestack.in)
 
 </div>
-
+**Lade Stack
 ---
 
 ## 📄 License
