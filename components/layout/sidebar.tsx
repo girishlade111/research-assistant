@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Home,
   Library,
@@ -205,6 +206,13 @@ export function Sidebar({
             <User className="h-4 w-4" />
             Developer Profile
           </button>
+        </div>
+
+        {/* Footer Links */}
+        <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 px-3 pb-2">
+          <Link href="/about-us" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">About Us</Link>
+          <Link href="/privacy-policy" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">Privacy Policy</Link>
+          <Link href="/terms-and-conditions" className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors">Terms & Conditions</Link>
         </div>
       </div>
       
