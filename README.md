@@ -112,20 +112,35 @@ flowchart TB
     P --> Q["✨ Progressive Markdown UI Reveal"]:::ui
 ```
 
-### **The Orchestration Execution Loop**
+### **The Orchestration Execution Loop (Technical Breakdown)**
 
-The orchestrator guarantees performance and quality through a strict multi-phase pipeline:
+The orchestrator guarantees performance, context retention, and quality through a strict, multi-phase pipeline managed by a centralized **State Machine**. The entire process is wrapped in a Server-Sent Events (SSE) stream, transmitting raw tokens, latency metrics, and agent statuses to the client as they occur.
 
-1. **Phase 1: Blueprint Generation**  
-   Instead of feeding the raw query to search engines, the **Query Intelligence Agent** deconstructs it. It identifies missing context, required technical depth, and breaks the query into 8-12 self-contained, highly specific research vectors.
-2. **Phase 2: Data Aggregation**  
-   The vectors are fired concurrently into the **Web Search Agent** (utilizing tools like Perplexity or direct LLM search) while local uploaded documents are parsed into pure text strings using WebAssembly (WASM) and OCR. The results are merged into an enormous temporary context pool.
-3. **Phase 3: Parallel Processing & Verification**  
-   The *Summary*, *Analysis*, *Fact-Check*, and *Coding* agents are spawned simultaneously, each fed the aggregated context. 
-    *   **Resource Allocation**: Each agent operates in its own isolated thread with an `8192` token output budget.
-    *   **Fallback Race Condition**: To prevent stalling, the orchestrator sets a hard 60-second timeout. If a primary NVIDIA NIM model (e.g., `Llama-3-70B`) is hanging, it concurrently fires a request to an OpenRouter fallback model. Whichever model completes first is accepted, guaranteeing extreme fault tolerance under heavy loads.
-4. **Phase 4: Final Synthesis**  
-   Once all parallel agents resolve, their massive outputs are stitched together and fed to the **Report Agent** (with an enormous `32,768` token budget). This master agent writes the final 4000-6000 word, highly-sectioned, beautifully formatted master document. The result is streamed to the user via SSE.
+#### **Phase 0: Intent Routing & Context Hydration**
+*   **Action**: Before any heavy lifting, the system evaluates the user query against a local Redis/LRU cache.
+*   **Routing**: Simple queries (e.g., "What is the capital of France?") are routed to a lightweight, single-pass LLM to save compute. Complex queries ("Analyze the impact of AGI on cryptographic algorithms") trigger the **Deep Research Mode**.
+*   **File Ingestion**: If the user uploaded files, WebAssembly (WASM) workers parse PDFs, DOCX, CSV, and perform OCR on images. This data is converted to pure markdown strings.
+
+#### **Phase 1: Blueprint Generation (The Query Intelligence Agent)**  
+*   **Role**: To prevent LLM "hallucination," the engine never feeds a raw query directly into a search engine. 
+*   **Process**: The **Query Intelligence Agent** (typically powered by a reasoning model) deconstructs the user's intent. It identifies missing context, determines required technical depth, and generates a structured JSON array containing 8-12 highly specific research vectors (e.g., historical context, technical implementation, counter-arguments, financial implications).
+
+#### **Phase 2: Data Aggregation & Deduplication**  
+*   **Role**: Gathering raw, verifiable facts from the live internet.
+*   **Process**: The research vectors are fired concurrently into the **Web Search Agent** (utilizing tools like Perplexity Sonar or direct Google/Bing API integration with an LLM summarizer). 
+*   **Vector Database (Memory)**: The returned URLs and text snippets are merged with the local uploaded documents. The system runs a rapid similarity check to deduplicate redundant information, resulting in an enormous, clean **Temporary Context Pool**.
+
+#### **Phase 3: Parallel Processing & Verification (The Core Engine)**  
+*   **Role**: Analyzing the massive context pool from four distinct, specialized perspectives simultaneously.
+*   **Execution**: The *Summary*, *Analysis*, *Fact-Check*, and *Coding* agents are spawned in parallel. Each agent is fed the entire Context Pool alongside its specific system prompt.
+*   **Resource Allocation**: Each agent operates in an isolated execution thread with an `8192` token maximum output budget, forcing deep, non-truncated reasoning.
+*   **The Fallback Race Condition (Fault Tolerance)**: To prevent a single slow API from stalling the 6-page report, the orchestrator implements a hard 60-second timeout. If a primary NVIDIA NIM model (e.g., `Llama-3-70B`) is hanging, it concurrently fires an identical request to an OpenRouter fallback model. The orchestrator accepts whichever Promise resolves first, immediately terminating the slower thread.
+
+#### **Phase 4: Final Synthesis & Formatting**  
+*   **Role**: Compiling the divergent agent outputs into a single, cohesive, beautifully formatted document.
+*   **Process**: Once all parallel agents resolve, their massive outputs (often totaling 15,000+ words) are stitched together into a structured prompt.
+*   **Synthesis**: The **Report Agent** (utilizing a massive `32,768` token context window model like `MoonshotAI/Kimi-K2-Thinking`) acts as the Chief Editor. It rewrites the content into a 4000-6000 word, highly-sectioned master document with an executive summary, table of contents, and perfectly cited references. 
+*   **Streaming**: The final markdown is streamed token-by-token to the Next.js frontend, where a memoized React-Markdown parser progressively reveals the text without causing UI frame drops.
 
 ---
 
