@@ -83,7 +83,7 @@ export function CitationGraphModal({ open, onOpenChange }: CitationGraphModalPro
           </div>
           
           <div className="absolute bottom-4 left-4 right-4 p-4 rounded-lg bg-background/80 backdrop-blur border text-sm text-muted-foreground flex justify-between items-center shadow-sm">
-            <span>Showing connections for <strong>"Impact of quantum computing on cryptography"</strong></span>
+            <span>Showing connections for <strong>&quot;Impact of quantum computing on cryptography&quot;</strong></span>
             <div className="flex gap-4">
               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-primary/60"></div> Primary</span>
               <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> Direct Citation</span>

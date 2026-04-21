@@ -31,7 +31,7 @@ export default function PrivacyPolicy() {
               <p className="text-sm m-0 font-medium text-muted-foreground">Last Revised: <strong className="text-foreground">April 2026</strong></p>
             </div>
             <p className="text-base leading-relaxed text-foreground">
-              At <strong className="text-primary">ResAgent</strong> ("we", "our", or "us"), we operate on a fundamental principle of zero-trust data minimization. We are unequivocally committed to protecting your privacy and ensuring the highest standards of cryptographic data security. This Enterprise Privacy Policy exhaustively delineates how we securely collect, transiently process, rigorously manage, and completely sanitize your personal and organizational data when interacting with our AI orchestration infrastructure.
+              At <strong className="text-primary">ResAgent</strong> (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;), we operate on a fundamental principle of zero-trust data minimization. We are unequivocally committed to protecting your privacy and ensuring the highest standards of cryptographic data security. This Enterprise Privacy Policy exhaustively delineates how we securely collect, transiently process, rigorously manage, and completely sanitize your personal and organizational data when interacting with our AI orchestration infrastructure.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ export default function PrivacyPolicy() {
             <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-5 mt-4">
               <strong className="text-secondary flex items-center gap-2 text-lg mb-2"><FileWarning className="w-5 h-5"/> Crucial Note on Query Processing:</strong>
               <p className="text-sm text-secondary leading-relaxed m-0">
-                The explicit textual queries, prompt configurations, and semantic parameters you submit to our AI engines are processed <strong>transiently</strong>. ResAgent does not permanently associate your distinct enterprise identity with specific semantic search trees unless explicit organizational history retention is toggled 'ON' by your administrator.
+                The explicit textual queries, prompt configurations, and semantic parameters you submit to our AI engines are processed <strong>transiently</strong>. ResAgent does not permanently associate your distinct enterprise identity with specific semantic search trees unless explicit organizational history retention is toggled &apos;ON&apos; by your administrator.
               </p>
             </div>
           </section>
@@ -184,7 +184,7 @@ export default function PrivacyPolicy() {
               </div>
               <div className="bg-accent/10 border-t-4 border-t-secondary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Erasure</strong>
-                <p className="text-sm mb-0">Often termed the "Right to be Forgotten." Demand the immediate, cascading, and mathematically irreversible destruction of your account and all associated telemetry.</p>
+                <p className="text-sm mb-0">Often termed the &quot;Right to be Forgotten.&quot; Demand the immediate, cascading, and mathematically irreversible destruction of your account and all associated telemetry.</p>
               </div>
               <div className="bg-accent/10 border-t-4 border-t-secondary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Restriction</strong>

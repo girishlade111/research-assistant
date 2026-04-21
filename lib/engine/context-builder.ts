@@ -99,7 +99,7 @@ export function buildContext(
   query: string
 ): BuiltContext {
   // Step 1: Process and rank files
-  let allChunks: Chunk[] = [];
+  const allChunks: Chunk[] = [];
   for (const file of files) {
     const textChunks = chunkText(file.content);
     for (const text of textChunks) {

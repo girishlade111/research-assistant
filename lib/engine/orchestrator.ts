@@ -14,8 +14,7 @@ import type {
 import { TOKEN_LIMITS, MODE_CONFIG } from "./config";
 import { enhanceQuery } from "./query-enhancer";
 import { selectModelByUserId, getNextFallback } from "./model-router";
-import { buildContext } from "./context-builder";
-import { classifyError, userFacingMessage } from "./errors";
+import { classifyError } from "./errors";
 import { generateAIResponse } from "./providers";
 import { nvidiaComplete } from "./providers/nvidia";
 import { openrouterComplete } from "./providers/openrouter";
@@ -276,9 +275,10 @@ export async function runResearch(
         return r;
       }));
 
-  const enhancedQuery = (queryResult as any).enhanced_query || queryResult.output?.enhanced_query || query;
-  const subtopics = (queryResult as any).subtopics || (queryResult.output?.subtopics as string[]) || [];
-  const searchTerms = (queryResult as any).search_terms || (queryResult.output?.search_terms as string[]) || [];
+  const qr = queryResult as AgentResult & { enhanced_query?: string; subtopics?: string[]; search_terms?: string[] };
+  const enhancedQuery = qr.enhanced_query || queryResult.output?.enhanced_query || query;
+  const subtopics = qr.subtopics || (queryResult.output?.subtopics as string[]) || [];
+  const searchTerms = qr.search_terms || (queryResult.output?.search_terms as string[]) || [];
 
   // ═══════════════════════════════════════════════════════════
   // PHASE 1.5: Web Search (Second, using optimized terms)
@@ -475,8 +475,9 @@ export async function runResearch(
 
   // Fact-check summary
   const factOutput = factCheckResult.output as Record<string, unknown>;
+  const contradictions = (factOutput.contradictions as string[] | undefined) ?? [];
   const factCheckSummary = factOutput.fact_check_summary
-    ? `**Reliability: ${String(factOutput.reliability_label ?? "Unknown")} (${String(factOutput.reliability_score ?? 0)}%)**\n\n${String(factOutput.fact_check_summary)}\n\n${(factOutput.contradictions as string[] | undefined ?? []).length > 0 ? `⚠️ Contradictions found:\n${(factOutput.contradictions as string[]).map(c => `- ${c}`).join("\n")}` : ""}`
+    ? `**Reliability: ${String(factOutput.reliability_label ?? "Unknown")} (${String(factOutput.reliability_score ?? 0)}%)**\n\n${String(factOutput.fact_check_summary)}\n\n${contradictions.length > 0 ? `⚠️ Contradictions found:\n${contradictions.map(c => `- ${c}`).join("\n")}` : ""}`
     : undefined;
 
   const totalDuration = Date.now() - startTime;

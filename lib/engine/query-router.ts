@@ -108,9 +108,10 @@ const RESEARCH_PATTERNS = [
   /\b(compare|comparison|versus|vs\.?)\b/i,
   /\b(research|study|investigate|explore|deep.?dive)\b/i,
   /\b(trend|market|industry|statistics|data|recent|latest)\b/i,
-  /\b(explain in detail|comprehensive|in-depth|thorough)\b/i,
+  /\b(explain|comprehensive|in-depth|thorough)\b/i,
   /\b(code|debug|implement|build|create a|write a program|function|algorithm)\b/i,
   /\b(pros and cons|advantages|disadvantages|benefits)\b/i,
+  /\b(how does|how do|what is|what are|why does|why do|why is)\b.*\b\w{4,}\b/i, // substantive questions
 ];
 
 function heuristicClassify(query: string): QueryComplexity | null {

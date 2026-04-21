@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, FileText, Scale, AlertTriangle, Copyright, ScrollText, Bot, ShieldAlert, Zap, BookOpen, Terminal, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, FileText, Scale, AlertTriangle, Copyright, Bot, ShieldAlert, Zap, BookOpen, Terminal, CheckCircle2 } from "lucide-react";
 
 export default function TermsAndConditions() {
   return (
@@ -36,7 +36,7 @@ export default function TermsAndConditions() {
               <p className="text-sm m-0 font-medium bg-background px-3 py-1 rounded-full border border-border">Effective: <strong className="text-primary">April 2026</strong></p>
             </div>
             <p className="text-base leading-relaxed text-foreground m-0">
-              These Enterprise Terms of Service ("Terms") constitute a legally binding Master Service Agreement between you (whether individually or representing an incorporated entity) and <strong className="text-foreground">ResAgent</strong>. By deploying, accessing, querying, or programmatically interacting with our AI research orchestration APIs and web interfaces, you explicitly acknowledge that you have read, understood, and agreed to be bound by these exhaustive terms without modification.
+              These Enterprise Terms of Service (&quot;Terms&quot;) constitute a legally binding Master Service Agreement between you (whether individually or representing an incorporated entity) and <strong className="text-foreground">ResAgent</strong>. By deploying, accessing, querying, or programmatically interacting with our AI research orchestration APIs and web interfaces, you explicitly acknowledge that you have read, understood, and agreed to be bound by these exhaustive terms without modification.
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export default function TermsAndConditions() {
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary font-bold border border-secondary/20 text-xl">A</div>
                 <div>
                   <strong className="text-foreground text-xl block mb-2">Inherent Probability of Hallucination</strong>
-                  <p className="text-sm text-muted-foreground leading-relaxed m-0">AI-generated content may periodically contain factual inaccuracies, logical inconsistencies, synthesized references, or "hallucinations." The platform is strictly designed to <strong>augment</strong> human intelligence, not to act as an infallible source of absolute truth. All citations must be manually verified.</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed m-0">AI-generated content may periodically contain factual inaccuracies, logical inconsistencies, synthesized references, or &quot;hallucinations.&quot; The platform is strictly designed to <strong>augment</strong> human intelligence, not to act as an infallible source of absolute truth. All citations must be manually verified.</p>
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export default function TermsAndConditions() {
               </p>
               <div className="h-px w-full bg-border/50 my-4"></div>
               <p className="text-sm leading-relaxed">
-                <strong className="text-foreground">Indemnification Clause:</strong> You explicitly agree to defend, fully indemnify, and hold harmless ResAgent and its affiliates from and against any third-party claims, liabilities, civil damages, judgments, legal awards, losses, costs, expenses, or fees (including reasonable and necessary attorneys' fees) arising out of or directly relating to your violation of these Terms, your misuse of the Platform outputs, or your infringement of third-party intellectual property via prompts submitted to the service.
+                <strong className="text-foreground">Indemnification Clause:</strong> You explicitly agree to defend, fully indemnify, and hold harmless ResAgent and its affiliates from and against any third-party claims, liabilities, civil damages, judgments, legal awards, losses, costs, expenses, or fees (including reasonable and necessary attorneys&apos; fees) arising out of or directly relating to your violation of these Terms, your misuse of the Platform outputs, or your infringement of third-party intellectual property via prompts submitted to the service.
               </p>
             </div>
           </section>
@@ -164,7 +164,7 @@ export default function TermsAndConditions() {
             <ul className="list-disc pl-6 space-y-2 marker:text-primary mt-4">
               <li>Material breach of the Acceptable Use Policy (AUP) outlined in Section 1.</li>
               <li>Detection of fraudulent API usage, credential sharing, or illegal activities originating from your tenant.</li>
-              <li>Execution of queries that structurally degrade the system's performance, latency, or availability for other enterprise tenants (Noisy Neighbor isolation).</li>
+              <li>Execution of queries that structurally degrade the system&apos;s performance, latency, or availability for other enterprise tenants (Noisy Neighbor isolation).</li>
               <li>Non-payment of subscription dues exceeding a 15-day grace period.</li>
             </ul>
           </section>

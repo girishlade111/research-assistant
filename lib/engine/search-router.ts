@@ -144,7 +144,7 @@ export async function searchWithFallback(
   options: SearchOptions,
   apiKeys: ApiKeys
 ): Promise<{ results: SearchResult[]; provider: "nvidia" | "openrouter" }> {
-  const { query, maxResults, mode } = options;
+  const { mode } = options;
 
   // Primary: NVIDIA NIM search
   if (apiKeys.nvidiaKey) {

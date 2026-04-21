@@ -43,6 +43,7 @@ async function parsePDF(file: File): Promise<string> {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent = await page.getTextContent();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     text += textContent.items.map((item: any) => item.str).join(' ') + '\n';
   }
   
@@ -64,11 +65,13 @@ async function parseCSV(file: File): Promise<string> {
   const Papa = PapaModule.default || PapaModule;
   return new Promise((resolve, reject) => {
     Papa.parse(file, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       complete: (results: any) => {
         const rows = results.data as string[][];
         const text = rows.map((row: string[]) => row.join(', ')).join('\n');
         resolve(text);
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       error: (error: any) => {
         reject(error);
       }
@@ -87,6 +90,7 @@ async function parseImageOCR(file: File): Promise<string> {
   const url = URL.createObjectURL(file);
   try {
     const result = await Tesseract.recognize(url, 'eng', {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       logger: (m: any) => console.log(m)
     });
     return result.data.text;
