@@ -1,6 +1,6 @@
 "use client";
 
-import { Instagram, Linkedin, Github, Codepen, Mail, Globe, ExternalLink } from "lucide-react";
+import { Instagram, Linkedin, Github, Code2, Mail, Globe, ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -50,7 +50,7 @@ const socialLinks = [
   {
     name: "CodePen",
     url: "https://codepen.io/Girish-Lade-the-looper",
-    icon: Codepen,
+    icon: Code2,
     color: "text-foreground",
     bg: "bg-foreground/10",
     border: "border-foreground/20",
