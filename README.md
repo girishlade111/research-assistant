@@ -94,8 +94,8 @@ graph TD
         N -->|Compiles 5-6 Pages| O([Final JSON Structure])
     end
     
-    O --> P[React Server-Sent Events (SSE) Stream]:::ui
-    P --> Q[Progressive Markdown UI Reveal]:::ui
+    O --> P["React Server-Sent Events (SSE) Stream"]:::ui
+    P --> Q["Progressive Markdown UI Reveal"]:::ui
 ```
 
 ### **The Execution Loop**
