@@ -5,7 +5,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM-76B900?style=for-the-badge&logo=nvidia)](https://www.nvidia.com/en-us/ai/)
 
 **Next-Generation Multi-Agent Research Engine**  
@@ -19,24 +19,28 @@
 
 ## 🌟 Executive Summary
 
-**ResAgent** is not just a chatbot—it is a deeply orchestrated **multi-agent AI research system**. It leverages an array of specialized AI agents working concurrently to fetch, synthesize, analyze, and verify data. The final output is an exhaustive, beautifully formatted 4000-6000 word research report, equipped with a comprehensive fact-check and coding implementation (when applicable). 
+**ResAgent** is not just a chatbot—it is a deeply orchestrated **multi-agent AI research system**. It leverages an array of specialized AI agents working concurrently to fetch, synthesize, analyze, and verify data. The final output is an exhaustive, beautifully formatted **4000-6000 word research report**, equipped with a comprehensive fact-check and coding implementation (when applicable). 
 
-> **💡 Key Highlight:** ResAgent utilizes dynamic model routing, seamlessly falling back to high-capacity context models (up to **131,072 tokens**) if the primary endpoints encounter rate limits, ensuring uninterrupted massive report generation.
+> **💡 Key Highlight:** ResAgent utilizes **dynamic model routing**, seamlessly falling back to high-capacity context models (up to **131,072 tokens**) if the primary endpoints encounter rate limits. This guarantees uninterrupted, massive report generation under heavy loads.
 
 ---
 
 ## 🚀 Core Features Breakdown
 
-*   **🌐 Intelligent Retrieval**: Performs concurrent, heavily optimized web searches triggered by a dedicated Query Intelligence Agent rather than raw user input.
+*   **🌐 Intelligent Retrieval**: 
+    * Performs concurrent, heavily optimized web searches triggered by a dedicated Query Intelligence Agent rather than raw user input.
 *   **🤖 Specialized Fleet Operations**:
     *   **Query Intelligence**: Automatically expands simple queries into massive, multi-layered research directives.
-    *   **Deep Analysis**: Uses models like `NVIDIA/Nemotron-3-Super` to extract profound, non-obvious patterns from raw data.
+    *   **Deep Analysis**: Uses advanced reasoning models (e.g., `NVIDIA/Nemotron-3-Super`) to extract profound, non-obvious patterns from raw data.
     *   **Rigorous Fact-Checking**: Cross-references every retrieved claim, scoring reliability (0-100) and flagging potential contradictions.
     *   **Production-Grade Coding**: Analyzes architecture and generates edge-case-handled code via `Qwen-3-Coder` when the intent is coding.
     *   **Report Synthesis**: The master orchestrator (`MoonshotAI/Kimi-K2-Thinking`) compiles upstream data into a massive 6-8 chapter report.
-*   **📄 Multi-Modal Intake**: Unified file parsing supporting `PDF` (pdf.js), `DOCX` (mammoth), `CSV` (PapaParse), and `Images` (Tesseract.js OCR).
-*   **🌊 Dynamic SSE Streaming**: Highly optimized React frontend displaying real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the UI.
-*   **📊 Integrated Tool Modals**: Quick Search, Citation Graph, and Developer Profile easily accessible directly from the sidebar.
+*   **📄 Multi-Modal Intake**: 
+    * Unified file parsing supporting `PDF` (pdf.js), `DOCX` (mammoth), `CSV` (PapaParse), and `Images` (Tesseract.js OCR).
+*   **🌊 Dynamic SSE Streaming**: 
+    * Highly optimized React frontend displaying real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the UI.
+*   **📊 Integrated Tool Modals**: 
+    * **Quick Search**, **Citation Graph**, and **Developer Profile** easily accessible directly from the application's sidebar, providing an immersed UX.
 
 ---
 
@@ -93,8 +97,7 @@ graph TD
 
 ---
 
-<details>
-<summary><b>🛠️ Developer Stack & Dependencies (Click to Expand)</b></summary>
+## 🛠️ Developer Stack & Dependencies
 
 ### **Frontend & UI**
 *   **Framework**: Next.js 16.2.4 (App Router, Turbopack)
@@ -108,18 +111,11 @@ graph TD
 *   **Orchestration**: Custom asynchronous multi-agent pipeline (Node.js/Next.js API routes)
 *   **Primary AI Endpoints**: NVIDIA NIM (Integrate API)
 *   **Fallback AI Endpoints**: OpenRouter (Free tier models)
-*   **File Parsing**:
-    *   `pdfjs-dist` (PDF)
-    *   `mammoth` (Word/DOCX)
-    *   `papaparse` (CSV)
-    *   `tesseract.js` (Image OCR)
-
-</details>
+*   **File Parsing**: `pdfjs-dist` (PDF), `mammoth` (Word/DOCX), `papaparse` (CSV), `tesseract.js` (Image OCR)
 
 ---
 
-<details>
-<summary><b>⚙️ Configurations & Token Stats (Click to Expand)</b></summary>
+## ⚙️ Configurations & Token Stats
 
 The engine is heavily optimized to manage massive context windows without failing.
 
@@ -129,8 +125,6 @@ The engine is heavily optimized to manage massive context windows without failin
 | **Report Generation Budget** | `32,768 Tokens` | Ensures the Report Agent never truncates the final 6-page synthesis. |
 | **Agent Budget (Per Agent)** | `8,192 Tokens` | Strict budget enforcing deep, one-page minimal outputs per agent. |
 | **Fallback Race Timeout** | `60,000 ms` | Primary models are raced against fallbacks if slow, capping at 120s max. |
-
-</details>
 
 ---
 
@@ -181,6 +175,7 @@ research-agent/
 │   ├── response/          # React-Markdown Memoized rendering & sources UI
 │   ├── search/            # Quick Search and Citation Graph modal UIs
 │   └── layout/            # Sidebar and responsive navigation wrappers
+├── hooks/                 # Custom React hooks (use-cache, use-debounce, etc)
 ├── lib/
 │   ├── engine/            # The Core Brain
 │   │   ├── agents/        # System prompts and specific logic for all 6 agents
