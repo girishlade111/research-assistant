@@ -30,14 +30,14 @@ export function SourceCard({ source, index, onClick }: SourceCardProps) {
         {index + 1}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-foreground/85 group-hover:text-primary transition-colors">
+        <p className="truncate text-sm font-medium text-foreground group-hover:text-primary transition-colors">
           {source.title}
         </p>
-        <p className="mt-0.5 truncate text-xs text-muted-foreground/60">
+        <p className="mt-0.5 truncate text-xs text-muted-foreground">
           {source.snippet}
         </p>
       </div>
-      <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/30 transition-all group-hover:text-primary/60 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground transition-all group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
     </motion.button>
   );
 }

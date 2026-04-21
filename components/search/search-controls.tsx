@@ -46,7 +46,7 @@ export function SearchControls({
               "rounded-md px-3 py-1.5 text-xs font-semibold transition-all",
               mode === m.value
                 ? "bg-primary text-primary-foreground shadow-sm glow-sm"
-                : "text-muted-foreground/70 hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {m.label}
@@ -60,7 +60,7 @@ export function SearchControls({
       {/* Settings button */}
       <button
         onClick={() => setSettingsOpen(true)}
-        className="flex items-center gap-1.5 rounded-lg bg-accent/60 border border-border/40 px-3 py-1.5 text-xs font-medium text-muted-foreground/70 transition-all hover:text-foreground hover:border-border/60"
+        className="flex items-center gap-1.5 rounded-lg bg-accent/60 border border-border/40 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-all hover:text-foreground hover:border-border/60"
       >
         <Settings2 className="h-3 w-3" />
         Settings

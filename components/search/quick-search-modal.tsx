@@ -31,7 +31,7 @@ export function QuickSearchModal({ open, onOpenChange }: QuickSearchModalProps) 
         <div className="mt-4 space-y-6">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search className="h-5 w-5 text-muted-foreground/50" />
+              <Search className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
@@ -57,7 +57,7 @@ export function QuickSearchModal({ open, onOpenChange }: QuickSearchModalProps) 
                   <button key={i} className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-accent transition-colors group text-left">
                     <div className="flex items-center gap-3">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-foreground/90 group-hover:text-primary transition-colors">{query}</span>
+                      <span className="text-sm text-foreground group-hover:text-primary transition-colors">{query}</span>
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
@@ -76,7 +76,7 @@ export function QuickSearchModal({ open, onOpenChange }: QuickSearchModalProps) 
                     <div className="p-2 rounded-lg bg-primary/10">
                       <FileText className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-sm truncate font-medium text-foreground/80">{doc}</span>
+                    <span className="text-sm truncate font-medium text-foreground">{doc}</span>
                   </button>
                 ))}
               </div>

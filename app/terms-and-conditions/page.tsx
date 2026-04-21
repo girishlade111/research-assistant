@@ -35,7 +35,7 @@ export default function TermsAndConditions() {
               </div>
               <p className="text-sm m-0 font-medium bg-background px-3 py-1 rounded-full border border-border">Effective: <strong className="text-primary">April 2026</strong></p>
             </div>
-            <p className="text-base leading-relaxed text-foreground/80 m-0">
+            <p className="text-base leading-relaxed text-foreground m-0">
               These Enterprise Terms of Service ("Terms") constitute a legally binding Master Service Agreement between you (whether individually or representing an incorporated entity) and <strong className="text-foreground">ResAgent</strong>. By deploying, accessing, querying, or programmatically interacting with our AI research orchestration APIs and web interfaces, you explicitly acknowledge that you have read, understood, and agreed to be bound by these exhaustive terms without modification.
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function TermsAndConditions() {
               <strong className="text-destructive flex items-center gap-2 text-xl mb-4 pb-2 border-b border-destructive/20">
                 <AlertTriangle className="w-6 h-6"/> Strict Prohibitions & Acceptable Use Policy (AUP)
               </strong>
-              <p className="text-sm text-foreground/80 mb-4">Any violation of the following directives will result in immediate API key revocation and potential legal action:</p>
+              <p className="text-sm text-foreground mb-4">Any violation of the following directives will result in immediate API key revocation and potential legal action:</p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 list-none pl-0 m-0">
                 <li className="flex items-start gap-3 bg-background border border-destructive/10 p-3 rounded-lg">
                   <div className="mt-0.5 text-destructive">•</div>

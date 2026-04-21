@@ -102,7 +102,7 @@ const ResponseSectionItem = React.memo(function ResponseSectionItem({
 
       {/* Paragraph */}
       {section.type === "paragraph" && (
-        <div className="leading-[1.75] text-foreground/90 whitespace-pre-wrap">
+        <div className="leading-[1.75] text-foreground whitespace-pre-wrap">
           {renderContent(section.content)}
         </div>
       )}
@@ -123,8 +123,8 @@ const ResponseSectionItem = React.memo(function ResponseSectionItem({
                 isReferences
                   ? "font-mono text-xs text-muted-foreground"
                   : isAccentSection
-                    ? "text-foreground/90"
-                    : "text-foreground/80"
+                    ? "text-foreground"
+                    : "text-foreground"
               }`}
             >
               {!isReferences && (
@@ -222,12 +222,12 @@ function CodeBlock({ content }: { content: string }) {
     <div className="overflow-hidden rounded-xl border border-border/60 bg-[#171717]">
       {/* Header bar */}
       <div className="flex items-center justify-between border-b border-border/40 bg-accent/50 px-4 py-2">
-        <span className="font-mono text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+        <span className="font-mono text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
           {language || "code"}
         </span>
         <button
           onClick={handleCopy}
-          className="rounded-md px-2 py-0.5 text-[11px] font-medium text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
+          className="rounded-md px-2 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           Copy
         </button>

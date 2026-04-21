@@ -119,7 +119,7 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{link.name}</p>
                 </div>
-                <ExternalLink className="h-4 w-4 text-muted-foreground/50" />
+                <ExternalLink className="h-4 w-4 text-muted-foreground" />
               </a>
             ))}
           </div>
@@ -127,5 +127,4 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
       </DialogContent>
     </Dialog>
   );
-}
 }

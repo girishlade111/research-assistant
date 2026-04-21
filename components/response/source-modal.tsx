@@ -22,15 +22,15 @@ export function SourceModal({ source, open, onOpenChange }: SourceModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="border-border bg-card/95 backdrop-blur-2xl sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-lg leading-snug text-foreground/90">
+          <DialogTitle className="text-lg leading-snug text-foreground">
             {source.title}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <p className="text-sm leading-[1.75] text-muted-foreground/80">
+          <p className="text-sm leading-[1.75] text-muted-foreground">
             {source.snippet}
           </p>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="rounded-md bg-accent border border-border/50 px-2 py-0.5 font-mono text-[11px]">
               {source.domain}
             </span>

@@ -64,7 +64,7 @@ export function CitationGraphModal({ open, onOpenChange }: CitationGraphModalPro
               ].map((node, i) => (
                 <div key={i} className="absolute" style={{ top: node.top, left: node.left, animationDelay: node.delay }}>
                   <div className={`rounded-full bg-background border border-border/60 flex items-center justify-center shadow-sm hover:border-primary/50 transition-colors cursor-pointer ${node.size}`}>
-                    <span className="text-[10px] font-medium text-foreground/80">{node.label}</span>
+                    <span className="text-[10px] font-medium text-foreground">{node.label}</span>
                   </div>
                   {/* Connecting lines would typically be drawn with an SVG or Canvas here */}
                 </div>

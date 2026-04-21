@@ -121,7 +121,7 @@ export function SearchInput({
             className="flex flex-wrap gap-2 px-1"
           >
             {attachedFiles.map((file, i) => (
-              <div key={i} className="flex items-center gap-2 rounded-lg bg-accent/80 border border-border/50 px-3 py-1.5 text-xs font-medium text-foreground/80">
+              <div key={i} className="flex items-center gap-2 rounded-lg bg-accent/80 border border-border/50 px-3 py-1.5 text-xs font-medium text-foreground">
                 {getFileIcon(file.fileType)}
                 <span className="max-w-[150px] truncate">{file.fileName}</span>
                 <button
@@ -153,7 +153,7 @@ export function SearchInput({
           placeholder={dragActive ? "Drop files here..." : "Ask anything or drop files..."}
           rows={1}
           disabled={isLoading}
-          className="w-full resize-none bg-transparent px-10 py-3 pr-14 text-[15px] font-medium text-foreground/90 placeholder:text-muted-foreground/50 focus:outline-none disabled:opacity-60"
+          className="w-full resize-none bg-transparent px-10 py-3 pr-14 text-[15px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none disabled:opacity-60"
         />
         
         {/* Upload Button */}

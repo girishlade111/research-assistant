@@ -207,7 +207,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
       >
         <div className="flex items-start gap-3 max-w-[85%]">
           <div className="glass-card rounded-2xl px-5 py-3 border-shine">
-            <p className="text-foreground/90 text-[15px] whitespace-pre-wrap">{message.query}</p>
+            <p className="text-foreground text-[15px] whitespace-pre-wrap">{message.query}</p>
             {message.files && message.files.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {message.files.map((f, i) => (
@@ -286,7 +286,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
               animate={{ opacity: 1 }}
               className={`mt-3 rounded-2xl p-6 border-shine ${isSimpleChat ? "glass" : "glass-strong"}`}
             >
-              <div className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
+              <div className="whitespace-pre-wrap leading-[1.75] text-foreground">
                 {renderContent(message.streamingText)}
                 <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse bg-primary rounded-full" />
               </div>
@@ -311,7 +311,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
               animate={{ opacity: 1, y: 0 }}
               className="glass mt-3 rounded-2xl p-6 border-shine"
             >
-              <div className="whitespace-pre-wrap leading-[1.75] text-foreground/90">
+              <div className="whitespace-pre-wrap leading-[1.75] text-foreground">
                 {renderContent(message.fullResult.overview)}
               </div>
               <div className="mt-4 flex items-center gap-2 text-[11px] text-muted-foreground border-t border-border/50 pt-3">
@@ -319,7 +319,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
                   {message.fullResult.metadata.model.split("/").pop()}
                 </span>
                 {message.fullResult.metadata.durationMs > 0 && (
-                  <span className="text-muted-foreground/80">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s</span>
+                  <span className="text-muted-foreground">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s</span>
                 )}
               </div>
             </motion.div>
@@ -346,7 +346,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
                 {message.fullResult.metadata.model.split("/").pop()} ({message.fullResult.metadata.provider.toUpperCase()})
               </span>
               {message.fullResult.metadata.durationMs > 0 && (
-                <span className="text-muted-foreground/80">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s total</span>
+                <span className="text-muted-foreground">{(message.fullResult.metadata.durationMs / 1000).toFixed(1)}s total</span>
               )}
               <span className="rounded-md bg-primary/10 px-2 py-0.5 text-primary font-bold border border-primary/20">
                 {message.fullResult.metadata.intent}

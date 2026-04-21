@@ -226,11 +226,11 @@ export function AgentStatusPanel({ agents, className = "" }: AgentStatusPanelPro
               />
             ))}
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60">
+          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
             Agent Pipeline
           </span>
         </div>
-        <span className="text-[11px] font-mono text-muted-foreground/50">
+        <span className="text-[11px] font-mono text-muted-foreground">
           {totalActive > 0 ? `${doneCount}/${AGENT_ORDER.length}` : "..."}
         </span>
       </div>

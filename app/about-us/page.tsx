@@ -275,7 +275,7 @@ export default function AboutUs() {
                     <p className="text-base font-bold text-foreground group-hover:text-primary transition-colors">{link.name}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">Connect via {link.name}</p>
                   </div>
-                  <ExternalLink className="hidden sm:block h-5 w-5 text-muted-foreground/30 group-hover:text-foreground/70 transition-colors" />
+                  <ExternalLink className="hidden sm:block h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </a>
               ))}
             </div>
