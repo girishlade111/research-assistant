@@ -18,7 +18,7 @@ export const RETRY_CONFIG = {
 export const TOKEN_LIMITS = {
   contextWindow: 131072,
   maxResponseTokens: 32768,
-  agentMaxTokens: 8192,       // per-agent token budget — enough for 1+ page per agent
+  agentMaxTokens: 16384,      // per-agent token budget — enough for 1+ full page of detailed JSON output
   reportMaxTokens: 32768,     // report agent gets maximum budget for 5-6 page synthesis
   wordsToTokenRatio: 1.3,
 } as const;

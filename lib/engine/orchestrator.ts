@@ -276,9 +276,9 @@ export async function runResearch(
         return r;
       }));
 
-  const enhancedQuery = (queryResult as any).enhanced_query || query;
-  const subtopics = (queryResult as any).subtopics || [];
-  const searchTerms = (queryResult as any).search_terms || [];
+  const enhancedQuery = (queryResult as any).enhanced_query || queryResult.output?.enhanced_query || query;
+  const subtopics = (queryResult as any).subtopics || (queryResult.output?.subtopics as string[]) || [];
+  const searchTerms = (queryResult as any).search_terms || (queryResult.output?.search_terms as string[]) || [];
 
   // ═══════════════════════════════════════════════════════════
   // PHASE 1.5: Web Search (Second, using optimized terms)

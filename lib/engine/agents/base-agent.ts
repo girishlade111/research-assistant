@@ -3,9 +3,9 @@ import { generateAIResponse } from "../providers";
 import { classifyError } from "../errors";
 
 // ── Timeouts ──────────────────────────────────────────────────
-const PRIMARY_TIMEOUT_MS = 60_000;   // 60s per-model timeout (generous for NVIDIA)
-const FALLBACK_RACE_MS   = 30_000;   // start fallback after 30s if primary is still pending
-const REPORT_TIMEOUT_MS  = 120_000;  // report agent gets longer
+const PRIMARY_TIMEOUT_MS = 90_000;   // 90s per-model timeout (generous for large JSON generation)
+const FALLBACK_RACE_MS   = 45_000;   // start fallback after 45s if primary is still pending
+const REPORT_TIMEOUT_MS  = 180_000;  // report agent gets 3 min for 5-6 page synthesis
 
 // ── Base: Call LLM with race-based fallback ──────────────────
 // Strategy: fire primary immediately. After FALLBACK_RACE_MS, if
