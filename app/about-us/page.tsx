@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Users, Mail, Globe, ExternalLink, Code2 } from "lucide-react";
+import { ArrowLeft, Users, Mail, Globe, ExternalLink, Code2, BrainCircuit, Rocket, Target, Zap } from "lucide-react";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -73,71 +73,130 @@ const socialLinks = [
 export default function AboutUs() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl w-full space-y-8">
-        <div className="flex items-center gap-4 border-b border-border pb-6">
-          <Link href="/" className="p-2 rounded-full hover:bg-accent transition-colors">
+      <div className="max-w-4xl w-full space-y-12">
+        
+        {/* Header */}
+        <div className="flex flex-col items-center text-center space-y-4 pb-8 border-b border-border relative">
+          <Link href="/" className="absolute left-0 top-0 p-2 rounded-full hover:bg-accent transition-colors">
             <ArrowLeft className="w-6 h-6" />
           </Link>
-          <Users className="w-8 h-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold tracking-tight">About Us</h1>
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
+            <BrainCircuit className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-heading font-bold tracking-tight">The ResAgent Initiative</h1>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Pioneering the next generation of autonomous research orchestration. We build intelligent systems that accelerate human discovery.
+          </p>
         </div>
         
-        <div className="prose prose-invert max-w-none space-y-6 text-muted-foreground">
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">Who We Are</h2>
-            <p>
-              ResAgent is an advanced AI-powered research assistant designed to explore, analyze, and synthesize complex information across various domains. 
-              Our mission is to make high-quality research accessible, fast, and comprehensive for everyone.
+        {/* Core Pillars */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-accent/10 border border-border rounded-xl p-6 space-y-3">
+            <Target className="w-6 h-6 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">Mission</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              To democratize access to profound analytical capabilities by abstracting away the tedious mechanics of data gathering, source verification, and comprehensive synthesis.
             </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">Our Vision</h2>
-            <p>
-              We believe in the power of artificial intelligence to augment human intelligence. By automating the tedious parts of information gathering and fact-checking, 
-              we empower individuals and organizations to focus on what matters most: insights and innovation.
+          </div>
+          <div className="bg-accent/10 border border-border rounded-xl p-6 space-y-3">
+            <Rocket className="w-6 h-6 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">Innovation</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Utilizing a state-of-the-art multi-agent architecture, our platform breaks down complex queries into parallelized analytical streams, delivering enterprise-grade reports in seconds.
             </p>
-          </section>
+          </div>
+          <div className="bg-accent/10 border border-border rounded-xl p-6 space-y-3">
+            <Zap className="w-6 h-6 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">Performance</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Engineered for absolute speed and accuracy. By implementing intelligent edge-caching and optimized vector retrieval, we ensure zero friction between curiosity and knowledge.
+            </p>
+          </div>
+        </div>
 
-          <section className="space-y-6 pt-6">
-            <h2 className="text-xl font-semibold text-foreground">Connect with the Developer</h2>
-            <div className="bg-accent/30 rounded-2xl p-6 border border-border">
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/20">
-                  <span className="text-4xl font-heading font-bold text-primary">GL</span>
+        {/* The Architecture */}
+        <div className="prose prose-invert max-w-none space-y-6 text-muted-foreground pt-8 border-t border-border">
+          <h2 className="text-3xl font-semibold text-foreground">Enterprise-Grade Architecture</h2>
+          <p className="text-lg">
+            ResAgent is not just a chatbot; it is a distributed intelligence engine. Our platform employs a specialized cohort of AI agents, each trained for distinct cognitive operations:
+          </p>
+          <ul className="list-none space-y-4 pl-0 mt-6">
+            <li className="flex gap-4 p-4 rounded-lg border border-border/50 bg-background">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 font-bold border border-blue-500/20">1</div>
+              <div>
+                <strong className="text-foreground text-lg">Query Intelligence Router</strong>
+                <p className="text-sm mt-1 mb-0">Analyzes user intent, expands semantic search parameters, and formulates a multi-dimensional attack plan for research extraction.</p>
+              </div>
+            </li>
+            <li className="flex gap-4 p-4 rounded-lg border border-border/50 bg-background">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 font-bold border border-emerald-500/20">2</div>
+              <div>
+                <strong className="text-foreground text-lg">Parallel Web Extractors</strong>
+                <p className="text-sm mt-1 mb-0">High-concurrency scrapers that bypass superficial SEO content to retrieve peer-reviewed journals, technical documentation, and authoritative data.</p>
+              </div>
+            </li>
+            <li className="flex gap-4 p-4 rounded-lg border border-border/50 bg-background">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 font-bold border border-amber-500/20">3</div>
+              <div>
+                <strong className="text-foreground text-lg">Fact-Check & Synthesis Agents</strong>
+                <p className="text-sm mt-1 mb-0">Rigorous cross-referencing agents that identify contradictions across sources, ultimately compiling a coherent, heavily cited final report.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        {/* Developer Section */}
+        <section className="space-y-6 pt-12 border-t border-border">
+          <div className="flex items-center gap-3 mb-6">
+            <Users className="w-6 h-6 text-primary" />
+            <h2 className="text-3xl font-semibold text-foreground m-0">Leadership & Development</h2>
+          </div>
+          
+          <div className="bg-gradient-to-br from-accent/30 to-background rounded-2xl p-8 border border-border shadow-lg">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-primary/10 border-4 border-primary/20 shadow-inner">
+                  <span className="text-5xl font-heading font-bold text-primary">GL</span>
                 </div>
-                
-                <div className="text-center sm:text-left space-y-2 flex-1">
-                  <h3 className="text-2xl font-medium text-foreground">Girish Lade</h3>
-                  <p className="text-sm text-muted-foreground">Full Stack Developer & Creator of ResAgent</p>
-                  <p className="text-sm text-muted-foreground pt-2">
-                    Passionate about building AI-powered applications that solve real-world problems.
-                  </p>
+                <div className="text-center md:hidden">
+                  <h3 className="text-2xl font-bold text-foreground">Girish Lade</h3>
+                  <p className="text-sm text-primary font-medium tracking-wide uppercase mt-1">Creator & Lead Architect</p>
                 </div>
               </div>
-
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-8">
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-3 rounded-xl border p-3 transition-all hover:scale-[1.02] ${link.border} bg-background hover:${link.bg}`}
-                  >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${link.bg} ${link.color}`}>
-                      <link.icon className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground">{link.name}</p>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-muted-foreground/50" />
-                  </a>
-                ))}
+              
+              <div className="flex-1 space-y-4 text-center md:text-left">
+                <div className="hidden md:block">
+                  <h3 className="text-3xl font-bold text-foreground">Girish Lade</h3>
+                  <p className="text-sm text-primary font-medium tracking-wide uppercase mt-1">Creator & Lead Architect</p>
+                </div>
+                <p className="text-muted-foreground leading-relaxed text-base">
+                  As a Full Stack Developer specializing in AI integrations and scalable web architectures, Girish built ResAgent to bridge the gap between raw data and actionable insight. His work focuses on optimizing LLM orchestration loops and creating intuitive, high-performance user interfaces.
+                </p>
               </div>
             </div>
-          </section>
-        </div>
+
+            <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 pt-10">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center justify-center sm:justify-start gap-3 rounded-xl border p-3.5 transition-all duration-200 hover:-translate-y-1 ${link.border} bg-background hover:${link.bg} group`}
+                >
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${link.bg} ${link.color} group-hover:scale-110 transition-transform`}>
+                    <link.icon className="h-5 w-5" />
+                  </div>
+                  <div className="hidden sm:block flex-1">
+                    <p className="text-sm font-semibold text-foreground">{link.name}</p>
+                  </div>
+                  <ExternalLink className="hidden sm:block h-4 w-4 text-muted-foreground/30 group-hover:text-foreground/70 transition-colors" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );

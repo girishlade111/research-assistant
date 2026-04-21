@@ -1,47 +1,117 @@
 import Link from "next/link";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText, Scale, AlertTriangle, Copyright, ScrollText, Bot, ShieldAlert } from "lucide-react";
 
 export default function TermsAndConditions() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl w-full space-y-8">
+      <div className="max-w-4xl w-full space-y-8">
         <div className="flex items-center gap-4 border-b border-border pb-6">
           <Link href="/" className="p-2 rounded-full hover:bg-accent transition-colors">
             <ArrowLeft className="w-6 h-6" />
           </Link>
-          <FileText className="w-8 h-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold tracking-tight">Terms and Conditions</h1>
+          <Scale className="w-8 h-8 text-primary" />
+          <h1 className="text-3xl sm:text-4xl font-heading font-bold tracking-tight">Enterprise Terms of Service</h1>
         </div>
         
-        <div className="prose prose-invert max-w-none space-y-6 text-muted-foreground">
-          <p className="text-lg">Last updated: April 2026</p>
-          
+        <div className="prose prose-invert max-w-none space-y-8 text-muted-foreground pb-12">
+          <div className="bg-accent/20 border border-border rounded-xl p-6 mb-8">
+            <p className="text-sm m-0 font-medium text-foreground">Effective Date: <span className="text-primary">April 2026</span></p>
+            <p className="text-sm m-0 mt-2">
+              These Enterprise Terms of Service ("Terms") constitute a legally binding agreement between you (whether individually or on behalf of an entity) and <strong>ResAgent</strong>. By deploying, accessing, or programmatically interacting with our AI research orchestration platform, you acknowledge that you have read, understood, and agree to be bound by these exhaustive terms.
+            </p>
+          </div>
+
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">1. Agreement to Terms</h2>
-            <p>By viewing or using this Website, which can be accessed at ResAgent, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
+            <div className="flex items-center gap-3">
+              <ScrollText className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-foreground m-0">1. Platform Licensing & Access Modalities</h2>
+            </div>
+            <p>Subject to your continuous compliance with these Terms, ResAgent grants you a revocable, non-exclusive, non-transferable, limited license to access and utilize the platform strictly for your internal business, research, or academic operations.</p>
+            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 mt-4">
+              <strong className="text-destructive flex items-center gap-2 mb-2">
+                <AlertTriangle className="w-4 h-4"/> Strict Prohibitions
+              </strong>
+              <ul className="list-disc pl-5 m-0 space-y-1 text-sm text-destructive/90">
+                <li>Reverse engineering, decompiling, or disassembling the proprietary agent orchestration algorithms.</li>
+                <li>Utilizing platform outputs to train, fine-tune, or calibrate competing foundational models or AI agents.</li>
+                <li>Executing automated denial-of-service, load-testing, or adversarial prompt-injection attacks against our endpoints.</li>
+                <li>Leasing, sublicensing, or commercially reselling direct API access to the ResAgent orchestrator without an explicit Reseller Agreement.</li>
+              </ul>
+            </div>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">2. Use License</h2>
-            <p>Permission is granted to temporarily download one copy of the materials on ResAgent's Website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>modify or copy the materials;</li>
-              <li>use the materials for any commercial purpose or for any public display;</li>
-              <li>attempt to reverse engineer any software contained on ResAgent's Website;</li>
-              <li>remove any copyright or other proprietary notations from the materials; or</li>
-              <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
+            <div className="flex items-center gap-3">
+              <Bot className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-foreground m-0">2. Artificial Intelligence Output Disclaimer</h2>
+            </div>
+            <p>ResAgent operates via complex, non-deterministic large language models (LLMs) and real-time web retrieval systems. You expressly understand and agree that:</p>
+            <ul className="list-none space-y-3 pl-0">
+              <li className="flex gap-3">
+                <div className="mt-1 h-5 w-5 flex items-center justify-center rounded bg-primary/20 text-primary font-bold text-xs shrink-0">A</div>
+                <div>
+                  <strong className="text-foreground">Probability of Hallucination:</strong> 
+                  <span className="block text-sm mt-1">AI-generated content may contain factual inaccuracies, logical inconsistencies, or "hallucinations." The platform is designed to augment human intelligence, not replace human verification.</span>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <div className="mt-1 h-5 w-5 flex items-center justify-center rounded bg-primary/20 text-primary font-bold text-xs shrink-0">B</div>
+                <div>
+                  <strong className="text-foreground">Absence of Professional Advice:</strong> 
+                  <span className="block text-sm mt-1">No output generated by ResAgent should be construed as definitive medical, legal, financial, or engineering advice. You must consult certified professionals before acting on critical AI-synthesized research.</span>
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <div className="mt-1 h-5 w-5 flex items-center justify-center rounded bg-primary/20 text-primary font-bold text-xs shrink-0">C</div>
+                <div>
+                  <strong className="text-foreground">Mandatory Human-in-the-Loop (HITL):</strong> 
+                  <span className="block text-sm mt-1">You hold sole liability and responsibility for reviewing, fact-checking, and validating all synthesized reports, code snippets, and data aggregations before internal or external publication.</span>
+                </div>
+              </li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">3. Disclaimer</h2>
-            <p>All the materials on ResAgent's Website are provided "as is". ResAgent makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, ResAgent does not make any representations concerning the accuracy or reliability of the use of the materials on its Website or otherwise relating to such materials or any sites linked to this Website.</p>
-            <p>The AI-generated research outputs should be fact-checked and verified independently. We are not responsible for any inaccuracies in the AI-generated reports.</p>
+            <div className="flex items-center gap-3">
+              <Copyright className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-foreground m-0">3. Intellectual Property Rights</h2>
+            </div>
+            <p>
+              <strong>Platform IP:</strong> The ResAgent application, including its UI/UX, multi-agent orchestration logic, source code, and underlying architecture, is the exclusive property of ResAgent and its creator.
+            </p>
+            <p>
+              <strong>User Content & Outputs:</strong> You retain ownership of the original prompts and queries you submit. ResAgent claims no copyright over the generated output provided to you, allowing you to use, publish, and distribute the research outputs as you see fit, provided you adhere to the Acceptable Use Policy.
+            </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">4. Limitations</h2>
-            <p>ResAgent or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on ResAgent's Website, even if ResAgent or an authorize representative of this Website has been notified, orally or written, of the possibility of such damage.</p>
+            <div className="flex items-center gap-3">
+              <ShieldAlert className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-foreground m-0">4. Limitation of Liability & Indemnification</h2>
+            </div>
+            <p>
+              TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL RESAGENT, ITS FOUNDERS, OR ITS SUPPLIERS BE LIABLE FOR ANY INDIRECT, PUNITIVE, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING WITHOUT LIMITATION DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR RELATING TO THE USE OF, OR INABILITY TO USE, THIS SERVICE.
+            </p>
+            <p>
+              You agree to defend, indemnify, and hold harmless ResAgent and its affiliates from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating to your violation of these Terms or your use of the Platform.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-center gap-3">
+              <FileText className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-semibold text-foreground m-0">5. Termination & Suspension</h2>
+            </div>
+            <p>We reserve the unilateral right to immediately suspend or terminate your access to ResAgent without prior notice or liability if you breach these Terms, engage in fraudulent or illegal activities, or utilize the platform in a manner that degrades the system's performance for other enterprise tenants.</p>
+          </section>
+
+          <section className="space-y-4 pt-6 border-t border-border">
+            <h2 className="text-xl font-semibold text-foreground">Legal Correspondence</h2>
+            <p>
+              For legal notices, breach reports, or questions regarding these Terms, please contact our legal counsel at:
+              <br /><br />
+              <a href="mailto:admin@ladestack.in" className="text-primary hover:underline font-medium">admin@ladestack.in</a>
+            </p>
           </section>
         </div>
       </div>
