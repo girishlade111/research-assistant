@@ -1,39 +1,81 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with subtle metallic depth -->
   <defs>
-    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#141414"/>
-      <stop offset="100%" stop-color="#0C0C0C"/>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512">
+      <stop offset="0%" stop-color="#131313"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
     </linearGradient>
-    <linearGradient id="chrome-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="coreGrad" x1="180" y1="120" x2="330" y2="390">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="50%" stop-color="#E0E0E0"/>
-      <stop offset="100%" stop-color="#A0A0A0"/>
+      <stop offset="100%" stop-color="#B8B8B8"/>
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="15" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <linearGradient id="ringGrad" x1="80" y1="80" x2="430" y2="430">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D4D4D4"/>
+    </linearGradient>
+    <filter id="coreGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
 
-  <rect width="512" height="512" rx="102" fill="url(#bg-grad)"/>
-  <rect x="2" y="2" width="508" height="508" rx="100" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+  <!-- Base rounded square -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  <rect x="2" y="2" width="508" height="508" rx="110" stroke="white" stroke-opacity="0.07" stroke-width="4"/>
 
-  <!-- Enterprise Orchestrator Core -->
-  <path d="M256 128L366.8 192V320L256 384L145.2 320V192L256 128Z" fill="url(#chrome-grad)" filter="url(#glow)"/>
-  
-  <!-- Internal Structural Detail -->
-  <path d="M256 176L325.2 216V296L256 336L186.8 296V216L256 176Z" fill="#0C0C0C"/>
-  <circle cx="256" cy="256" r="32" fill="url(#chrome-grad)"/>
-  <circle cx="256" cy="256" r="12" fill="#0C0C0C"/>
+  <!-- Outer orbital ring -->
+  <circle cx="256" cy="256" r="168" stroke="url(#ringGrad)" stroke-width="2.5" fill="none"/>
 
-  <!-- Agent Network Nodes (Sub-Agents) -->
-  <circle cx="256" cy="96" r="24" fill="white" fill-opacity="0.8"/>
-  <circle cx="422.3" cy="352" r="24" fill="white" fill-opacity="0.8"/>
-  <circle cx="89.7" cy="352" r="24" fill="white" fill-opacity="0.8"/>
+  <!-- Secondary orbital ring (subtle) -->
+  <circle cx="256" cy="256" r="130" stroke="white" stroke-opacity="0.06" stroke-width="1.5" fill="none"/>
 
-  <!-- Connection Lines -->
-  <line x1="256" y1="128" x2="256" y2="96" stroke="white" stroke-width="4" stroke-opacity="0.4" stroke-dasharray="8 8"/>
-  <line x1="366.8" y1="320" x2="422.3" y2="352" stroke="white" stroke-width="4" stroke-opacity="0.4" stroke-dasharray="8 8"/>
-  <line x1="145.2" y1="320" x2="89.7" y2="352" stroke="white" stroke-width="4" stroke-opacity="0.4" stroke-dasharray="8 8"/>
+  <!-- Outer hexagonal core -->
+  <path d="M256 120L373.5 180V300L256 360L138.5 300V180L256 120Z"
+        fill="url(#coreGrad)" fill-opacity="0.1"
+        stroke="white" stroke-opacity="0.5" stroke-width="2"/>
+
+  <!-- Inner hexagonal detail -->
+  <path d="M256 168L320 205V279L256 316L192 279V205L256 168Z"
+        fill="url(#coreGrad)" fill-opacity="0.05"
+        stroke="white" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Connection lines from core to agent nodes -->
+  <line x1="256" y1="200" x2="256" y2="105" stroke="white" stroke-opacity="0.3" stroke-width="2.5"/>
+  <line x1="290" y1="268" x2="378" y2="318" stroke="white" stroke-opacity="0.3" stroke-width="2.5"/>
+  <line x1="222" y1="268" x2="134" y2="318" stroke="white" stroke-opacity="0.3" stroke-width="2.5"/>
+
+  <!-- Central AI core (eye) -->
+  <circle cx="256" cy="240" r="36" fill="url(#nodeGrad)" filter="url(#coreGlow)"/>
+  <circle cx="256" cy="240" r="18" fill="#0C0C0C"/>
+  <circle cx="256" cy="240" r="8" fill="white" fill-opacity="0.9"/>
+  <circle cx="250" cy="235" r="3" fill="white" fill-opacity="0.5"/>
+
+  <!-- Agent node - Top (Researcher) -->
+  <circle cx="256" cy="88" r="28" fill="url(#nodeGrad)" fill-opacity="0.92" filter="url(#nodeGlow)"/>
+  <circle cx="256" cy="88" r="13" fill="#0C0C0C"/>
+  <circle cx="256" cy="88" r="5" fill="white" fill-opacity="0.85"/>
+
+  <!-- Agent node - Bottom Right (Analyzer) -->
+  <circle cx="402" cy="332" r="28" fill="url(#nodeGrad)" fill-opacity="0.92" filter="url(#nodeGlow)"/>
+  <circle cx="402" cy="332" r="13" fill="#0C0C0C"/>
+  <circle cx="402" cy="332" r="5" fill="white" fill-opacity="0.85"/>
+
+  <!-- Agent node - Bottom Left (Synthesizer) -->
+  <circle cx="110" cy="332" r="28" fill="url(#nodeGrad)" fill-opacity="0.92" filter="url(#nodeGlow)"/>
+  <circle cx="110" cy="332" r="13" fill="#0C0C0C"/>
+  <circle cx="110" cy="332" r="5" fill="white" fill-opacity="0.85"/>
+
+  <!-- Dashed research ring (magnifying glass hint) -->
+  <circle cx="256" cy="240" r="88" stroke="white" stroke-opacity="0.1" stroke-width="1.5" fill="none" stroke-dasharray="8 6"/>
+
+  <!-- Magnifying glass handle accent -->
+  <line x1="318" y1="305" x2="360" y2="348" stroke="white" stroke-opacity="0.18" stroke-width="4" stroke-linecap="round"/>
 </svg>
