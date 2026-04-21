@@ -58,51 +58,74 @@ The final output is an exhaustive, beautifully formatted **4000-6000 word resear
 The system operates on an advanced asynchronous state machine. It forces extensive query analysis *before* execution to eliminate hallucinatory drift and ensure maximum research depth.
 
 ```mermaid
-graph TD
-    classDef user fill:#2d3748,stroke:#4a5568,color:#fff;
-    classDef router fill:#805ad5,stroke:#553c9a,color:#fff;
-    classDef agent fill:#319795,stroke:#44337a,color:#fff;
-    classDef search fill:#38a169,stroke:#276749,color:#fff;
-    classDef report fill:#dd6b20,stroke:#9b2c2c,color:#fff;
-    classDef ui fill:#000000,stroke:#2d3748,color:#fff,stroke-width:2px;
+flowchart TB
+    classDef user fill:#0f172a,stroke:#334155,stroke-width:2px,color:#f8fafc,rx:5,ry:5;
+    classDef router fill:#4c1d95,stroke:#5b21b6,stroke-width:2px,color:#f8fafc,rx:5,ry:5;
+    classDef agent fill:#0f766e,stroke:#115e59,stroke-width:2px,color:#f8fafc,rx:5,ry:5;
+    classDef search fill:#166534,stroke:#14532d,stroke-width:2px,color:#f8fafc,rx:5,ry:5;
+    classDef report fill:#9a3412,stroke:#7c2d12,stroke-width:2px,color:#f8fafc,rx:5,ry:5;
+    classDef ui fill:#020617,stroke:#1e293b,stroke-width:2px,color:#38bdf8,rx:5,ry:5;
+    classDef fallback fill:#86198f,stroke:#581c87,stroke-width:2px,color:#f8fafc,stroke-dasharray: 5 5;
 
-    A([User Query + Files]):::user --> B{Intent Router & Cache Check}:::router
+    A(["🧑‍💻 User Query + Documents"]):::user --> B{"🧠 Intent Router & Cache Check"}:::router
     
-    B -->|Direct Match| C[Simple Chat Interface]:::ui
-    B -->|Deep Research Mode| D[Multi-Agent Orchestrator]:::router
+    B -->|"Direct Match (Cache/Simple)"| C["💬 Simple Chat Interface"]:::ui
+    B -->|"Deep Research Mode"| D["⚙️ Multi-Agent Orchestrator"]:::router
     
-    subgraph "Phase 1: Intelligence Generation"
-        D --> E[Query Intelligence Agent]:::agent
-        E -->|Expands Context| F([Enhanced Research Blueprint])
+    subgraph Phase1 ["Phase 1: Intelligence Generation"]
+        direction TB
+        D --> E["🕵️ Query Intelligence Agent"]:::agent
+        E -->|"Expands & Structurizes"| F(["📋 Enhanced Research Blueprint"]):::user
     end
     
-    subgraph "Phase 2: Data Aggregation"
-        F --> G[Web Search Agent]:::search
-        G -->|Concurrent Perplexity/LLM Search| H([Web Sources Aggregator])
-        A -->|OCR/WASM Parsing| I([Local File Context])
+    subgraph Phase2 ["Phase 2: Aggregation & Context Building"]
+        direction LR
+        F --> G["🌐 Web Search Agent"]:::search
+        G -->|"Perplexity / LLM Search"| H(["🕸️ Web Sources Aggregator"]):::user
+        A -.->|"OCR / WASM Parsing"| I(["📄 Local File Context"]):::user
     end
     
-    subgraph "Phase 3: Parallel Synthesis & Verification"
-        H & I --> J[Analysis Agent]:::agent
-        H & I --> K[Summary Agent]:::agent
-        H & I --> L[Fact-Check Agent]:::agent
-        H & I --> M[Coding Agent]:::agent
+    Phase1 --> Phase2
+    
+    subgraph Phase3 ["Phase 3: Parallel Synthesis & Verification"]
+        direction TB
+        H & I --> J["🔍 Analysis Agent"]:::agent
+        H & I --> K["📝 Summary Agent"]:::agent
+        H & I --> L["✅ Fact-Check Agent"]:::agent
+        H & I --> M["💻 Coding Agent"]:::agent
+        
+        J & K & L & M -.->|"Timeout > 60s"| Z{"🔄 Fallback Race Condition"}:::fallback
+        Z -.->|"OpenRouter Backup"| J & K & L & M
     end
     
-    subgraph "Phase 4: Massive Report Generation"
-        J & K & L & M --> N[Report Synthesis Agent]:::report
-        N -->|Compiles 5-6 Pages| O([Final JSON Structure])
+    Phase2 --> Phase3
+    
+    subgraph Phase4 ["Phase 4: Massive Report Generation"]
+        direction TB
+        J & K & L & M --> N["✍️ Report Synthesis Agent"]:::report
+        N -->|"Compiles 5-6 Pages"| O(["📑 Final JSON Structure"]):::user
     end
     
-    O --> P["React Server-Sent Events (SSE) Stream"]:::ui
-    P --> Q["Progressive Markdown UI Reveal"]:::ui
+    Phase3 --> Phase4
+    
+    O --> P["📡 React Server-Sent Events (SSE) Stream"]:::ui
+    P --> Q["✨ Progressive Markdown UI Reveal"]:::ui
 ```
 
-### **The Execution Loop**
-1. **Blueprint Generation**: The *Query Intelligence Agent* breaks the query into 8-12 self-contained research vectors.
-2. **Parallel Processing**: The *Summary*, *Analysis*, *Fact-Check*, and *Coding* agents run simultaneously. Each agent has an isolated `8192` token budget to generate at least one full page of deeply reasoned content.
-3. **Fallback Race Condition**: If a primary NVIDIA NIM model fails to respond within 60 seconds, the orchestrator triggers an OpenRouter fallback model concurrently, accepting whichever finishes first.
-4. **Final Synthesis**: The *Report Agent* absorbs all upstream data (utilizing a massive `32,768` token budget) to draft a 4000-6000 word, highly sectioned master document.
+### **The Orchestration Execution Loop**
+
+The orchestrator guarantees performance and quality through a strict multi-phase pipeline:
+
+1. **Phase 1: Blueprint Generation**  
+   Instead of feeding the raw query to search engines, the **Query Intelligence Agent** deconstructs it. It identifies missing context, required technical depth, and breaks the query into 8-12 self-contained, highly specific research vectors.
+2. **Phase 2: Data Aggregation**  
+   The vectors are fired concurrently into the **Web Search Agent** (utilizing tools like Perplexity or direct LLM search) while local uploaded documents are parsed into pure text strings using WebAssembly (WASM) and OCR. The results are merged into an enormous temporary context pool.
+3. **Phase 3: Parallel Processing & Verification**  
+   The *Summary*, *Analysis*, *Fact-Check*, and *Coding* agents are spawned simultaneously, each fed the aggregated context. 
+    *   **Resource Allocation**: Each agent operates in its own isolated thread with an `8192` token output budget.
+    *   **Fallback Race Condition**: To prevent stalling, the orchestrator sets a hard 60-second timeout. If a primary NVIDIA NIM model (e.g., `Llama-3-70B`) is hanging, it concurrently fires a request to an OpenRouter fallback model. Whichever model completes first is accepted, guaranteeing extreme fault tolerance under heavy loads.
+4. **Phase 4: Final Synthesis**  
+   Once all parallel agents resolve, their massive outputs are stitched together and fed to the **Report Agent** (with an enormous `32,768` token budget). This master agent writes the final 4000-6000 word, highly-sectioned, beautifully formatted master document. The result is streamed to the user via SSE.
 
 ---
 
