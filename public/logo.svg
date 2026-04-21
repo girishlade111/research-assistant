@@ -1,30 +1,43 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="metallic-base" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2A2A2A"/>
-      <stop offset="50%" stop-color="#0C0C0C"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F0F0F"/>
       <stop offset="100%" stop-color="#000000"/>
     </linearGradient>
-    <linearGradient id="metallic-edge" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#404040"/>
-      <stop offset="50%" stop-color="#1A1A1A"/>
-      <stop offset="100%" stop-color="#606060"/>
-    </linearGradient>
-    <linearGradient id="chrome-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="50%" stop-color="#A0A0A0"/>
-      <stop offset="100%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#888888"/>
     </linearGradient>
   </defs>
-  
-  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#metallic-base)"/>
-  
-  <g transform="translate(158, 158) scale(0.8)">
-    <path d="M40 240 V0 H140 C190 0 220 30 220 80 C220 120 195 145 160 155 L225 240 H165 L110 160 H85 V240 H40 Z" fill="url(#chrome-highlight)"/>
-    <circle cx="40" cy="240" r="16" fill="#FFFFFF"/>
-    <circle cx="40" cy="0" r="16" fill="#FFFFFF"/>
-    <circle cx="225" cy="240" r="16" fill="#FFFFFF"/>
-    <circle cx="140" cy="0" r="16" fill="#FFFFFF"/>
-    <circle cx="220" cy="80" r="16" fill="#FFFFFF"/>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="2" y="2" width="508" height="508" rx="110" fill="none" stroke="#222222" stroke-width="4"/>
+
+  <!-- Orbital Ring -->
+  <circle cx="256" cy="256" r="144" fill="none" stroke="#2A2A2A" stroke-width="4" stroke-dasharray="12 12"/>
+
+  <!-- Connections -->
+  <line x1="256" y1="184" x2="256" y2="144" stroke="#888888" stroke-width="8" stroke-linecap="round"/>
+  <line x1="318" y1="292" x2="353" y2="312" stroke="#888888" stroke-width="8" stroke-linecap="round"/>
+  <line x1="194" y1="292" x2="159" y2="312" stroke="#888888" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Orchestrator Core (Center) -->
+  <g transform="rotate(45 256 256)">
+    <rect x="200" y="200" width="112" height="112" rx="28" fill="url(#metal)"/>
+    <rect x="224" y="224" width="64" height="64" rx="16" fill="#0A0A0A"/>
+    <circle cx="256" cy="256" r="12" fill="#FFFFFF"/>
   </g>
+
+  <!-- Agent 1: Top -->
+  <circle cx="256" cy="112" r="36" fill="url(#metal)"/>
+  <circle cx="256" cy="112" r="14" fill="#0A0A0A"/>
+
+  <!-- Agent 2: Bottom Right -->
+  <circle cx="380" cy="328" r="36" fill="url(#metal)"/>
+  <circle cx="380" cy="328" r="14" fill="#0A0A0A"/>
+
+  <!-- Agent 3: Bottom Left -->
+  <circle cx="132" cy="328" r="36" fill="url(#metal)"/>
+  <circle cx="132" cy="328" r="14" fill="#0A0A0A"/>
+
 </svg>
