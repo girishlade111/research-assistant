@@ -9,7 +9,6 @@ import {
   Search,
   GitBranch,
   Plus,
-  Sparkles,
   X,
   Menu,
   Trash2,
@@ -83,8 +82,8 @@ export function Sidebar({
       {/* Logo */}
       <div className="mb-7 flex items-center justify-between px-2">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 border border-primary/20">
-            <Sparkles className="h-4 w-4 text-primary" />
+          <div className="flex h-8 w-8 items-center justify-center overflow-hidden">
+            <img src="/logo.svg" alt="ResAgent Logo" className="h-8 w-8 object-contain" />
           </div>
           <span className="text-xl font-heading tracking-tight text-foreground">
             Research Agent

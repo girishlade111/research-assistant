@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Database, FileText, Globe, User, Sparkles } from "lucide-react";
+import { Database, FileText, Globe, User } from "lucide-react";
 import { Sidebar, MobileMenuButton } from "@/components/layout/sidebar";
 import { SearchInput } from "@/components/search/search-input";
 import { SearchControls } from "@/components/search/search-controls";
@@ -239,8 +239,8 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
       className="mt-4 md:mt-6"
     >
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 mt-1 h-7 w-7 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
+        <div className="flex-shrink-0 mt-1 h-7 w-7 flex items-center justify-center overflow-hidden">
+          <img src="/logo.svg" alt="ResAgent" className="h-7 w-7 object-contain" />
         </div>
         <div className="flex-1 min-w-0">
           {/* Routing badge */}
