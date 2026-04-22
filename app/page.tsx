@@ -738,11 +738,37 @@ export default function HomePage() {
     }
   }, [query, workflowMode, mode, selectedModel, isAnyLoading, messages, getCached, setCached, getHistory, disabledAgents, updateLastAssistant, revealSections]);
 
+  // ── Mobile Viewport Fix ──────────────────────────────────────
+  const [viewportBottom, setViewportBottom] = useState(0);
+
+  useEffect(() => {
+    if (!window.visualViewport) return;
+
+    const handleResize = () => {
+      const vv = window.visualViewport;
+      if (!vv) return;
+      const offset = window.innerHeight - vv.height;
+      setViewportBottom(offset > 0 ? offset : 0);
+    };
+
+    window.visualViewport.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("scroll", handleResize);
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener("scroll", handleResize);
+    };
+  }, []);
+
   // ── Export Handler ───────────────────────────────────────────
   const handleExport = useCallback(
-    (result: ResearchResult, format: "md" | "pdf" | "txt") => {
-      const markdown = toExportMarkdown(result);
+    async (result: ResearchResult, format: "md" | "pdf" | "txt") => {
+      if (format === "pdf") {
+        const { exportToPdf } = await import("@/lib/export-pdf");
+        await exportToPdf(result);
+        return;
+      }
 
+      const markdown = toExportMarkdown(result);
       const text =
         format === "txt"
           ? markdown
@@ -759,7 +785,7 @@ export default function HomePage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `research-report.${format === "pdf" ? "md" : format}`;
+      a.download = `research-report.${format}`;
       a.click();
       URL.revokeObjectURL(url);
     },
@@ -818,10 +844,11 @@ export default function HomePage() {
 
         {/* Unified sleek floating bottom search bar OR centered hero bar */}
         <div
+          style={{ bottom: showHero ? 0 : `${viewportBottom}px` }}
           className={
             showHero
-              ? "absolute inset-0 z-30 flex flex-col items-center md:pt-[22vh] pt-[18vh] pointer-events-none px-4"
-              : "absolute inset-x-0 bottom-0 z-30 flex justify-center pb-6 pt-10 pointer-events-none"
+              ? "absolute inset-0 z-30 flex flex-col items-center md:pt-[22vh] pt-[18vh] pointer-events-none px-4 transition-all duration-300"
+              : "absolute inset-x-0 z-30 flex justify-center pb-6 pt-10 pointer-events-none transition-all duration-300"
           }
         >
           {/* Fading gradient background for text readability only when sticky bottom */}

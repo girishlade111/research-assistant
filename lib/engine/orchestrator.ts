@@ -431,7 +431,8 @@ export async function runResearch(
       codingOutput: codingResult.output,
       sources,
     },
-    apiKeys
+    apiKeys,
+    onChunk
   ).then(r => {
     emit({
       agent: "report-agent",
