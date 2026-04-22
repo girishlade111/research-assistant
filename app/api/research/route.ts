@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { runResearch, runSimpleChat } from "@/lib/engine/orchestrator";
 import { classifyQuery } from "@/lib/engine/query-router";
 import { classifyError, userFacingMessage } from "@/lib/engine/errors";
+import { detectPlanningTransition, runPlanningChat } from "@/lib/engine/planning-workflow";
 import type {
   ResearchRequest,
   ResearchApiResponse,
@@ -44,8 +45,48 @@ function streamingResponse(
       }
 
       try {
+        const workflowMode = body.workflowMode ?? "research";
+        let forceResearch = workflowMode === "research";
+
         // ── Step 1: Fast classification + early start ────────────
         send("status", { phase: "routing", message: "Analyzing your query..." });
+        send("workflow_mode", { mode: workflowMode, autoSwitched: false });
+
+        if (workflowMode === "planning") {
+          const transition = await detectPlanningTransition(
+            query,
+            apiKeys,
+            body.conversationHistory
+          );
+
+          if (!transition.shouldBeginResearch) {
+            send("route_decision", { complexity: "simple", reason: `Planning mode: ${transition.reason}` });
+            send("status", { phase: "planning", message: "Building a research plan..." });
+
+            const result = await runPlanningChat(
+              query,
+              apiKeys,
+              body.conversationHistory,
+              (chunk, done) => {
+                if (chunk) send("token", { text: chunk });
+                if (done) send("status", { phase: "done", message: "" });
+              }
+            );
+
+            send("result", result);
+            send("done", {});
+            return;
+          }
+
+          send("workflow_mode", {
+            mode: "research",
+            autoSwitched: true,
+            reason: transition.reason,
+            confidence: transition.confidence,
+          });
+          send("status", { phase: "transition", message: "Planning complete. Starting research..." });
+          forceResearch = true;
+        }
 
         // Force-simple if all agents disabled
         if (body.disabledAgents?.length === 6) {
@@ -66,7 +107,9 @@ function streamingResponse(
           return;
         }
 
-        const { complexity, reason } = await classifyQuery(query, apiKeys);
+        const { complexity, reason } = forceResearch
+          ? { complexity: "research" as const, reason: "Research workflow active" }
+          : await classifyQuery(query, apiKeys);
         send("route_decision", { complexity, reason });
 
         // ── Step 2a: SIMPLE → direct chat response ─────────────
@@ -94,6 +137,7 @@ function streamingResponse(
           query,
           {
             mode: body.mode ?? "pro",
+            workflowMode,
             userModelId: body.model,
             maxSources: 8,
             files: body.files,
@@ -183,10 +227,30 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json({ success: true, data: result } satisfies ResearchApiResponse);
     }
 
+    const workflowMode = body.workflowMode ?? "research";
+
+    if (workflowMode === "planning") {
+      const transition = await detectPlanningTransition(
+        body.query.trim(),
+        apiKeys,
+        body.conversationHistory
+      );
+
+      if (!transition.shouldBeginResearch) {
+        const result = await runPlanningChat(
+          body.query.trim(),
+          apiKeys,
+          body.conversationHistory
+        );
+        return NextResponse.json({ success: true, data: result } satisfies ResearchApiResponse);
+      }
+    }
+
     // Non-streaming mode — always use research for simplicity
     const result = await runResearch(
       body.query.trim(),
       {
+        workflowMode,
         mode: body.mode ?? "pro",
         userModelId: body.model,
         maxSources: 8,

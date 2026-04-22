@@ -89,7 +89,6 @@ function buildOverview(args: AssembleArgs): string {
   const summary = asObject(args.summaryResult.output);
   const analysis = asObject(args.analysisResult.output);
   const fact = asObject(args.factCheckResult.output);
-  const query = asObject(args.queryResult.output);
 
   const keyPoints = takeFirst(asStringArray(summary.key_points), 6);
   const quickFacts = takeFirst(asStringArray(summary.quick_facts), 6);

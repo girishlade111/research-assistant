@@ -23,6 +23,8 @@ import type {
   AgentStatusEvent,
   LLMMessage,
   ChatMessage,
+  WorkflowMode,
+  SearchMode,
 } from "@/lib/engine/types";
 import { ParsedFile } from "@/lib/engine/file-parser";
 
@@ -45,6 +47,13 @@ interface RouteDecision {
   reason: string;
 }
 
+interface WorkflowModeEvent {
+  mode: WorkflowMode;
+  autoSwitched?: boolean;
+  reason?: string;
+  confidence?: number;
+}
+
 // ── SSE Stream Reader ──────────────────────────────────────────
 
 async function readStream(
@@ -57,6 +66,7 @@ async function readStream(
     onDone: () => void;
     onAgentStatus: (event: AgentStatusEvent) => void;
     onRouteDecision: (decision: RouteDecision) => void;
+    onWorkflowMode: (event: WorkflowModeEvent) => void;
   }
 ) {
   const reader = response.body?.getReader();
@@ -103,6 +113,9 @@ async function readStream(
                 break;
               case "route_decision":
                 callbacks.onRouteDecision(parsed as RouteDecision);
+                break;
+              case "workflow_mode":
+                callbacks.onWorkflowMode(parsed as WorkflowModeEvent);
                 break;
             }
           } catch {
@@ -397,7 +410,8 @@ export default function HomePage() {
 
   // ── Search State ─────────────────────────────────────────────
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<"pro" | "deep" | "corpus">("pro");
+  const [workflowMode, setWorkflowMode] = useState<WorkflowMode>("research");
+  const [mode, setMode] = useState<SearchMode>("pro");
   const [selectedModel, setSelectedModel] = useState("balanced-1");
   const [disabledAgents, setDisabledAgents] = useState<AgentName[]>([]);
 
@@ -465,10 +479,11 @@ export default function HomePage() {
     setSidebarView("home");
   }, []);
 
-  const handleSelectHistory = useCallback((historyQuery: string, historyMode: string) => {
+  const handleSelectHistory = useCallback((historyQuery: string, historyWorkflowMode: WorkflowMode, historyMode: SearchMode) => {
     setMessages([]);
     setQuery(historyQuery);
-    setMode(historyMode as "pro" | "deep" | "corpus");
+    setWorkflowMode(historyWorkflowMode);
+    setMode(historyMode);
     setSidebarView("home");
   }, []);
 
@@ -535,7 +550,7 @@ export default function HomePage() {
     const conversationHistory = toConversationHistory(messages);
 
     // ── Check Cache First ──────────────────────────────────
-    const cached = getCached(currentQuery, mode, selectedModel);
+    const cached = getCached(currentQuery, workflowMode, mode, selectedModel);
     if (cached && files.length === 0) {
       const allSections = toResponseSections(cached);
       const assistantMsg = createAssistantMessage({
@@ -543,7 +558,12 @@ export default function HomePage() {
         isLoading: false,
         isStreaming: true,
         statusMessage: null,
-        routeComplexity: cached.agentResults && cached.agentResults.length > 0 ? "research" : "simple",
+        routeComplexity:
+          cached.metadata.workflowMode === "research" &&
+          cached.agentResults &&
+          cached.agentResults.length > 0
+            ? "research"
+            : "simple",
         agentStatuses: cached.metadata.agentTrace
           ? Object.fromEntries(
               cached.metadata.agentTrace.map((t) => [
@@ -585,6 +605,7 @@ export default function HomePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: currentQuery,
+          workflowMode,
           mode,
           model: selectedModel,
           stream: true,
@@ -603,14 +624,22 @@ export default function HomePage() {
         if (!data.success || !responseData) throw new Error(data.error ?? "Request failed");
 
         const allSections = toResponseSections(responseData);
-        setCached(currentQuery, mode, selectedModel, responseData);
+        setCached(currentQuery, workflowMode, mode, selectedModel, responseData);
         updateLastAssistant(() => ({
           fullResult: responseData,
           isLoading: false,
           isStreaming: true,
           statusMessage: null,
-          routeComplexity: responseData.agentResults && responseData.agentResults.length > 0 ? "research" : "simple",
+          routeComplexity:
+            responseData.metadata.workflowMode === "research" &&
+            responseData.agentResults &&
+            responseData.agentResults.length > 0
+              ? "research"
+              : "simple",
         }));
+        if (responseData.metadata.workflowMode) {
+          setWorkflowMode(responseData.metadata.workflowMode);
+        }
         revealSections(allSections, responseData.sources);
         setHistory(getHistory());
         return;
@@ -630,6 +659,17 @@ export default function HomePage() {
             statusMessage: complexity === "research" ? "Launching research agents..." : "Generating response...",
           }));
         },
+        onWorkflowMode: ({ mode: nextWorkflowMode, autoSwitched }) => {
+          setWorkflowMode(nextWorkflowMode);
+          updateLastAssistant(() => ({
+            statusMessage:
+              autoSwitched && nextWorkflowMode === "research"
+                ? "Detected research intent. Switching to Research Mode..."
+                : nextWorkflowMode === "planning"
+                  ? "Planning workflow active..."
+                  : undefined,
+          }));
+        },
         onStatus: (_phase, message) => {
           if (message) {
             updateLastAssistant(() => ({ statusMessage: message }));
@@ -643,13 +683,16 @@ export default function HomePage() {
         },
         onResult: (result) => {
           const allSections = toResponseSections(result);
-          setCached(currentQuery, mode, selectedModel, result);
+          setCached(currentQuery, result.metadata.workflowMode ?? workflowMode, mode, selectedModel, result);
           updateLastAssistant(() => ({
             streamingText: "",
             fullResult: result,
             sections: allSections,
             sources: result.sources,
           }));
+          if (result.metadata.workflowMode) {
+            setWorkflowMode(result.metadata.workflowMode);
+          }
           setHistory(getHistory());
         },
         onError: (message) => {
@@ -693,7 +736,7 @@ export default function HomePage() {
         error: err instanceof Error ? err.message : "Something went wrong",
       }));
     }
-  }, [query, mode, selectedModel, isAnyLoading, messages, getCached, setCached, getHistory, disabledAgents, updateLastAssistant, revealSections]);
+  }, [query, workflowMode, mode, selectedModel, isAnyLoading, messages, getCached, setCached, getHistory, disabledAgents, updateLastAssistant, revealSections]);
 
   // ── Export Handler ───────────────────────────────────────────
   const handleExport = useCallback(
@@ -815,9 +858,12 @@ export default function HomePage() {
                 onChange={setQuery}
                 onSubmit={handleSubmit}
                 isLoading={!!isAnyLoading}
+                workflowMode={workflowMode}
               />
               <div className="mt-3 flex justify-between items-center ml-1">
                 <SearchControls
+                  workflowMode={workflowMode}
+                  onWorkflowModeChange={setWorkflowMode}
                   mode={mode}
                   onModeChange={setMode}
                   selectedModel={selectedModel}

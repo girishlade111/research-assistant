@@ -30,7 +30,7 @@ interface SidebarProps {
   isMobile: boolean;
   onNewThread: () => void;
   history: HistoryEntry[];
-  onSelectHistory: (query: string, mode: string) => void;
+  onSelectHistory: (query: string, workflowMode: "planning" | "research", mode: "pro" | "deep" | "corpus") => void;
   onClearHistory: () => void;
   activeView: "home" | "history";
   onViewChange: (view: "home" | "history") => void;
@@ -154,7 +154,7 @@ export function Sidebar({
                 <button
                   key={entry.id}
                   onClick={() => {
-                    onSelectHistory(entry.query, entry.mode);
+                    onSelectHistory(entry.query, entry.workflowMode, entry.mode);
                     if (isMobile) onClose();
                   }}
                   className="flex w-full flex-col items-start rounded-lg px-3 py-2 text-left transition-all hover:bg-accent/50 group"
@@ -163,7 +163,7 @@ export function Sidebar({
                     {entry.query}
                   </span>
                   <span className="mt-0.5 text-[10px] text-muted-foreground">
-                    {formatTimeAgo(entry.timestamp)} · {entry.mode}
+                    {formatTimeAgo(entry.timestamp)} · {entry.workflowMode === "planning" ? "Planning" : `Research / ${entry.mode}`}
                   </span>
                 </button>
               ))}

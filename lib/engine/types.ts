@@ -1,6 +1,7 @@
 // ── Intent & Mode ──────────────────────────────────────────────
 
 export type SearchMode = "pro" | "deep" | "corpus";
+export type WorkflowMode = "planning" | "research";
 
 export type IntentType =
   | "coding"
@@ -203,6 +204,8 @@ export interface ResearchResult {
     provider: string;
     searchProvider: string;
     intent: IntentType;
+    workflowMode?: WorkflowMode;
+    switchedFromPlanning?: boolean;
     tokensUsed: number;
     durationMs: number;
     isFallback?: boolean;
@@ -213,6 +216,7 @@ export interface ResearchResult {
 // ── Orchestrator ───────────────────────────────────────────────
 
 export interface ResearchOptions {
+  workflowMode?: WorkflowMode;
   mode: SearchMode;
   userModelId?: string;
   maxSources?: number;
@@ -230,6 +234,7 @@ export type AgentStatusCallback = (event: AgentStatusEvent) => void;
 
 export interface ResearchRequest {
   query: string;
+  workflowMode?: WorkflowMode;
   mode: SearchMode;
   model?: string;
   stream?: boolean;

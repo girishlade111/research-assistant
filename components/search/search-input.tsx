@@ -10,6 +10,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   onSubmit: (files: ParsedFile[]) => void;
   isLoading: boolean;
+  workflowMode?: "planning" | "research";
 }
 
 export function SearchInput({
@@ -17,6 +18,7 @@ export function SearchInput({
   onChange,
   onSubmit,
   isLoading,
+  workflowMode = "research",
 }: SearchInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,6 +111,15 @@ export function SearchInput({
     return <File className="h-3 w-3" />;
   };
 
+  const placeholder =
+    workflowMode === "planning"
+      ? dragActive
+        ? "Drop files here..."
+        : "Describe the topic, goals, and constraints you want to plan..."
+      : dragActive
+        ? "Drop files here..."
+        : "Ask anything or drop files...";
+
   return (
     <div className="w-full space-y-2">
       {/* File Previews */}
@@ -150,7 +161,7 @@ export function SearchInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={dragActive ? "Drop files here..." : "Ask anything or drop files..."}
+          placeholder={placeholder}
           rows={1}
           disabled={isLoading}
           className="w-full resize-none bg-transparent px-10 py-3 pr-14 text-[15px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none disabled:opacity-60"
