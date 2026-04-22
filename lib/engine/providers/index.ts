@@ -13,6 +13,7 @@ export interface GenerateAIResponseArgs {
   maxTokens?: number;
   temperature?: number;
   timeoutMs?: number;
+  jsonMode?: boolean;
 }
 
 export async function generateAIResponse({
@@ -25,6 +26,7 @@ export async function generateAIResponse({
   maxTokens,
   temperature,
   timeoutMs,
+  jsonMode,
 }: GenerateAIResponseArgs): Promise<LLMResponse> {
   const options = {
     model,
@@ -33,6 +35,7 @@ export async function generateAIResponse({
     temperature: temperature ?? 0.3,
     stream,
     timeoutMs,
+    jsonMode,
   };
 
   if (provider === "nvidia") {

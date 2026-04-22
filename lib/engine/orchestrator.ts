@@ -18,6 +18,7 @@ import { classifyError } from "./errors";
 import { generateAIResponse } from "./providers";
 import { nvidiaComplete } from "./providers/nvidia";
 import { openrouterComplete } from "./providers/openrouter";
+import { buildAssembledResearchResult, shouldUseAssembledReport } from "./report-assembler";
 
 // ── Agent imports ──────────────────────────────────────────────
 import { runWebSearchAgent } from "./agents/web-search-agent";
@@ -467,47 +468,56 @@ export async function runResearch(
     isFallback: r.isFallback,
   }));
 
-  // Code section from coding agent
-  const codingOutput = codingResult.output as Record<string, unknown>;
-  const codeBlock = codingOutput.code
-    ? `\`\`\`${String(codingOutput.language ?? "")}\n${String(codingOutput.code)}\n\`\`\`\n\n${String(codingOutput.explanation ?? "")}`
-    : undefined;
-
-  // Fact-check summary
-  const factOutput = factCheckResult.output as Record<string, unknown>;
-  const contradictions = (factOutput.contradictions as string[] | undefined) ?? [];
-  const factCheckSummary = factOutput.fact_check_summary
-    ? `**Reliability: ${String(factOutput.reliability_label ?? "Unknown")} (${String(factOutput.reliability_score ?? 0)}%)**\n\n${String(factOutput.fact_check_summary)}\n\n${contradictions.length > 0 ? `⚠️ Contradictions found:\n${contradictions.map(c => `- ${c}`).join("\n")}` : ""}`
-    : undefined;
-
   const totalDuration = Date.now() - startTime;
+
+  const finalMetadata: ResearchResult["metadata"] = {
+    model: reportResult.model_used,
+    provider: reportResult.provider,
+    searchProvider: (searchResult.provider as string) || "nvidia",
+    intent,
+    tokensUsed: 0,
+    durationMs: totalDuration,
+    isFallback: reportResult.isFallback,
+    agentTrace,
+  };
+
+  const assembledResult = buildAssembledResearchResult(
+    {
+      context: agentContext,
+      sources,
+      searchResults: webResults,
+      queryResult,
+      searchResult,
+      analysisResult,
+      summaryResult,
+      factCheckResult,
+      codingResult,
+      reportResult,
+    },
+    finalMetadata
+  );
+
+  const shouldAssemble = shouldUseAssembledReport(reportOutput);
 
   if (onChunk) {
     onChunk("", true);
   }
 
+  if (shouldAssemble) {
+    return assembledResult;
+  }
+
   return {
-    overview: String(reportOutput.overview ?? summaryResult.output.overview ?? ""),
-    keyInsights: (reportOutput.key_insights as string[] | undefined) ?? (summaryResult.output.key_points as string[] | undefined) ?? [],
-    details: String(reportOutput.details ?? analysisResult.output.analysis ?? ""),
-    comparison: String(reportOutput.comparison ?? analysisResult.output.comparison ?? ""),
-    expertInsights: (reportOutput.expert_insights as string[] | undefined) ?? [],
-    conclusion: String(reportOutput.conclusion ?? ""),
-    code: codeBlock,
-    factCheck: factCheckSummary,
-    sources,
-    references: sources,
+    ...assembledResult,
+    overview: String(reportOutput.overview ?? assembledResult.overview),
+    keyInsights: (reportOutput.key_insights as string[] | undefined) ?? assembledResult.keyInsights,
+    details: String(reportOutput.details ?? assembledResult.details),
+    comparison: String(reportOutput.comparison ?? assembledResult.comparison),
+    expertInsights: (reportOutput.expert_insights as string[] | undefined) ?? assembledResult.expertInsights,
+    conclusion: String(reportOutput.conclusion ?? assembledResult.conclusion),
+    factCheck: String(reportOutput.fact_check_summary ?? assembledResult.factCheck ?? ""),
+    metadata: finalMetadata,
     agentResults: allAgentResults,
-    metadata: {
-      model: reportResult.model_used,
-      provider: reportResult.provider,
-      searchProvider: (searchResult.provider as string) || "nvidia",
-      intent,
-      tokensUsed: 0,
-      durationMs: totalDuration,
-      isFallback: reportResult.isFallback,
-      agentTrace,
-    },
   };
 }
 

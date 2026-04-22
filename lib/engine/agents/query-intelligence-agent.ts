@@ -1,4 +1,4 @@
-import type { ApiKeys, AgentResult, AgentContext } from "../types";
+import type { ApiKeys, AgentResult } from "../types";
 import { selectModel } from "../model-router";
 import { callWithFallback, safeParseJSON } from "./base-agent";
 import { TOKEN_LIMITS } from "../config";
@@ -126,7 +126,8 @@ Return ONLY valid JSON.`,
       chain.fallbacks[0],
       messages,
       TOKEN_LIMITS.agentMaxTokens,
-      apiKeys
+      apiKeys,
+      { jsonMode: true }
     );
 
     const parsed = safeParseJSON(result.content);

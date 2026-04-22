@@ -142,7 +142,8 @@ Return ONLY valid JSON.`,
       chain.fallbacks[0],
       messages,
       TOKEN_LIMITS.agentMaxTokens * 2, // coding gets double tokens
-      apiKeys
+      apiKeys,
+      { jsonMode: true }
     );
 
     const parsed = safeParseJSON(result.content);

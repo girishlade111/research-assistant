@@ -19,7 +19,7 @@ export async function callWithFallback(
   messages: LLMMessage[],
   maxTokens: number,
   apiKeys: ApiKeys,
-  opts?: { temperature?: number }
+  opts?: { temperature?: number; jsonMode?: boolean }
 ): Promise<{ content: string; model_used: string; provider: string; isFallback: boolean }> {
 
   const isReport = agent === "report-agent";
@@ -35,6 +35,7 @@ export async function callWithFallback(
       maxTokens,
       temperature: opts?.temperature ?? 0.3,
       timeoutMs: overrideTimeout ?? timeoutMs,
+      jsonMode: opts?.jsonMode,
     });
 
   // Keep a reference to the primary call so we can await it even after race timeout
@@ -122,13 +123,30 @@ export function skippedResult(agent: AgentName): AgentResult {
 // ── Safe JSON parse ────────────────────────────────────────────
 
 export function safeParseJSON(raw: string): Record<string, unknown> | null {
+  const trimmed = raw.trim();
+
   // Direct parse
-  try { return JSON.parse(raw); } catch { /* continue */ }
+  try { return JSON.parse(trimmed); } catch { /* continue */ }
+
+  const normalized = trimmed
+    .replace(/^\uFEFF/, "")
+    .replace(/,\s*([}\]])/g, "$1");
+
+  try { return JSON.parse(normalized); } catch { /* continue */ }
+
   // Fence extraction
-  const fence = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const fence = normalized.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (fence) { try { return JSON.parse(fence[1]); } catch { /* continue */ } }
   // First brace block
-  const brace = raw.match(/\{[\s\S]*\}/);
+  const brace = normalized.match(/\{[\s\S]*\}/);
   if (brace) { try { return JSON.parse(brace[0]); } catch { /* continue */ } }
+
+  const first = normalized.indexOf("{");
+  const last = normalized.lastIndexOf("}");
+  if (first !== -1 && last > first) {
+    const candidate = normalized.slice(first, last + 1);
+    try { return JSON.parse(candidate); } catch { /* continue */ }
+  }
+
   return null;
 }
