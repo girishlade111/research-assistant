@@ -1,14 +1,8 @@
 import { jsPDF } from "jspdf";
-import { toExportMarkdown } from "./engine/response-normalizer";
 import type { ResearchResult } from "./engine/types";
 
 /**
  * Generates a PDF from a ResearchResult using jsPDF.
- * Since we don't have a full HTML-to-PDF renderer easily available in this environment,
- * we'll create a well-formatted text-based PDF or use a hidden DOM element with html2canvas/jspdf.
- * 
- * For simplicity and reliability in this setup, we'll use a high-quality text-based approach
- * that mimics the report structure.
  */
 export async function exportToPdf(result: ResearchResult) {
   const doc = new jsPDF({
@@ -118,7 +112,7 @@ export async function exportToPdf(result: ResearchResult) {
   }
 
   // ── Footer ───────────────────────────────────────────────────
-  const pageCount = (doc as any).internal.getNumberOfPages();
+  const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);

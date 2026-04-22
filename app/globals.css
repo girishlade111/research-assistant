@@ -132,7 +132,9 @@
   .mobile-padding {
     @apply px-4 md:px-6 lg:px-8;
   }
-...
+}
+
+@layer utilities {
   /* ── Glass Effects ─────────────────────────────────────────── */
   .glass {
     @apply bg-[var(--glass)] border border-[var(--glass-border)] backdrop-blur-xl;
