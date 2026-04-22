@@ -105,7 +105,9 @@ function buildOverview(args: AssembleArgs): string {
     joinBullets(quickFacts.length > 0 ? quickFacts : verifiedClaims),
     buildMethodology(args.context, args.sources),
     "### Reliability & Confidence Statement",
-    `The current reliability signal from the fact-check stage is **${String(fact.reliability_label ?? "Unknown")}** with a score of **${String(fact.reliability_score ?? 0)} / 100**. The strongest support generally comes from the most concrete retrieved sources and any repeated patterns across agent outputs. The main caveats are:\n${joinBullets(caveats)}`,
+    Number(fact.reliability_score) === -1
+      ? `The fact-check stage was **unavailable** for this run, so no independent reliability score could be assigned. Readers should treat all claims as unverified and apply their own judgment. The main caveats are:\n${joinBullets(caveats)}`
+      : `The current reliability signal from the fact-check stage is **${String(fact.reliability_label ?? "Unknown")}** with a score of **${String(fact.reliability_score ?? 0)} / 100**. The strongest support generally comes from the most concrete retrieved sources and any repeated patterns across agent outputs. The main caveats are:\n${joinBullets(caveats)}`,
   ].join("\n\n");
 }
 
@@ -260,7 +262,9 @@ function buildConclusion(args: AssembleArgs): string {
     `2. Resolve the remaining contradictions captured by the fact-check stage before treating contested claims as settled.`,
     `3. Expand the evidence base with more primary sources, official documentation, or user-provided files where possible.`,
     "### Final Assessment",
-    `The current evidence supports a report-level judgment of **${String(fact.reliability_label ?? "Unknown")} reliability** with a score of **${String(fact.reliability_score ?? 0)} / 100**. The strongest findings are the ones repeated across the summary, analysis, and fact-check stages; the weakest findings are those that rely on sparse sourcing or unresolved contradictions.`,
+    Number(fact.reliability_score) === -1
+      ? `The fact-check stage was unavailable for this run, so no formal reliability score could be assigned. The strongest findings are the ones repeated across the summary and analysis stages; all claims should be treated as unverified until independently confirmed.`
+      : `The current evidence supports a report-level judgment of **${String(fact.reliability_label ?? "Unknown")} reliability** with a score of **${String(fact.reliability_score ?? 0)} / 100**. The strongest findings are the ones repeated across the summary, analysis, and fact-check stages; the weakest findings are those that rely on sparse sourcing or unresolved contradictions.`,
   ].join("\n\n");
 }
 
@@ -269,8 +273,12 @@ function buildFactCheckSummary(args: AssembleArgs): string {
   const contradictions = takeFirst(asStringArray(fact.contradictions), 3);
   const warnings = takeFirst(asStringArray(fact.warnings), 4);
 
+  const scoreDisplay = Number(fact.reliability_score) === -1
+    ? "**Reliability: Unavailable** (fact-check agent did not complete)"
+    : `**Reliability: ${String(fact.reliability_label ?? "Unknown")} (${String(fact.reliability_score ?? 0)} / 100)**`;
+
   return [
-    `**Reliability: ${String(fact.reliability_label ?? "Unknown")} (${String(fact.reliability_score ?? 0)} / 100)**`,
+    scoreDisplay,
     asString(fact.fact_check_summary) || "The fact-check stage returned limited narrative output, so this condensed section emphasizes the structured reliability signals that were available.",
     contradictions.length > 0 ? `**Contradictions**\n${joinBullets(contradictions)}` : "",
     warnings.length > 0 ? `**Warnings**\n${joinBullets(warnings)}` : "",

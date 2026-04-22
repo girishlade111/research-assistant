@@ -142,14 +142,25 @@ Return ONLY valid JSON.`,
 
     const parsed = safeParseJSON(result.content);
 
-    return {
-      agent: "summary-agent",
-      output: parsed ?? {
-        overview: result.content.slice(0, 500),
-        key_points: [],
+    // When JSON parse fails, preserve full content and extract structure from raw text
+    const fallbackOutput = parsed ?? (() => {
+      const raw = result.content;
+      const bulletLines = raw.split("\n")
+        .filter(line => /^\s*[-*]\s+/.test(line))
+        .map(line => line.replace(/^\s*[-*]\s+/, "").trim())
+        .filter(Boolean)
+        .slice(0, 12);
+      return {
+        overview: raw,
+        key_points: bulletLines,
         quick_facts: [],
         action_items: [],
-      },
+      };
+    })();
+
+    return {
+      agent: "summary-agent",
+      output: fallbackOutput,
       model_used: result.model_used,
       provider: result.provider,
       durationMs: Date.now() - start,

@@ -81,9 +81,10 @@ export async function callWithFallback(
       try {
         const winner = await Promise.any([primaryWrapped, fallbackWrapped]);
         return winner;
-      } catch {
-        // Both rejected — this is the AggregateError case
-        throw new Error(`[${agent}] Both primary and fallback failed after race`);
+      } catch (aggErr) {
+        const errors = aggErr instanceof AggregateError ? aggErr.errors : [aggErr];
+        const messages = errors.map((e: unknown) => e instanceof Error ? e.message : String(e)).join("; ");
+        throw new Error(`[${agent}] Both primary (${primary.id}) and fallback (${fallback.id}) failed after race: ${messages}`);
       }
     }
 
@@ -143,8 +144,9 @@ export function safeParseJSON(raw: string): Record<string, unknown> | null {
 
   const first = normalized.indexOf("{");
   const last = normalized.lastIndexOf("}");
-  if (first !== -1 && last > first) {
-    const candidate = normalized.slice(first, last + 1);
+  if (first !== -1 && last > first && (last - first) < 100_000) {
+    const candidate = normalized.slice(first, last + 1)
+      .replace(/,\s*([}\]])/g, "$1");
     try { return JSON.parse(candidate); } catch { /* continue */ }
   }
 

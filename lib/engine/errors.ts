@@ -31,6 +31,7 @@ function isRetryable(kind: ErrorKind, statusCode?: number): boolean {
   if (kind === "rate_limit") return true;
   if (kind === "network") return true;
   if (kind === "provider_down") return true;
+  if (kind === "parse_error") return true;
   if (statusCode && statusCode >= 500) return true;
   return false;
 }
@@ -67,6 +68,12 @@ export function classifyError(error: unknown, provider?: string): ResearchError 
       return new ResearchError("Provider temporarily unavailable", "provider_down", {
         provider,
       });
+    }
+    if (msg.includes("context length") || msg.includes("max_tokens") || msg.includes("token limit") || msg.includes("too many tokens")) {
+      return new ResearchError("Context window exceeded — try a shorter query", "token_exceeded", { provider });
+    }
+    if (msg.includes("invalid json") || msg.includes("unexpected token") || (msg.includes("json") && msg.includes("parse"))) {
+      return new ResearchError("Failed to parse model response", "parse_error", { provider });
     }
     return new ResearchError(error.message, "unknown", { provider });
   }
