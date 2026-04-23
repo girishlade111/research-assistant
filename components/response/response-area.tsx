@@ -32,8 +32,9 @@ function extractCodeBlock(content: string): { language: string; code: string } {
 }
 
 import ReactMarkdown, { Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-// ── Helper to render text with markdown links, bold, and italic text ──────────
+// ── Markdown component overrides (GitHub README–style) ──────────
 
 const markdownComponents: Components = {
   p: ({ node: _, ...props }) => <span className="block mb-2 last:mb-0" {...props} />,
@@ -61,12 +62,86 @@ const markdownComponents: Components = {
   ),
   li: ({ node: _, ...props }) => (
     <li {...props} className="" />
-  )
+  ),
+  h1: ({ node: _, ...props }) => (
+    <h1 {...props} className="text-2xl font-bold text-foreground mt-6 mb-3 pb-2 border-b border-border/40" />
+  ),
+  h2: ({ node: _, ...props }) => (
+    <h2 {...props} className="text-xl font-semibold text-foreground mt-5 mb-2 pb-1.5 border-b border-border/30" />
+  ),
+  h3: ({ node: _, ...props }) => (
+    <h3 {...props} className="text-lg font-semibold text-foreground mt-4 mb-2" />
+  ),
+  h4: ({ node: _, ...props }) => (
+    <h4 {...props} className="text-base font-semibold text-foreground mt-3 mb-1.5" />
+  ),
+  h5: ({ node: _, ...props }) => (
+    <h5 {...props} className="text-sm font-semibold text-foreground mt-3 mb-1" />
+  ),
+  h6: ({ node: _, ...props }) => (
+    <h6 {...props} className="text-sm font-medium text-muted-foreground mt-2 mb-1" />
+  ),
+  blockquote: ({ node: _, ...props }) => (
+    <blockquote {...props} className="border-l-3 border-primary/40 pl-4 my-3 text-muted-foreground italic" />
+  ),
+  hr: ({ node: _, ...props }) => (
+    <hr {...props} className="my-4 border-border/40" />
+  ),
+  code: ({ node: _, className, children, ...props }) => {
+    const isInline = !className;
+    if (isInline) {
+      return (
+        <code {...props} className="rounded bg-accent/80 px-1.5 py-0.5 text-[13px] font-mono text-secondary">
+          {children}
+        </code>
+      );
+    }
+    const language = className?.replace("language-", "") || "text";
+    return (
+      <div className="my-3 overflow-hidden rounded-xl border border-border/60 bg-[#111111]">
+        <div className="flex items-center justify-between border-b border-border/40 bg-accent/50 px-4 py-2">
+          <span className="font-mono text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+            {language}
+          </span>
+        </div>
+        <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
+          <code className="text-secondary font-mono">{children}</code>
+        </pre>
+      </div>
+    );
+  },
+  pre: ({ node: _, children, ...props }) => <>{children}</>,
+  table: ({ node: _, ...props }) => (
+    <div className="my-3 overflow-x-auto rounded-lg border border-border/40">
+      <table {...props} className="w-full text-sm" />
+    </div>
+  ),
+  thead: ({ node: _, ...props }) => (
+    <thead {...props} className="bg-accent/40 text-left" />
+  ),
+  tbody: ({ node: _, ...props }) => (
+    <tbody {...props} className="divide-y divide-border/30" />
+  ),
+  tr: ({ node: _, ...props }) => (
+    <tr {...props} className="transition-colors hover:bg-accent/20" />
+  ),
+  th: ({ node: _, ...props }) => (
+    <th {...props} className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground" />
+  ),
+  td: ({ node: _, ...props }) => (
+    <td {...props} className="px-3 py-2 text-foreground" />
+  ),
+  del: ({ node: _, ...props }) => (
+    <del {...props} className="text-muted-foreground line-through" />
+  ),
+  input: ({ node: _, ...props }) => (
+    <input {...props} disabled className="mr-1.5 accent-primary" />
+  ),
 };
 
 export function renderContent(text: string) {
   if (!text) return text;
-  return <ReactMarkdown components={markdownComponents}>{text}</ReactMarkdown>;
+  return <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{text}</ReactMarkdown>;
 }
 
 const ResponseSectionItem = React.memo(function ResponseSectionItem({ 
@@ -102,7 +177,7 @@ const ResponseSectionItem = React.memo(function ResponseSectionItem({
 
       {/* Paragraph */}
       {section.type === "paragraph" && (
-        <div className="leading-[1.75] text-foreground whitespace-pre-wrap">
+        <div className="leading-[1.75] text-foreground markdown-content">
           {renderContent(section.content)}
         </div>
       )}
@@ -268,9 +343,9 @@ function FactCheckBlock({ content }: { content: string }) {
           <span>Contradictions detected</span>
         </div>
       )}
-      <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-        {content}
-      </p>
+      <div className="text-sm leading-relaxed text-foreground">
+        {renderContent(content)}
+      </div>
     </div>
   );
 }

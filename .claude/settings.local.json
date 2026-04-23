@@ -16,7 +16,9 @@
       "Bash(curl -s -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"hello\",\"mode\":\"pro\",\"stream\":false}')",
       "Bash(curl -s --max-time 20 -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"hi\",\"mode\":\"pro\",\"stream\":true}')",
       "Bash(curl -s --max-time 15 -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"explain quantum computing\",\"mode\":\"pro\",\"stream\":true}')",
-      "Bash(curl -s --max-time 10 -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"hello\",\"mode\":\"pro\",\"stream\":true}')"
+      "Bash(curl -s --max-time 10 -X POST http://localhost:3000/api/research -H \"Content-Type: application/json\" -d '{\"query\":\"hello\",\"mode\":\"pro\",\"stream\":true}')",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(npm install *)"
     ]
   }
 }
