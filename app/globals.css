@@ -249,3 +249,36 @@
     );
   }
 }
+
+/* ── Thinking Panel ──────────────────────────────────────────── */
+
+.thinking-log {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+.thinking-log::-webkit-scrollbar {
+  width: 4px;
+}
+
+.thinking-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thinking-log::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.thinking-dot-active {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: thinking-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes thinking-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}

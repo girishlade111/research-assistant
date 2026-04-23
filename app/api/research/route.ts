@@ -8,6 +8,7 @@ import type {
   ResearchApiResponse,
   ApiKeys,
   AgentStatusEvent,
+  ThinkingStep,
 } from "@/lib/engine/types";
 
 // ── Resolve API Keys ───────────────────────────────────────────
@@ -133,6 +134,19 @@ function streamingResponse(
         // ── Step 2b: RESEARCH → full multi-agent pipeline ──────
         send("status", { phase: "starting", message: "Initializing multi-agent research pipeline..." });
 
+        let _routeThinkingId = 0;
+        const emitThinking = (phase: string, text: string) => {
+          send("thinking", {
+            id: `t-${Date.now()}-route-${++_routeThinkingId}`,
+            phase,
+            text,
+            timestamp: Date.now(),
+          });
+        };
+
+        emitThinking("routing", "Analyzing query complexity and determining research strategy...");
+        emitThinking("routing", `Query classified as research-grade. Launching multi-agent pipeline.`);
+
         const result = await runResearch(
           query,
           {
@@ -169,6 +183,9 @@ function streamingResponse(
                 message: `⚠ ${capitalize(label)} failed, continuing...`,
               });
             }
+          },
+          (step: ThinkingStep) => {
+            send("thinking", step);
           }
         );
 

@@ -10,6 +10,7 @@ import { ResponseArea, renderContent } from "@/components/response/response-area
 import { SourcesSection } from "@/components/response/sources-section";
 import { ExportButtons } from "@/components/export/export-buttons";
 import { AgentStatusPanel } from "@/components/agents/agent-status-panel";
+import { ThinkingPanel } from "@/components/agents/thinking-panel";
 import { useMobile } from "@/hooks/use-mobile";
 import { useResearchCache, type HistoryEntry } from "@/hooks/use-cache";
 import { toResponseSections, toExportMarkdown } from "@/lib/engine/response-normalizer";
@@ -25,6 +26,7 @@ import type {
   ChatMessage,
   WorkflowMode,
   SearchMode,
+  ThinkingStep,
 } from "@/lib/engine/types";
 import { ParsedFile } from "@/lib/engine/file-parser";
 
@@ -67,6 +69,7 @@ async function readStream(
     onAgentStatus: (event: AgentStatusEvent) => void;
     onRouteDecision: (decision: RouteDecision) => void;
     onWorkflowMode: (event: WorkflowModeEvent) => void;
+    onThinking: (step: ThinkingStep) => void;
   }
 ) {
   const reader = response.body?.getReader();
@@ -117,6 +120,9 @@ async function readStream(
               case "workflow_mode":
                 callbacks.onWorkflowMode(parsed as WorkflowModeEvent);
                 break;
+              case "thinking":
+                callbacks.onThinking(parsed as ThinkingStep);
+                break;
             }
           } catch {
             // skip malformed JSON
@@ -159,6 +165,8 @@ function createAssistantMessage(overrides?: Partial<ChatMessage>): ChatMessage {
     isStreaming: false,
     isLoading: true,
     error: null,
+    thinkingSteps: [],
+    showThinking: true,
     ...overrides,
   };
 }
@@ -206,9 +214,11 @@ function RoutingBadge({ complexity }: { complexity: "simple" | "research" | null
 const ChatMessageBubble = memo(function ChatMessageBubble({
   message,
   onExport,
+  onToggleThinking,
 }: {
   message: ChatMessage;
   onExport: (result: ResearchResult, format: "md" | "pdf" | "txt") => void;
+  onToggleThinking: (id: string) => void;
 }) {
   // ── User message ──────────────────────────────────────────
   if (message.role === "user") {
@@ -278,6 +288,16 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* AI Thinking Panel */}
+          {message.thinkingSteps.length > 0 && (
+            <ThinkingPanel
+              steps={message.thinkingSteps}
+              isExpanded={message.showThinking}
+              onToggle={() => onToggleThinking(message.id)}
+              isActive={message.isLoading || message.isStreaming}
+            />
+          )}
 
           {/* Status message */}
           {message.statusMessage && !message.showAgentPanel && (
@@ -493,6 +513,14 @@ export default function HomePage() {
     );
   }, []);
 
+  const toggleThinking = useCallback((messageId: string) => {
+    setMessages(prev =>
+      prev.map(m =>
+        m.id === messageId ? { ...m, showThinking: !m.showThinking } : m
+      )
+    );
+  }, []);
+
   // ── Clear History Handler ────────────────────────────────────
   const handleClearHistory = useCallback(() => {
     clearHistory();
@@ -544,6 +572,8 @@ export default function HomePage() {
       isStreaming: false,
       isLoading: false,
       error: null,
+      thinkingSteps: [],
+      showThinking: false,
     };
 
     // Build conversation history from current messages BEFORE appending new ones
@@ -708,6 +738,7 @@ export default function HomePage() {
             isLoading: false,
             statusMessage: null,
             showAgentPanel: false,
+            showThinking: false,
           }));
         },
         onAgentStatus: (event: AgentStatusEvent) => {
@@ -723,6 +754,11 @@ export default function HomePage() {
                 error: event.error,
               },
             },
+          }));
+        },
+        onThinking: (step: ThinkingStep) => {
+          updateLastAssistant(msg => ({
+            thinkingSteps: [...msg.thinkingSteps, step],
           }));
         },
       });
@@ -834,6 +870,7 @@ export default function HomePage() {
                 key={msg.id}
                 message={msg}
                 onExport={handleExport}
+                onToggleThinking={toggleThinking}
               />
             ))}
 

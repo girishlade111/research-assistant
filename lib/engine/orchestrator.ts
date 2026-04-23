@@ -10,6 +10,7 @@ import type {
   ResearchSource,
   SearchResult,
   AgentName,
+  ThinkingCallback,
 } from "./types";
 import { TOKEN_LIMITS, MODE_CONFIG } from "./config";
 import { enhanceQuery } from "./query-enhancer";
@@ -236,7 +237,8 @@ export async function runResearch(
   options: ResearchOptions,
   apiKeys: ApiKeys,
   onChunk?: StreamCallback,
-  onAgentStatus?: AgentStatusCallback
+  onAgentStatus?: AgentStatusCallback,
+  onThinking?: ThinkingCallback
 ): Promise<ResearchResult> {
   const startTime = Date.now();
 
@@ -244,11 +246,24 @@ export async function runResearch(
     onAgentStatus?.(event);
   };
 
+  let _thinkingCounter = 0;
+  const think = (phase: string, text: string, agent?: AgentName) => {
+    onThinking?.({
+      id: `t-${Date.now()}-${++_thinkingCounter}`,
+      phase,
+      agent,
+      text,
+      timestamp: Date.now(),
+    });
+  };
+
   const disabled = options.disabledAgents || [];
 
   // ═══════════════════════════════════════════════════════════
   // PHASE 1: Query Intelligence (First)
   // ═══════════════════════════════════════════════════════════
+
+  think("query-intelligence", "Expanding query into a structured research blueprint...", "query-intelligence-agent");
 
   emit({ agent: "query-intelligence-agent", status: "running", model: "moonshotai/kimi-k2-thinking", provider: "nvidia" });
 
@@ -283,9 +298,23 @@ export async function runResearch(
   const subtopics = qr.subtopics || (queryResult.output?.subtopics as string[]) || [];
   const searchTerms = qr.search_terms || (queryResult.output?.search_terms as string[]) || [];
 
+  if (!queryResult.error || queryResult.error !== "skipped") {
+    think(
+      "query-intelligence",
+      `Identified intent: "${queryResult.output?.intent ?? "general"}". Generated ${subtopics.length} subtopics and ${searchTerms.length} search terms.`,
+      "query-intelligence-agent"
+    );
+  }
+
   // ═══════════════════════════════════════════════════════════
   // PHASE 1.5: Web Search (Second, using optimized terms)
   // ═══════════════════════════════════════════════════════════
+
+  think(
+    "web-search",
+    `Searching for: ${searchTerms.slice(0, 4).map(t => `"${t}"`).join(", ")}${searchTerms.length > 4 ? "..." : ""}`,
+    "web-search-agent"
+  );
 
   emit({ agent: "web-search-agent", status: "running", model: "abacusai/dracarys-llama-3.1-70b-instruct", provider: "nvidia" });
 
@@ -319,6 +348,16 @@ export async function runResearch(
 
   // Build shared AgentContext from Phase 1 outputs
   const webResults: SearchResult[] = (searchResult.output.raw_results as SearchResult[]) ?? [];
+
+  if (webResults.length > 0) {
+    const domains = [...new Set(webResults.map(r => r.domain))].slice(0, 4);
+    think(
+      "web-search",
+      `Found ${webResults.length} relevant sources from ${domains.join(", ")}.`,
+      "web-search-agent"
+    );
+  }
+
   const intent = (queryResult.output.intent as ResearchResult["metadata"]["intent"]) ||
     enhanceQuery(query, options.mode).intent;
 
@@ -337,10 +376,21 @@ export async function runResearch(
   // PHASE 2: Analysis + Summary + Coding + Fact-Check (parallel)
   // ═══════════════════════════════════════════════════════════
 
+  think("parallel-agents", "Launching parallel analysis agents...");
+
   emit({ agent: "analysis-agent", status: "running", model: "nvidia/nemotron-3-super-120b-a12b", provider: "nvidia" });
+  think("analysis", "Running deep multi-dimensional analysis on collected sources...", "analysis-agent");
+
   emit({ agent: "summary-agent", status: "running", model: "minimaxai/minimax-m2.7", provider: "nvidia" });
+  think("summary", "Generating executive briefing and key themes...", "summary-agent");
+
   emit({ agent: "coding-agent", status: intent === "coding" ? "running" : "skipped", model: "qwen/qwen3-coder-480b-a35b-instruct", provider: "nvidia" });
+  if (intent === "coding") {
+    think("coding", "Generating production-quality code with documentation...", "coding-agent");
+  }
+
   emit({ agent: "fact-check-agent", status: "running", model: "mistralai/mistral-large-3-675b-instruct-2512", provider: "nvidia" });
+  think("fact-check", "Cross-referencing claims and validating source reliability...", "fact-check-agent");
 
   const skipAgent = (agentName: AgentName, basePromise: Promise<AgentResult>) => {
     if (disabled.includes(agentName)) {
@@ -370,6 +420,10 @@ export async function runResearch(
         isFallback: r.isFallback,
         error: r.error,
       });
+      if (!r.error) {
+        const patterns = (r.output.patterns as string[])?.length ?? 0;
+        think("analysis", `Deep analysis complete${patterns > 0 ? `. Identified ${patterns} key patterns.` : "."}`, "analysis-agent");
+      }
       return r;
     })),
     skipAgent("summary-agent", runSummaryAgent(agentContext, apiKeys).then(r => {
@@ -382,6 +436,10 @@ export async function runResearch(
         isFallback: r.isFallback,
         error: r.error,
       });
+      if (!r.error) {
+        const keyPoints = (r.output.key_points as string[])?.length ?? 0;
+        think("summary", `Executive briefing complete${keyPoints > 0 ? `. Distilled ${keyPoints} key themes.` : "."}`, "summary-agent");
+      }
       return r;
     })),
     skipAgent("coding-agent", runCodingAgent(agentContext, apiKeys).then(r => {
@@ -394,6 +452,9 @@ export async function runResearch(
         isFallback: r.isFallback,
         error: r.error,
       });
+      if (!r.error && r.error !== "skipped") {
+        think("coding", `Code generation complete. Language: ${(r.output.language as string) ?? "auto-detected"}.`, "coding-agent");
+      }
       return r;
     })),
     skipAgent("fact-check-agent", runFactCheckAgent(agentContext, apiKeys).then(r => {
@@ -406,6 +467,11 @@ export async function runResearch(
         isFallback: r.isFallback,
         error: r.error,
       });
+      if (!r.error) {
+        const verified = (r.output.verified_claims as string[])?.length ?? 0;
+        const contradictions = (r.output.contradictions as string[])?.length ?? 0;
+        think("fact-check", `Verified ${verified} claims${contradictions > 0 ? `, found ${contradictions} contradictions` : ""}.`, "fact-check-agent");
+      }
       return r;
     })),
   ]);
@@ -413,6 +479,8 @@ export async function runResearch(
   // ═══════════════════════════════════════════════════════════
   // PHASE 3: Report Agent — Aggregate Everything
   // ═══════════════════════════════════════════════════════════
+
+  think("report-synthesis", "Synthesizing all agent findings into a structured research report...", "report-agent");
 
   emit({ agent: "report-agent", status: "running", model: "moonshotai/kimi-k2-thinking", provider: "nvidia" });
 
@@ -443,6 +511,9 @@ export async function runResearch(
       isFallback: r.isFallback,
       error: r.error,
     });
+    if (!r.error) {
+      think("report-synthesis", "Report generation complete. Assembling final output...", "report-agent");
+    }
     return r;
   });
 

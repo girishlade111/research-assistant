@@ -230,6 +230,18 @@ export type StreamCallback = (chunk: string, done: boolean) => void;
 
 export type AgentStatusCallback = (event: AgentStatusEvent) => void;
 
+// ── Thinking Events (SSE) ─────────────────────────────────────
+
+export interface ThinkingStep {
+  id: string;
+  phase: string;
+  agent?: AgentName;
+  text: string;
+  timestamp: number;
+}
+
+export type ThinkingCallback = (step: ThinkingStep) => void;
+
 // ── API Route ──────────────────────────────────────────────────
 
 export interface ResearchRequest {
@@ -288,6 +300,8 @@ export interface ChatMessage {
   isStreaming: boolean;
   isLoading: boolean;
   error: string | null;
+  thinkingSteps: ThinkingStep[];
+  showThinking: boolean;
 }
 
 export type AgentState = {
