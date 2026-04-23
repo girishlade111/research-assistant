@@ -97,6 +97,16 @@ const markdownComponents: Components = {
       );
     }
     const language = className?.replace("language-", "") || "text";
+
+    // Render markdown code blocks as actual markdown instead of a code box
+    if (language.toLowerCase() === "markdown" || language.toLowerCase() === "md") {
+      return (
+        <div className="markdown-content my-2">
+          {renderContent(String(children))}
+        </div>
+      );
+    }
+
     return (
       <div className="my-3 overflow-hidden rounded-xl border border-border/60 bg-[#111111]">
         <div className="flex items-center justify-between border-b border-border/40 bg-accent/50 px-4 py-2">
@@ -288,6 +298,15 @@ export function ResponseArea({ sections, isStreaming }: ResponseAreaProps) {
 
 function CodeBlock({ content }: { content: string }) {
   const { language, code } = extractCodeBlock(content);
+
+  // If the extracted code block is actually markdown, render it directly
+  if (language.toLowerCase() === "markdown" || language.toLowerCase() === "md") {
+    return (
+      <div className="markdown-content my-4">
+        {renderContent(code)}
+      </div>
+    );
+  }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code).catch(() => {});

@@ -91,16 +91,16 @@ function parseStructuredText(raw: string): Partial<ResearchResult> {
     if (!trimmed) continue;
     switch (currentSection) {
       case "overview":
-        overview += (overview ? " " : "") + trimmed;
+        overview += (overview ? "\n\n" : "") + trimmed;
         break;
       case "details":
-        details += (details ? " " : "") + trimmed;
+        details += (details ? "\n\n" : "") + trimmed;
         break;
       case "comparison":
-        comparison += (comparison ? " " : "") + trimmed;
+        comparison += (comparison ? "\n\n" : "") + trimmed;
         break;
       case "conclusion":
-        conclusion += (conclusion ? " " : "") + trimmed;
+        conclusion += (conclusion ? "\n\n" : "") + trimmed;
         break;
     }
   }
