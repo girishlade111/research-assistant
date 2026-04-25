@@ -436,11 +436,31 @@ We welcome contributions that improve the reliability, performance, and accessib
 ### **Created by Girish Lade**
 *UI/UX Developer, AI Engineer, and Founder of Lade Stack.*
 
-[![Website](https://img.shields.io/badge/Website-ladestack.in-6366F1?style=for-the-badge&logo=safari&logoColor=white)](https://ladestack.in)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Girish_Lade-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/girish-lade-075bba201/)
-[![GitHub](https://img.shields.io/badge/GitHub-girishlade111-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/girishlade111)
-[![Instagram](https://img.shields.io/badge/Instagram-@girish__lade__-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/girish_lade_/)
-[![Email](https://img.shields.io/badge/Email-admin@ladestack.in-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:admin@ladestack.in)
+<br/>
+
+<a href="https://ladestack.in" target="_blank">
+  <img src="https://img.shields.io/badge/🌐_Website-ladestack.in-6366F1?style=for-the-badge&logoColor=white&labelColor=0a0a0a&color=6366F1" alt="Website" />
+</a>
+&nbsp;
+<a href="https://www.linkedin.com/in/girish-lade-075bba201/" target="_blank">
+  <img src="https://img.shields.io/badge/🔗_LinkedIn-Girish_Lade-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0a0a0a&color=0A66C2" alt="LinkedIn" />
+</a>
+&nbsp;
+<a href="https://github.com/girishlade111" target="_blank">
+  <img src="https://img.shields.io/badge/⚡_GitHub-girishlade111-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=0a0a0a&color=181717" alt="GitHub" />
+</a>
+&nbsp;
+<a href="https://codepen.io/Girish-Lade-the-looper" target="_blank">
+  <img src="https://img.shields.io/badge/✒️_CodePen-Girish_Lade-000000?style=for-the-badge&logo=codepen&logoColor=white&labelColor=0a0a0a&color=000000" alt="CodePen" />
+</a>
+&nbsp;
+<a href="https://www.instagram.com/girish_lade_/" target="_blank">
+  <img src="https://img.shields.io/badge/📸_Instagram-@girish__lade__-E4405F?style=for-the-badge&logo=instagram&logoColor=white&labelColor=0a0a0a&color=E4405F" alt="Instagram" />
+</a>
+&nbsp;
+<a href="mailto:admin@ladestack.in">
+  <img src="https://img.shields.io/badge/✉️_Email-admin@ladestack.in-D14836?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0a0a0a&color=D14836" alt="Email" />
+</a>
 
 </div>
 

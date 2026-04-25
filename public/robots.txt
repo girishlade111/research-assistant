@@ -1,0 +1,6 @@
+# Allow all web crawlers to access all parts of the website
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://research-agent.vercel.app/sitemap.xml
