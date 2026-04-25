@@ -1,4 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Meet the team behind ResAgent. Learn about our mission to build the definitive standard for autonomous AI research orchestration with enterprise-grade multi-agent architectures.",
+  keywords: ["about ResAgent", "Girish Lade", "AI research team", "Lade Stack", "multi-agent research"],
+  openGraph: {
+    title: "About ResAgent — The Team & Mission",
+    description:
+      "Discover the mission, architecture, and people behind ResAgent — the next-generation multi-agent AI research engine.",
+    url: "/about-us",
+  },
+};
+
 import { ArrowLeft, Users, Mail, Globe, ExternalLink, Code2, BrainCircuit, Rocket, Target, Zap, ShieldCheck, Network, Cpu, Database } from "lucide-react";
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -74,7 +89,7 @@ export default function AboutUs() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full space-y-16">
-        
+
         {/* Header Section */}
         <div className="flex flex-col items-center text-center space-y-6 pb-12 border-b border-border relative">
           <Link href="/" className="absolute left-0 top-0 p-2 rounded-full hover:bg-accent transition-colors">
@@ -90,7 +105,7 @@ export default function AboutUs() {
             We are engineering the definitive standard for autonomous research orchestration. ResAgent bridges the gap between raw data chaos and synthesized, actionable intelligence through enterprise-grade multi-agent architectures.
           </p>
         </div>
-        
+
         {/* Core Pillars of Innovation */}
         <div className="space-y-8">
           <div className="flex items-center gap-3">
@@ -162,7 +177,7 @@ export default function AboutUs() {
               <p className="text-lg text-muted-foreground leading-relaxed">
                 ResAgent abstracts the complexity of large language model orchestration behind a seamless interface. Our platform is not a mere API wrapper; it is a <strong>self-correcting cognitive loop</strong> built for scale.
               </p>
-              
+
               <div className="space-y-4 mt-6">
                 <div className="flex gap-4 p-5 rounded-xl border border-border/50 bg-accent/5">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold border border-primary/20 text-lg">1</div>
@@ -189,9 +204,9 @@ export default function AboutUs() {
                 </div>
               </div>
             </div>
-            
+
             <div className="w-full md:w-1/3 bg-accent/10 border border-border rounded-2xl p-6 hidden md:block">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Database className="w-5 h-5"/> Stack Specifications</h3>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Database className="w-5 h-5" /> Stack Specifications</h3>
               <ul className="space-y-3 text-sm">
                 <li className="flex justify-between border-b border-border/50 pb-2">
                   <span className="text-muted-foreground">Frontend Framework</span>
@@ -224,11 +239,11 @@ export default function AboutUs() {
             <Users className="w-8 h-8 text-primary" />
             <h2 className="text-3xl font-bold text-foreground m-0">Leadership & Development</h2>
           </div>
-          
+
           <div className="bg-gradient-to-br from-accent/10 via-background to-accent/5 rounded-3xl p-8 sm:p-12 border border-border/60 shadow-2xl relative overflow-hidden">
             {/* Decorative background element */}
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-            
+
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10 relative z-10">
               <div className="flex flex-col items-center space-y-5">
                 <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-primary/20 to-primary/5 border-4 border-primary/30 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
@@ -241,7 +256,7 @@ export default function AboutUs() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex-1 space-y-6 text-center lg:text-left">
                 <div className="hidden lg:block">
                   <h3 className="text-4xl font-extrabold text-foreground tracking-tight">Girish Lade</h3>
@@ -249,9 +264,9 @@ export default function AboutUs() {
                     Creator & Lead Architect
                   </div>
                 </div>
-                
+
                 <p className="text-muted-foreground leading-relaxed text-lg">
-                  As a Full Stack Developer specializing in AI integrations and scalable web architectures, Girish built ResAgent to bridge the gap between raw, unstructured data and actionable, verifiable insight. 
+                  As a Full Stack Developer specializing in AI integrations and scalable web architectures, Girish built ResAgent to bridge the gap between raw, unstructured data and actionable, verifiable insight.
                 </p>
                 <p className="text-muted-foreground leading-relaxed text-lg">
                   His engineering philosophy centers on <strong className="text-foreground font-semibold">abstracting complexity</strong>. By optimizing LLM orchestration loops, minimizing token latency, and building intuitive, high-performance user interfaces, Girish ensures that ResAgent remains at the bleeding edge of AI research technology.

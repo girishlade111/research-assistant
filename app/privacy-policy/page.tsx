@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "ResAgent's Enterprise Privacy Policy. Learn how we securely collect, process, and protect your data with zero-trust data minimization and military-grade encryption.",
+  keywords: ["privacy policy", "data protection", "GDPR", "CCPA", "AI privacy", "ResAgent security"],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: "Privacy Policy — ResAgent",
+    description:
+      "Comprehensive Data Governance and Security Framework for ResAgent users.",
+    url: "/privacy-policy",
+  },
+};
+
 import { ArrowLeft, Shield, Lock, Eye, Server, UserCheck, Globe, Database, Cpu, FileWarning, RefreshCcw, Activity } from "lucide-react";
 
 export default function PrivacyPolicy() {
@@ -21,9 +40,9 @@ export default function PrivacyPolicy() {
             </div>
           </div>
         </div>
-        
+
         <div className="prose prose-invert max-w-none space-y-12 text-muted-foreground pb-12">
-          
+
           {/* Executive Summary */}
           <div className="bg-gradient-to-r from-accent/20 to-transparent border-l-4 border-primary rounded-r-xl p-6 shadow-sm">
             <div className="flex justify-between items-start mb-4">
@@ -42,7 +61,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-2xl font-bold text-foreground m-0">1. Data Collection Architecture & Minimization</h2>
             </div>
             <p className="text-lg">We deploy a precise, minimal-collection strategy engineered to gather only the exact byte-level data strictly necessary for delivering our advanced generative services. We categorize collected data as follows:</p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="bg-background border border-border rounded-xl p-5 hover:border-primary/40 transition-colors">
                 <div className="flex items-center gap-2 mb-3">
@@ -70,7 +89,7 @@ export default function PrivacyPolicy() {
             </div>
 
             <div className="bg-secondary/10 border border-secondary/20 rounded-xl p-5 mt-4">
-              <strong className="text-secondary flex items-center gap-2 text-lg mb-2"><FileWarning className="w-5 h-5"/> Crucial Note on Query Processing:</strong>
+              <strong className="text-secondary flex items-center gap-2 text-lg mb-2"><FileWarning className="w-5 h-5" /> Crucial Note on Query Processing:</strong>
               <p className="text-sm text-secondary leading-relaxed m-0">
                 The explicit textual queries, prompt configurations, and semantic parameters you submit to our AI engines are processed <strong>transiently</strong>. ResAgent does not permanently associate your distinct enterprise identity with specific semantic search trees unless explicit organizational history retention is toggled &apos;ON&apos; by your administrator.
               </p>
@@ -84,7 +103,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-2xl font-bold text-foreground m-0">2. Data Utilization & Processing Directives</h2>
             </div>
             <p className="text-lg">Your data is weaponized solely for your benefit. We categorically and unconditionally <strong>do not sell, rent, lease, or monetize</strong> your personal or organizational data to third-party data brokers or advertising networks.</p>
-            
+
             <div className="space-y-3 pl-4 border-l-2 border-primary/30 mt-4">
               <div className="mb-4">
                 <strong className="text-foreground text-base">A. Core Orchestration Execution</strong>
@@ -108,11 +127,11 @@ export default function PrivacyPolicy() {
               <h2 className="text-2xl font-bold text-foreground m-0">3. Third-Party Ecosystem & Sub-Processors</h2>
             </div>
             <p className="text-lg">To provide state-of-the-art research synthesis, ResAgent integrates via secure, encrypted channels (TLS 1.3) with elite third-party sub-processors. We enforce strict Data Processing Agreements (DPAs) with all vendors.</p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div className="border border-border bg-accent/5 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-primary/10 rounded-lg"><Server className="w-5 h-5 text-primary"/></div>
+                  <div className="p-2 bg-primary/10 rounded-lg"><Server className="w-5 h-5 text-primary" /></div>
                   <strong className="text-foreground text-lg">Inference Providers</strong>
                 </div>
                 <p className="text-sm leading-relaxed mb-4">We route anonymized query payloads to foundational model providers (e.g., OpenAI, Anthropic, OpenRouter).</p>
@@ -121,10 +140,10 @@ export default function PrivacyPolicy() {
                   <span className="text-xs">These providers are contractually bound to zero-retention policies for API payloads. <strong>Your data is never used to train their foundational models.</strong></span>
                 </div>
               </div>
-              
+
               <div className="border border-border bg-accent/5 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-primary/10 rounded-lg"><Database className="w-5 h-5 text-primary"/></div>
+                  <div className="p-2 bg-primary/10 rounded-lg"><Database className="w-5 h-5 text-primary" /></div>
                   <strong className="text-foreground text-lg">Vector Infrastructure</strong>
                 </div>
                 <p className="text-sm leading-relaxed mb-4">High-dimensional embeddings generated from your active sessions are temporarily stored in isolated, tenant-specific vector databases.</p>
@@ -143,7 +162,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-2xl font-bold text-foreground m-0">4. Enterprise Security Posture</h2>
             </div>
             <p className="text-lg">We employ military-grade, defense-in-depth methodologies to ensure absolute data sovereignty and cryptographic integrity:</p>
-            
+
             <ul className="list-none space-y-4 pl-0 mt-4">
               <li className="flex gap-4 items-start p-4 rounded-xl border border-border/50 bg-background">
                 <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">✓</div>
@@ -176,7 +195,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-2xl font-bold text-foreground m-0">5. User Sovereign Rights & Global Compliance</h2>
             </div>
             <p className="text-lg">We natively recognize and proactively enforce your sovereign data rights globally, adhering to the strictest interpretations of the <strong>GDPR (Europe), CCPA/CPRA (California), and SOC 2 Type II compliance frameworks</strong>.</p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
               <div className="bg-accent/10 border-t-4 border-t-primary rounded-b-xl p-5 shadow-sm">
                 <strong className="text-foreground block mb-2 text-lg">Right to Access</strong>
@@ -202,8 +221,8 @@ export default function PrivacyPolicy() {
             <p className="max-w-2xl text-center mb-6">
               For complex legal inquiries, formal Data Subject Access Requests (DSARs), compliance audits, or to directly contact our Data Protection Officer (DPO), please initiate communication through our secure administrative channel.
             </p>
-            <a 
-              href="mailto:privacy@ladestack.in" 
+            <a
+              href="mailto:privacy@ladestack.in"
               className="inline-flex items-center justify-center px-8 py-4 font-semibold text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25"
             >
               privacy@ladestack.in
