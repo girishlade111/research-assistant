@@ -10,9 +10,6 @@ import {
   FileText,
   Image as ImageIcon,
   File,
-  Sparkles,
-  Mic,
-  CornerDownLeft,
 } from "lucide-react";
 import { parseFile, ParsedFile } from "@/lib/engine/file-parser";
 import { cn } from "@/lib/utils";
@@ -43,7 +40,7 @@ export function SearchInput({
     const el = textareaRef.current;
     if (el) {
       el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 200) + "px";
+      el.style.height = Math.min(el.scrollHeight, 160) + "px";
     }
   }, [value]);
 
@@ -120,10 +117,10 @@ export function SearchInput({
 
   const getFileIcon = (fileType: string) => {
     if (fileType.includes("image"))
-      return <ImageIcon className="h-3.5 w-3.5 text-primary" />;
+      return <ImageIcon className="h-3 w-3 text-primary" />;
     if (fileType.includes("pdf") || fileType.includes("text"))
-      return <FileText className="h-3.5 w-3.5 text-secondary" />;
-    return <File className="h-3.5 w-3.5 text-muted-foreground" />;
+      return <FileText className="h-3 w-3 text-secondary" />;
+    return <File className="h-3 w-3 text-muted-foreground" />;
   };
 
   const canSubmit = value.trim() && !isLoading && !isParsing;
@@ -132,21 +129,21 @@ export function SearchInput({
     workflowMode === "planning"
       ? dragActive
         ? "Drop files here..."
-        : "Describe the topic, goals, and constraints you want to plan..."
+        : "Describe the topic, goals, and constraints..."
       : dragActive
         ? "Drop files here..."
         : "Ask anything or drop files...";
 
   return (
-    <div className="w-full space-y-2">
+    <div className="w-full space-y-1.5">
       {/* File Previews */}
       <AnimatePresence>
         {attachedFiles.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="flex flex-wrap gap-2 px-1"
+            exit={{ opacity: 0, y: -8 }}
+            className="flex flex-wrap gap-1.5 px-1"
           >
             {attachedFiles.map((file, i) => (
               <motion.div
@@ -154,16 +151,16 @@ export function SearchInput({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="flex items-center gap-2 rounded-xl bg-accent/70 border border-border/50 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm"
+                className="flex items-center gap-1.5 rounded-lg bg-accent/70 border border-border/50 pl-2 pr-1.5 py-1 text-[11px] font-medium text-foreground"
               >
                 {getFileIcon(file.fileType)}
-                <span className="max-w-[150px] truncate">{file.fileName}</span>
+                <span className="max-w-[120px] truncate">{file.fileName}</span>
                 <button
                   onClick={() => removeFile(i)}
-                  className="ml-1 rounded-full p-0.5 hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
-                  title="Remove file"
+                  className="rounded-full p-px hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+                  title="Remove"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-2.5 w-2.5" />
                 </button>
               </motion.div>
             ))}
@@ -172,16 +169,12 @@ export function SearchInput({
       </AnimatePresence>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className={cn(
-          "relative rounded-2xl transition-all duration-300",
-          dragActive
-            ? "border-2 border-dashed border-primary/50 bg-primary/5"
-            : isFocused
-              ? "ring-1 ring-primary/20"
-              : ""
+          "relative rounded-xl transition-all",
+          dragActive && "border-2 border-dashed border-primary/40 bg-primary/[0.03]"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -197,7 +190,7 @@ export function SearchInput({
           placeholder={placeholder}
           rows={1}
           disabled={isLoading}
-          className="w-full resize-none bg-transparent px-12 py-3.5 pr-16 text-[15px] font-medium text-foreground placeholder:text-muted-foreground/70 focus:outline-none disabled:opacity-60"
+          className="w-full resize-none bg-transparent px-9 py-2.5 pr-11 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none disabled:opacity-60"
         />
 
         {/* Upload Button */}
@@ -212,36 +205,18 @@ export function SearchInput({
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading || isParsing}
-          className={cn(
-            "absolute left-3 top-1/2 -translate-y-1/2 rounded-xl p-2 transition-all duration-200",
-            "text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40"
-          )}
-          title="Attach files (Ctrl+U)"
+          className="absolute left-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent transition-all disabled:opacity-40"
+          title="Attach files"
         >
           {isParsing ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <Paperclip className="h-4 w-4" />
+            <Paperclip className="h-3.5 w-3.5" />
           )}
         </button>
 
-        {/* Voice input button (visual placeholder) */}
-        {!value.trim() && !isLoading && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute right-14 top-1/2 -translate-y-1/2 rounded-xl p-2 text-muted-foreground/50 hover:text-muted-foreground hover:bg-accent transition-all"
-            title="Voice input (coming soon)"
-          >
-            <Mic className="h-4 w-4" />
-          </motion.button>
-        )}
-
         {/* Submit Button */}
-        <motion.button
-          whileHover={canSubmit ? { scale: 1.08 } : {}}
-          whileTap={canSubmit ? { scale: 0.92 } : {}}
+        <button
           onClick={() => {
             if (canSubmit) {
               onSubmit(attachedFiles);
@@ -250,27 +225,18 @@ export function SearchInput({
           }}
           disabled={!canSubmit}
           className={cn(
-            "absolute right-3 top-1/2 -translate-y-1/2 rounded-xl p-2.5 transition-all duration-200",
+            "absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 transition-all",
             canSubmit
-              ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30"
+              ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow"
               : "bg-muted text-muted-foreground/40"
           )}
-          title={canSubmit ? "Send (Enter)" : "Type a message to send"}
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <Send className="h-4 w-4" />
+            <Send className="h-3.5 w-3.5" />
           )}
-        </motion.button>
-
-        {/* Keyboard shortcut hint */}
-        {!isLoading && !value.trim() && (
-          <div className="absolute right-14 bottom-1 flex items-center gap-1 text-[10px] text-muted-foreground/40 pointer-events-none">
-            <CornerDownLeft className="h-2.5 w-2.5" />
-            <span>Enter</span>
-          </div>
-        )}
+        </button>
       </motion.div>
     </div>
   );

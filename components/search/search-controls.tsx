@@ -1,6 +1,13 @@
 "use client";
 
-import { Compass, FlaskConical, Settings2, Layers, Sparkles, Search, BookOpen } from "lucide-react";
+import {
+  Compass,
+  FlaskConical,
+  Settings2,
+  Sparkles,
+  Search,
+  BookOpen,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ModelSelector } from "./model-selector";
 import { AgentSettingsModal } from "@/components/agents/agent-settings-modal";
@@ -22,10 +29,9 @@ const workflowModes: {
   value: WorkflowMode;
   label: string;
   icon: typeof Compass;
-  desc: string;
 }[] = [
-    { value: "planning", label: "Planning", icon: Compass, desc: "Structured workflow" },
-    { value: "research", label: "Research", icon: FlaskConical, desc: "Multi-agent deep dive" },
+    { value: "planning", label: "Plan", icon: Compass },
+    { value: "research", label: "Research", icon: FlaskConical },
   ];
 
 const modes: { value: SearchMode; label: string; icon: typeof Search }[] = [
@@ -47,9 +53,9 @@ export function SearchControls({
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 px-1">
+    <div className="flex flex-wrap items-center gap-1.5 px-1">
       {/* Workflow Mode Toggle */}
-      <div className="flex rounded-xl bg-accent/60 border border-border/40 p-0.5">
+      <div className="flex rounded-lg bg-accent/60 border border-border/40 p-px">
         {workflowModes.map((m) => {
           const Icon = m.icon;
           const isActive = workflowMode === m.value;
@@ -58,15 +64,14 @@ export function SearchControls({
               key={m.value}
               onClick={() => onWorkflowModeChange(m.value)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200",
+                "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold transition-all",
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent/80"
               )}
-              title={m.desc}
             >
-              <Icon className={cn("h-3.5 w-3.5", isActive && "text-primary-foreground")} />
-              {m.label}
+              <Icon className="h-3 w-3" />
+              <span className="hidden sm:inline">{m.label}</span>
             </button>
           );
         })}
@@ -75,8 +80,8 @@ export function SearchControls({
       {/* Research Depth Toggles */}
       <div
         className={cn(
-          "flex rounded-xl bg-accent/60 border border-border/40 p-0.5 transition-opacity duration-200",
-          workflowMode === "planning" && "opacity-50 pointer-events-none"
+          "flex rounded-lg bg-accent/60 border border-border/40 p-px transition-opacity",
+          workflowMode === "planning" && "opacity-40 pointer-events-none"
         )}
       >
         {modes.map((m) => {
@@ -87,14 +92,14 @@ export function SearchControls({
               key={m.value}
               onClick={() => onModeChange(m.value)}
               className={cn(
-                "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all duration-200",
+                "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold transition-all",
                 isActive
-                  ? "bg-secondary text-secondary-foreground shadow-sm shadow-secondary/20"
+                  ? "bg-secondary text-secondary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent/80"
               )}
             >
               <Icon className="h-3 w-3" />
-              {m.label}
+              <span className="hidden sm:inline">{m.label}</span>
             </button>
           );
         })}
@@ -107,12 +112,12 @@ export function SearchControls({
       <button
         onClick={() => setSettingsOpen(true)}
         className={cn(
-          "flex items-center gap-1.5 rounded-xl bg-accent/60 border border-border/40 px-3 py-1.5 text-xs font-medium transition-all duration-200",
+          "inline-flex items-center gap-1 rounded-lg bg-accent/60 border border-border/40 px-2 py-1 text-[11px] font-medium transition-all",
           "text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border/60"
         )}
         title="Configure agents"
       >
-        <Settings2 className="h-3.5 w-3.5" />
+        <Settings2 className="h-3 w-3" />
         <span className="hidden sm:inline">Agents</span>
       </button>
 

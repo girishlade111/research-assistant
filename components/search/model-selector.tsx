@@ -56,39 +56,39 @@ export function ModelSelector({ selected, onSelect }: ModelSelectorProps) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex items-center gap-2 rounded-xl bg-accent/60 border border-border/40 px-3 py-1.5 text-xs font-medium transition-all duration-200",
+          "inline-flex items-center gap-1 rounded-lg bg-accent/60 border border-border/40 px-2 py-1 text-[11px] font-medium transition-all",
           "text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border/60"
         )}
       >
-        <Cpu className="h-3.5 w-3.5" />
+        <Cpu className="h-3 w-3" />
         <span className="hidden sm:inline">{selectedModel?.displayName ?? "Auto"}</span>
         <span className="sm:hidden">{selectedModel?.displayName.split(" ")[0] ?? "Auto"}</span>
-        <ChevronDown className="h-3 w-3 opacity-60" />
+        <ChevronDown className="h-2.5 w-2.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
         className="w-72 border-border bg-card/95 backdrop-blur-2xl"
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <DropdownMenuLabel className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             <Cpu className="h-3 w-3" />
-            NVIDIA Models
+            NVIDIA
           </DropdownMenuLabel>
           {MODEL_REGISTRY.nvidia.map((model) => (
             <DropdownMenuItem
               key={model.id}
               onClick={() => onSelect(model.id)}
               className={cn(
-                "flex items-center justify-between cursor-pointer rounded-lg my-0.5",
+                "flex items-center justify-between cursor-pointer rounded-md my-px py-1.5",
                 selected === model.id && "bg-primary/10 border border-primary/20"
               )}
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{model.displayName}</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="flex items-center gap-1.5 mt-px">
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 rounded px-1.5 py-px text-[10px] font-bold uppercase border",
+                      "inline-flex items-center gap-1 rounded px-1 py-px text-[10px] font-bold uppercase border",
                       getTypeColor(model.type)
                     )}
                   >
@@ -107,25 +107,25 @@ export function ModelSelector({ selected, onSelect }: ModelSelectorProps) {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <DropdownMenuLabel className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             <Globe className="h-3 w-3" />
-            OpenRouter Models
+            OpenRouter
           </DropdownMenuLabel>
           {MODEL_REGISTRY.openrouter.map((model) => (
             <DropdownMenuItem
               key={model.id}
               onClick={() => onSelect(model.id)}
               className={cn(
-                "flex items-center justify-between cursor-pointer rounded-lg my-0.5",
+                "flex items-center justify-between cursor-pointer rounded-md my-px py-1.5",
                 selected === model.id && "bg-primary/10 border border-primary/20"
               )}
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{model.displayName}</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="flex items-center gap-1.5 mt-px">
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 rounded px-1.5 py-px text-[10px] font-bold uppercase border",
+                      "inline-flex items-center gap-1 rounded px-1 py-px text-[10px] font-bold uppercase border",
                       getTypeColor(model.type)
                     )}
                   >
