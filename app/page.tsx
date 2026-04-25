@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Database, FileText, Globe, User } from "lucide-react";
+import { Database, FileText, Globe, User, Shield, Calendar, Star } from "lucide-react";
 import { Sidebar, MobileMenuButton } from "@/components/layout/sidebar";
 import { SearchInput } from "@/components/search/search-input";
 import { SearchControls } from "@/components/search/search-controls";
@@ -590,23 +590,23 @@ export default function HomePage() {
         statusMessage: null,
         routeComplexity:
           cached.metadata.workflowMode === "research" &&
-          cached.agentResults &&
-          cached.agentResults.length > 0
+            cached.agentResults &&
+            cached.agentResults.length > 0
             ? "research"
             : "simple",
         agentStatuses: cached.metadata.agentTrace
           ? Object.fromEntries(
-              cached.metadata.agentTrace.map((t) => [
-                t.agent,
-                {
-                  status: t.status,
-                  model: t.model,
-                  provider: t.provider,
-                  durationMs: t.durationMs,
-                  isFallback: t.isFallback,
-                } satisfies AgentState,
-              ])
-            ) as Partial<Record<AgentName, AgentState>>
+            cached.metadata.agentTrace.map((t) => [
+              t.agent,
+              {
+                status: t.status,
+                model: t.model,
+                provider: t.provider,
+                durationMs: t.durationMs,
+                isFallback: t.isFallback,
+              } satisfies AgentState,
+            ])
+          ) as Partial<Record<AgentName, AgentState>>
           : initialAgentStates(),
       });
 
@@ -662,8 +662,8 @@ export default function HomePage() {
           statusMessage: null,
           routeComplexity:
             responseData.metadata.workflowMode === "research" &&
-            responseData.agentResults &&
-            responseData.agentResults.length > 0
+              responseData.agentResults &&
+              responseData.agentResults.length > 0
               ? "research"
               : "simple",
         }));
@@ -808,11 +808,11 @@ export default function HomePage() {
       const text =
         format === "txt"
           ? markdown
-              .replace(/^##\s+/gm, "")
-              .replace(/^\d+\.\s+\[([^\]]+)\]\([^)]+\)/gm, "$1")
-              .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-              .replace(/^---$/gm, "")
-              .replace(/^\*.*\*$/gm, "")
+            .replace(/^##\s+/gm, "")
+            .replace(/^\d+\.\s+\[([^\]]+)\]\([^)]+\)/gm, "$1")
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+            .replace(/^---$/gm, "")
+            .replace(/^\*.*\*$/gm, "")
           : markdown;
 
       const blob = new Blob([text], {
@@ -946,22 +946,90 @@ export default function HomePage() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="mt-12 w-full"
               >
-                <h3 className="font-heading text-lg text-foreground mb-6">Verified Sources</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <FileText className="w-6 h-6 text-secondary" />
-                    <h4 className="font-heading text-lg text-foreground">Attention Is All You Need</h4>
-                    <p className="font-sans text-sm text-muted-foreground">Foundational paper introducing the transformer architecture.</p>
+                <div className="flex items-center gap-2 mb-6">
+                  <Shield className="w-5 h-5 text-primary" />
+                  <h3 className="font-heading text-lg text-foreground">Verified Sources</h3>
+                  <span className="ml-2 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                    Trusted
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {/* Card 1 */}
+                  <div className="group glass-card rounded-2xl p-5 flex flex-col gap-3 hover:border-primary/30 hover:bg-accent/30 transition-all cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 border border-secondary/20">
+                        <FileText className="w-5 h-5 text-secondary" />
+                      </div>
+                      <span className="rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wide">
+                        Verified
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors">Attention Is All You Need</h4>
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">Foundational paper introducing the transformer architecture.</p>
+                    </div>
+                    <div className="mt-auto pt-3 border-t border-border/30 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3 h-3" />
+                        <span>Jun 2017</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-primary fill-primary" />
+                        <span className="font-semibold text-foreground">9.8</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <Globe className="w-6 h-6 text-primary" />
-                    <h4 className="font-heading text-lg text-foreground">Reinforcement Learning</h4>
-                    <p className="font-sans text-sm text-muted-foreground">Sutton & Barto&apos;s definitive text on RL and agent coordination.</p>
+
+                  {/* Card 2 */}
+                  <div className="group glass-card rounded-2xl p-5 flex flex-col gap-3 hover:border-primary/30 hover:bg-accent/30 transition-all cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+                        <Globe className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wide">
+                        Verified
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors">Reinforcement Learning</h4>
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">Sutton & Barto's definitive text on RL and agent coordination.</p>
+                    </div>
+                    <div className="mt-auto pt-3 border-t border-border/30 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3 h-3" />
+                        <span>2018</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-primary fill-primary" />
+                        <span className="font-semibold text-foreground">9.5</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="glass-card rounded-xl p-6 flex flex-col gap-4 hover:border-primary/30 transition-colors">
-                    <Database className="w-6 h-6 text-secondary" />
-                    <h4 className="font-heading text-lg text-foreground">Agentic Architectures</h4>
-                    <p className="font-sans text-sm text-muted-foreground">Latest survey on orchestrating multi-LLM systems effectively.</p>
+
+                  {/* Card 3 */}
+                  <div className="group glass-card rounded-2xl p-5 flex flex-col gap-3 hover:border-primary/30 hover:bg-accent/30 transition-all cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 border border-secondary/20">
+                        <Database className="w-5 h-5 text-secondary" />
+                      </div>
+                      <span className="rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wide">
+                        Verified
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors">Agentic Architectures</h4>
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">Latest survey on orchestrating multi-LLM systems effectively.</p>
+                    </div>
+                    <div className="mt-auto pt-3 border-t border-border/30 flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3 h-3" />
+                        <span>Jan 2025</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-primary fill-primary" />
+                        <span className="font-semibold text-foreground">9.2</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
