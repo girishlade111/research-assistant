@@ -84,6 +84,18 @@ export function useResearchCache() {
     }
   }, []);
 
+  const deleteHistoryItem = useCallback((id: string) => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      const history: HistoryEntry[] = raw ? JSON.parse(raw) : [];
+      const filtered = history.filter((h) => h.id !== id);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered));
+      return filtered;
+    } catch {
+      return [];
+    }
+  }, []);
+
   const clearHistory = useCallback(() => {
     try {
       localStorage.removeItem(HISTORY_KEY);
@@ -99,7 +111,7 @@ export function useResearchCache() {
     }
   }, []);
 
-  return { getCached, setCached, getHistory, clearHistory };
+  return { getCached, setCached, getHistory, deleteHistoryItem, clearHistory };
 }
 
 function addToHistory(query: string, workflowMode: WorkflowMode, mode: SearchMode, model: string) {

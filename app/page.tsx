@@ -417,7 +417,7 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
 
 export default function HomePage() {
   const isMobile = useMobile();
-  const { getCached, setCached, getHistory, clearHistory } = useResearchCache();
+  const { getCached, setCached, getHistory, deleteHistoryItem, clearHistory } = useResearchCache();
 
   // ── UI State ─────────────────────────────────────────────────
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -838,8 +838,13 @@ export default function HomePage() {
         history={history}
         onSelectHistory={handleSelectHistory}
         onClearHistory={handleClearHistory}
+        onDeleteHistoryItem={(id) => {
+          const updated = deleteHistoryItem(id);
+          setHistory(updated);
+        }}
         activeView={sidebarView}
         onViewChange={setSidebarView}
+        activeQuery={messages[messages.length - 1]?.role === "user" ? messages[messages.length - 1]?.query : undefined}
       />
 
       <main className="flex min-h-dvh flex-1 flex-col relative">
