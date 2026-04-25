@@ -1,11 +1,30 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description:
+    "ResAgent's Enterprise Terms of Service and Master Service Agreement (MSA). Read our licensing terms, acceptable use policy, and liability provisions.",
+  keywords: ["terms of service", "terms and conditions", "MSA", "licensing", "AI terms", "ResAgent legal"],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: "Terms of Service — ResAgent",
+    description:
+      "Master Service Agreement (MSA) & Licensing Terms for ResAgent users.",
+    url: "/terms-and-conditions",
+  },
+};
+
 import { ArrowLeft, FileText, Scale, AlertTriangle, Copyright, Bot, ShieldAlert, Zap, BookOpen, Terminal, CheckCircle2 } from "lucide-react";
 
 export default function TermsAndConditions() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full space-y-12">
-        
+
         {/* Header Section */}
         <div className="flex flex-col gap-4 border-b border-border pb-8">
           <Link href="/" className="w-fit p-2 -ml-2 rounded-full hover:bg-accent transition-colors flex items-center gap-2 text-muted-foreground hover:text-foreground">
@@ -22,9 +41,9 @@ export default function TermsAndConditions() {
             </div>
           </div>
         </div>
-        
+
         <div className="prose prose-invert max-w-none space-y-12 text-muted-foreground pb-12">
-          
+
           {/* Executive Summary */}
           <div className="bg-accent/10 border border-border rounded-xl p-6 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
@@ -47,10 +66,10 @@ export default function TermsAndConditions() {
               <h2 className="text-2xl font-bold text-foreground m-0">1. Platform Licensing & Access Modalities</h2>
             </div>
             <p className="text-lg">Subject to your continuous, uninterrupted compliance with these Terms and the payment of applicable tier fees, ResAgent grants you a revocable, non-exclusive, non-transferable, limited worldwide license to access and utilize the orchestration platform.</p>
-            
+
             <div className="bg-destructive/5 border border-destructive/30 rounded-xl p-6 mt-6">
               <strong className="text-destructive flex items-center gap-2 text-xl mb-4 pb-2 border-b border-destructive/20">
-                <AlertTriangle className="w-6 h-6"/> Strict Prohibitions & Acceptable Use Policy (AUP)
+                <AlertTriangle className="w-6 h-6" /> Strict Prohibitions & Acceptable Use Policy (AUP)
               </strong>
               <p className="text-sm text-foreground mb-4">Any violation of the following directives will result in immediate API key revocation and potential legal action:</p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 list-none pl-0 m-0">
@@ -81,7 +100,7 @@ export default function TermsAndConditions() {
               <h2 className="text-2xl font-bold text-foreground m-0">2. Artificial Intelligence Output Disclaimers</h2>
             </div>
             <p className="text-lg">ResAgent operates via complex, non-deterministic large language models (LLMs) integrated with real-time web retrieval vector systems. Due to the statistical nature of generative AI, you expressly understand and formally agree that:</p>
-            
+
             <div className="space-y-4 mt-6">
               <div className="flex gap-4 p-5 rounded-xl border border-border bg-accent/5 hover:bg-accent/10 transition-colors">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary font-bold border border-secondary/20 text-xl">A</div>
@@ -115,7 +134,7 @@ export default function TermsAndConditions() {
               <Copyright className="w-7 h-7 text-primary" />
               <h2 className="text-2xl font-bold text-foreground m-0">3. Intellectual Property Rights & Data Ownership</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div className="p-6 rounded-xl border border-border bg-background shadow-sm">
                 <div className="flex items-center gap-2 mb-4 text-primary">
@@ -124,7 +143,7 @@ export default function TermsAndConditions() {
                 </div>
                 <p className="text-sm leading-relaxed mb-0">The ResAgent application, encompassing its UI/UX, multi-agent orchestration logic, API schemas, compiled source code, and underlying cloud architecture, remains the exclusive, copyrighted property of ResAgent and its creator. No transfer of corporate intellectual property is implied by your use of the service.</p>
               </div>
-              
+
               <div className="p-6 rounded-xl border border-primary/30 bg-primary/5 shadow-sm">
                 <div className="flex items-center gap-2 mb-4 text-primary">
                   <CheckCircle2 className="w-5 h-5" />
@@ -141,7 +160,7 @@ export default function TermsAndConditions() {
               <ShieldAlert className="w-7 h-7 text-primary" />
               <h2 className="text-2xl font-bold text-foreground m-0">4. Limitation of Liability & Full Indemnification</h2>
             </div>
-            
+
             <div className="bg-accent/10 border border-border p-6 rounded-xl space-y-4">
               <p className="text-sm font-mono uppercase tracking-wide text-muted-foreground mb-2">Legal Disclaimer</p>
               <p className="text-base font-medium text-foreground uppercase leading-relaxed text-justify">
@@ -178,8 +197,8 @@ export default function TermsAndConditions() {
             <p className="max-w-2xl text-center mb-6">
               For formal legal notices, breach reporting, DMCA takedown requests, or bespoke Enterprise SLA negotiations regarding these Terms, please contact our legal counsel directly:
             </p>
-            <a 
-              href="mailto:admin@ladestack.in" 
+            <a
+              href="mailto:admin@ladestack.in"
               className="inline-flex items-center justify-center px-8 py-4 font-semibold text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25"
             >
               admin@ladestack.in
