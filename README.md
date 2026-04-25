@@ -11,7 +11,7 @@
 **Next-Generation Multi-Agent Research Engine**  
 *Transform raw queries into exhaustive, structured, and fact-checked intelligence reports.*
 
-[Project Overview](#-project-overview) • [Key Features](#-key-features) • [Development Stack](#-development-stack) • [Installation](#-installation--setup) • [Configuration](#-configuration) • [Project Stats](#-project-stats--metrics) • [Usage Guide](#-usage-guide)
+[Project Overview](#-project-overview) • [Key Features](#-key-features) • [Dev Stack](#-development-stack) • [Installation](#-installation--setup) • [Configuration](#-configuration) • [Project Stats](#-project-stats--metrics) • [Usage Guide](#-usage-guide)
 
 </div>
 
@@ -19,16 +19,20 @@
 
 ## 📋 Project Overview
 
-**ResAgent** is a production-grade, multi-agent AI research system engineered for depth, accuracy, and scale. Unlike conventional chatbots that rely on a single model inference pass, ResAgent orchestrates a **fleet of specialized AI agents** across a four-phase pipeline to deliver exhaustive, citation-rich research reports in real time.
+**ResAgent** is a production-grade, multi-agent AI research system engineered for **depth**, **accuracy**, and **scale**. Unlike conventional chatbots that rely on a single model inference pass, ResAgent orchestrates a **fleet of 7 specialized AI agents** across a four-phase pipeline to deliver exhaustive, citation-rich research reports in real time.
 
-The architecture follows a deterministic execution model:
+### 🔹 Four-Phase Execution Model
 
-1. **Query Intelligence** — Deconstructs raw user intent into 8–12 structured research vectors using a reasoning-optimized LLM.
-2. **Data Aggregation** — Executes concurrent web searches via Perplexity Sonar and ingests user-uploaded documents (PDF, DOCX, CSV, images) to enrich the local context.
-3. **Parallel Synthesis** — Runs Analysis, Summary, Fact-Check, and Coding agents simultaneously with **dynamic model routing** and automatic fallback chains.
-4. **Report Assembly** — Compiles all agent outputs into a cohesive, 4,000–6,000 word structured research document, streamed progressively via **Server-Sent Events (SSE)**.
+- **Phase 1 — Query Intelligence**  
+  Deconstructs raw user intent into 8–12 structured research vectors using a reasoning-optimized LLM.
+- **Phase 2 — Data Aggregation**  
+  Executes concurrent web searches and ingests user-uploaded documents (PDF, DOCX, CSV, images) to enrich the local context.
+- **Phase 3 — Parallel Synthesis**  
+  Runs **Analysis**, **Summary**, **Fact-Check**, and **Coding** agents simultaneously with dynamic model routing and automatic fallback chains.
+- **Phase 4 — Report Assembly**  
+  Compiles all agent outputs into a cohesive structured research document, streamed progressively via **Server-Sent Events (SSE)**.
 
-> **💡 Unique Selling Point:** ResAgent features **Dynamic Model Routing** with automatic fallback to high-capacity context models (up to **131,072 tokens**) when primary endpoints hit rate limits. A race-condition fallback mechanism fires identical requests to OpenRouter free-tier models if the primary NVIDIA NIM endpoint stalls beyond 60 seconds, ensuring uninterrupted massive report generation under heavy load.
+> **💡 Unique Selling Point:** ResAgent features **Dynamic Model Routing** with automatic fallback to high-capacity context models (up to **131,072 tokens**) when primary endpoints hit rate limits. A race-condition fallback mechanism fires identical requests to OpenRouter free-tier models if the primary NVIDIA NIM endpoint stalls beyond 60 seconds.
 
 ---
 
@@ -36,8 +40,7 @@ The architecture follows a deterministic execution model:
 
 ### 🌐 Intelligent Data Retrieval
 
-- **Targeted Augmentation** — Concurrent, optimized web searches triggered by a Query Intelligence Agent rather than raw user input, yielding highly relevant source aggregation.
-- **Citation Mapping** — Builds visual relationship nodes across all referenced sources for deep-dive verification.
+- **Targeted Augmentation** — Concurrent, optimized web searches triggered by a Query Intelligence Agent rather than raw user input.
 - **Multi-Modal Document Intake** — Seamlessly parses user-uploaded documents to enrich local context:
   - **PDFs** via `pdfjs-dist`
   - **DOCX/Word** via `mammoth`
@@ -60,7 +63,6 @@ The architecture follows a deterministic execution model:
 
 - **Dynamic SSE Streaming** — Real-time agent progression, latency metrics, and progressive Markdown reveal without freezing the main UI thread.
 - **Intent-Based Routing** — Automatically classifies queries as *Simple* (direct chat) or *Research* (full multi-agent pipeline), with an optional *Planning* workflow mode for iterative research design.
-- **Interactive Tool Modals** — Quick Search, Citation Graph, Agent Settings, and Developer Profile accessible from the sidebar.
 - **Multi-Format Export** — Download reports as **Markdown**, **PDF**, or **Plain Text**.
 - **Responsive Design** — Fully adaptive layout with mobile viewport optimization, collapsible sidebar, and virtual keyboard handling.
 - **Client-Side Caching** — `localStorage`-backed research cache with query-keyed history entries and progressive section reveal animations.
@@ -154,7 +156,7 @@ npm install
 Create a `.env.local` file in the project root:
 
 ```bash
-cp .env.example .env.local
+cp .env .env.local
 # Edit .env.local and add your API keys
 ```
 
@@ -384,7 +386,7 @@ research-assistant/
 │   ├── layout/                 # Sidebar & responsive navigation
 │   ├── profile/                # Developer profile modal
 │   ├── response/               # React-Markdown rendering & source cards
-│   ├── search/                 # Search input, controls, citation graph
+│   ├── search/                 # Search input, controls, model selector
 │   └── ui/                     # shadcn/ui primitives (button, dialog, etc.)
 ├── hooks/                      # Custom React hooks (cache, debounce, mobile)
 ├── lib/
