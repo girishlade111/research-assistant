@@ -4,10 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Home,
-  Library,
   Clock,
-  Search,
-  GitBranch,
   Plus,
   X,
   Menu,
@@ -16,13 +13,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { HistoryEntry } from "@/hooks/use-cache";
-import { QuickSearchModal } from "@/components/search/quick-search-modal";
-import { CitationGraphModal } from "@/components/search/citation-graph-modal";
-
-const toolItems = [
-  { id: "search", icon: Search, label: "Quick Search" },
-  { id: "graph", icon: GitBranch, label: "Citation Graph" },
-];
 
 interface SidebarProps {
   open: boolean;
@@ -58,9 +48,6 @@ export function Sidebar({
   activeView,
   onViewChange,
 }: SidebarProps) {
-  const [quickSearchOpen, setQuickSearchOpen] = useState(false);
-  const [citationGraphOpen, setCitationGraphOpen] = useState(false);
-
   const navItems = [
     {
       icon: Home,
@@ -176,37 +163,12 @@ export function Sidebar({
         )}
       </div>
 
-      {/* Tools */}
-      <div className="border-t border-border/40 pt-4">
-        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-          Tools
-        </p>
-        <div className="space-y-1">
-          {toolItems.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => {
-                if (item.id === "search") setQuickSearchOpen(true);
-                if (item.id === "graph") setCitationGraphOpen(true);
-              }}
-              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-all hover:bg-accent/50 hover:text-foreground"
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Footer Links */}
-        <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 px-3 pb-2">
-          <Link href="/about-us" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">About Us</Link>
-          <Link href="/privacy-policy" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
-          <Link href="/terms-and-conditions" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Terms & Conditions</Link>
-        </div>
+      {/* Footer Links */}
+      <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 px-3 pb-2">
+        <Link href="/about-us" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">About Us</Link>
+        <Link href="/privacy-policy" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
+        <Link href="/terms-and-conditions" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">Terms & Conditions</Link>
       </div>
-      
-      <QuickSearchModal open={quickSearchOpen} onOpenChange={setQuickSearchOpen} />
-      <CitationGraphModal open={citationGraphOpen} onOpenChange={setCitationGraphOpen} />
     </div>
   );
 
