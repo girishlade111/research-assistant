@@ -26,6 +26,7 @@ interface SearchControlsProps {
   onModelChange: (model: string) => void;
   disabledAgents: AgentName[];
   onToggleAgent: (agent: AgentName) => void;
+  onSetDisabledAgents: (agents: AgentName[]) => void;
 }
 
 const workflowModes: {
@@ -45,6 +46,7 @@ export function SearchControls({
   onModelChange,
   disabledAgents,
   onToggleAgent,
+  onSetDisabledAgents,
 }: SearchControlsProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
 

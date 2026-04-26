@@ -513,6 +513,10 @@ export default function HomePage() {
     );
   }, []);
 
+  const handleSetDisabledAgents = useCallback((agents: AgentName[]) => {
+    setDisabledAgents(agents);
+  }, []);
+
   const toggleThinking = useCallback((messageId: string) => {
     setMessages(prev =>
       prev.map(m =>
