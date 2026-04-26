@@ -933,8 +933,6 @@ export default function HomePage() {
                 <SearchControls
                   workflowMode={workflowMode}
                   onWorkflowModeChange={setWorkflowMode}
-                  mode={mode}
-                  onModeChange={setMode}
                   selectedModel={selectedModel}
                   onModelChange={setSelectedModel}
                   disabledAgents={disabledAgents}
