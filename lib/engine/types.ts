@@ -1,7 +1,7 @@
 // ── Intent & Mode ──────────────────────────────────────────────
 
 export type SearchMode = "pro" | "deep" | "corpus";
-export type WorkflowMode = "planning" | "research";
+export type WorkflowMode = "chat" | "planning" | "research";
 
 export type IntentType =
   | "coding"
