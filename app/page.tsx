@@ -228,8 +228,8 @@ const ChatMessageBubble = memo(function ChatMessageBubble({
         animate={{ opacity: 1, y: 0 }}
         className="mt-6 md:mt-8 flex justify-end"
       >
-        <div className="flex items-start gap-3 max-w-[85%]">
-          <div className="glass-card rounded-2xl px-5 py-3 border-shine">
+        <div className="flex items-start gap-2 md:gap-3 max-w-[92%] md:max-w-[85%]">
+          <div className="glass-card rounded-2xl px-4 py-2.5 md:px-5 md:py-3 border-shine">
             <p className="text-foreground text-[15px] whitespace-pre-wrap">{message.query}</p>
             {message.files && message.files.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1.5">

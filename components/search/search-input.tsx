@@ -191,7 +191,7 @@ export function SearchInput({
           placeholder={placeholder}
           rows={1}
           disabled={isLoading}
-          className="w-full resize-none bg-transparent px-9 py-2.5 pr-11 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none disabled:opacity-60"
+          className="w-full resize-none bg-transparent px-8 py-2.5 md:px-9 md:py-3 pr-11 md:pr-12 text-sm md:text-base font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none disabled:opacity-60"
         />
 
         {/* Upload Button */}
