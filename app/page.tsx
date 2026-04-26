@@ -864,7 +864,7 @@ export default function HomePage() {
         {/* Content area — scrollable middle */}
         <div
           ref={scrollContainerRef}
-          className="flex flex-1 flex-col items-center justify-start overflow-y-auto px-4 pb-48 md:pb-52"
+          className="flex flex-1 flex-col items-center justify-start overflow-y-auto px-3 sm:px-4 pb-40 md:pb-52 w-full"
         >
           <div className="w-full max-w-3xl">
             {hasMessages && <div className="mt-6 md:mt-10" />}
@@ -921,7 +921,7 @@ export default function HomePage() {
             animate={{ y: 0, opacity: 1 }}
             className="w-full max-w-3xl relative z-10 pointer-events-auto"
           >
-            <div className={`rounded-[2rem] p-3 md:p-4 transition-all duration-500 border-shine ${showHero ? "glass-card gold-glow" : "glass-strong"}`}>
+            <div className={`w-full rounded-3xl md:rounded-[2rem] p-2.5 md:p-4 transition-all duration-500 border-shine ${showHero ? "glass-card gold-glow" : "glass-strong"}`}>
               <SearchInput
                 value={query}
                 onChange={setQuery}
