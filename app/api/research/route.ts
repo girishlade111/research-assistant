@@ -89,9 +89,9 @@ function streamingResponse(
           forceResearch = true;
         }
 
-        // Force-simple if all agents disabled or chat mode
-        if (body.disabledAgents?.length === 6 || workflowMode === "chat") {
-          send("route_decision", { complexity: "simple", reason: workflowMode === "chat" ? "Chat mode active" : "All agents disabled" });
+        // Force-simple if all agents disabled
+        if (body.disabledAgents?.length === 6) {
+          send("route_decision", { complexity: "simple", reason: "All agents disabled" });
           send("status", { phase: "chat", message: "Generating response..." });
 
           const result = await runSimpleChat(
@@ -100,12 +100,41 @@ function streamingResponse(
             (chunk, done) => {
               if (chunk) send("token", { text: chunk });
               if (done) send("status", { phase: "done", message: "" });
-            }
+            },
+            body.conversationHistory
           );
 
           send("result", result);
           send("done", {});
           return;
+        }
+
+        // Chat mode: check if user wants research, otherwise direct chat
+        if (workflowMode === "chat") {
+          const researchIntent = /\b(research|analyze|investigate|deep dive|detailed analysis|comprehensive report|multi-agent)\b/i.test(query);
+
+          if (researchIntent) {
+            send("workflow_mode", { mode: "research", autoSwitched: true, reason: "Research intent detected in chat" });
+            send("status", { phase: "transition", message: "Research intent detected. Switching to Research Mode..." });
+            forceResearch = true;
+          } else {
+            send("route_decision", { complexity: "simple", reason: "Chat mode active" });
+            send("status", { phase: "chat", message: "Generating response..." });
+
+            const result = await runSimpleChat(
+              query,
+              apiKeys,
+              (chunk, done) => {
+                if (chunk) send("token", { text: chunk });
+                if (done) send("status", { phase: "done", message: "" });
+              },
+              body.conversationHistory
+            );
+
+            send("result", result);
+            send("done", {});
+            return;
+          }
         }
 
         const { complexity, reason } = forceResearch
@@ -242,7 +271,7 @@ export async function POST(request: Request): Promise<Response> {
     const workflowMode = body.workflowMode ?? "research";
 
     if (body.disabledAgents?.length === 6 || workflowMode === "chat") {
-      const result = await runSimpleChat(body.query.trim(), apiKeys);
+      const result = await runSimpleChat(body.query.trim(), apiKeys, undefined, body.conversationHistory);
       return NextResponse.json({ success: true, data: result } satisfies ResearchApiResponse);
     }
 
