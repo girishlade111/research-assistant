@@ -14,6 +14,7 @@ import {
   Lightbulb,
   ChevronDown,
   XCircle,
+  MessageSquare,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
