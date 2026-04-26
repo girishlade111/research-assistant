@@ -890,7 +890,7 @@ export default function HomePage() {
           className={
             showHero
               ? "absolute inset-0 z-30 flex flex-col items-center md:pt-[22vh] pt-[18vh] pointer-events-none px-4 transition-all duration-300"
-              : "absolute inset-x-0 z-30 flex justify-center pb-6 pt-10 pointer-events-none transition-all duration-300"
+              : "absolute inset-x-0 z-30 flex justify-center pb-4 md:pb-6 pt-6 md:pt-10 pointer-events-none px-3 md:px-4 transition-all duration-300"
           }
         >
           {/* Fading gradient background for text readability only when sticky bottom */}
