@@ -233,34 +233,33 @@ export function Sidebar({
       {/* History Section */}
       <div className="mt-5 flex flex-col flex-1 min-h-0">
         {/* History Header */}
-        <button
-          onClick={() => setHistoryOpen(!historyOpen)}
+        <div
           className="flex items-center justify-between px-2 py-1 mb-2 group"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground group-hover:text-foreground transition-colors">
+          <button
+            onClick={() => setHistoryOpen(!historyOpen)}
+            className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground group-hover:text-foreground transition-colors"
+          >
             Recent
-          </p>
-          <div className="flex items-center gap-1">
-            {history.length > 0 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClearHistory();
-                }}
-                className="rounded p-1 text-muted-foreground hover:text-destructive transition-colors"
-                title="Clear all history"
-              >
-                <Trash2 className="h-3 w-3" />
-              </button>
-            )}
             <motion.span
               animate={{ rotate: historyOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
             >
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </motion.span>
+          </button>
+          <div className="flex items-center gap-1">
+            {history.length > 0 && (
+              <button
+                onClick={onClearHistory}
+                className="rounded p-1 text-muted-foreground hover:text-destructive transition-colors"
+                title="Clear all history"
+              >
+                <Trash2 className="h-3 w-3" />
+              </button>
+            )}
           </div>
-        </button>
+        </div>
 
         <AnimatePresence initial={false}>
           {historyOpen && (
