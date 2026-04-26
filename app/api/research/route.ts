@@ -89,9 +89,9 @@ function streamingResponse(
           forceResearch = true;
         }
 
-        // Force-simple if all agents disabled
-        if (body.disabledAgents?.length === 6) {
-          send("route_decision", { complexity: "simple", reason: "All agents disabled" });
+        // Force-simple if all agents disabled or chat mode
+        if (body.disabledAgents?.length === 6 || workflowMode === "chat") {
+          send("route_decision", { complexity: "simple", reason: workflowMode === "chat" ? "Chat mode active" : "All agents disabled" });
           send("status", { phase: "chat", message: "Generating response..." });
 
           const result = await runSimpleChat(
@@ -239,12 +239,12 @@ export async function POST(request: Request): Promise<Response> {
       return streamingResponse(body.query.trim(), body, apiKeys);
     }
 
-    if (body.disabledAgents?.length === 6) {
+    const workflowMode = body.workflowMode ?? "research";
+
+    if (body.disabledAgents?.length === 6 || workflowMode === "chat") {
       const result = await runSimpleChat(body.query.trim(), apiKeys);
       return NextResponse.json({ success: true, data: result } satisfies ResearchApiResponse);
     }
-
-    const workflowMode = body.workflowMode ?? "research";
 
     if (workflowMode === "planning") {
       const transition = await detectPlanningTransition(

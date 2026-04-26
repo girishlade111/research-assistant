@@ -47,6 +47,7 @@ function formatTimeAgo(timestamp: number): string {
 }
 
 const WorkflowIcon = ({ mode, className }: { mode: string; className?: string }) => {
+  if (mode === "chat") return <MessageSquare className={className} />;
   if (mode === "planning") return <Lightbulb className={className} />;
   return <Brain className={className} />;
 };
@@ -328,7 +329,7 @@ export function Sidebar({
                                 </span>
                                 <span className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
                                   <WorkflowIcon mode={entry.workflowMode} className="h-3 w-3" />
-                                  {entry.workflowMode === "planning" ? "Planning" : "Research"}
+                                  {entry.workflowMode === "planning" ? "Planning" : entry.workflowMode === "chat" ? "Chat" : "Research"}
                                   <span className="text-border">·</span>
                                   <ModeBadge mode={entry.mode} />
                                   <span className="text-border">·</span>
