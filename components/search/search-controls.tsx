@@ -55,17 +55,15 @@ export function SearchControls({
     <div className="flex flex-wrap items-center gap-1.5 px-1">
       {/* Workflow Mode Dropdown */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
+        <DropdownMenuTrigger
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg bg-accent/60 border border-border/40 px-2.5 py-1 text-[11px] font-semibold transition-all outline-none",
               "text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border/60"
             )}
-          >
+        >
             <ActiveIcon className="h-3.5 w-3.5" />
             <span>{activeMode.label}</span>
             <ChevronDown className="h-3 w-3 opacity-50" />
-          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-40">
           {workflowModes.map((m) => {

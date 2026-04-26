@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 import { parseFile, ParsedFile } from "@/lib/engine/file-parser";
 import { cn } from "@/lib/utils";
+import type { WorkflowMode } from "@/lib/engine/types";
 
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit: (files: ParsedFile[]) => void;
   isLoading: boolean;
-  workflowMode?: "planning" | "research";
+  workflowMode?: WorkflowMode;
 }
 
 export function SearchInput({

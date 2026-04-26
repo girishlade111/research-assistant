@@ -19,13 +19,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { HistoryEntry } from "@/hooks/use-cache";
 
+import type { WorkflowMode } from "@/lib/engine/types";
+
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
   isMobile: boolean;
   onNewThread: () => void;
   history: HistoryEntry[];
-  onSelectHistory: (query: string, workflowMode: "planning" | "research", mode: "pro" | "deep" | "corpus") => void;
+  onSelectHistory: (query: string, workflowMode: WorkflowMode, mode: "pro" | "deep" | "corpus") => void;
   onClearHistory: () => void;
   onDeleteHistoryItem?: (id: string) => void;
   activeView: "home" | "history";
