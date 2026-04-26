@@ -937,11 +937,18 @@ export default function HomePage() {
                   onModelChange={setSelectedModel}
                   disabledAgents={disabledAgents}
                   onToggleAgent={handleToggleAgent}
+                  onSetDisabledAgents={handleSetDisabledAgents}
                 />
               </div>
             </div>
 
           </motion.div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
         </div>
       </main>
     </div>

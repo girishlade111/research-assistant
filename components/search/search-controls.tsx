@@ -107,7 +107,12 @@ export function SearchControls({
         onOpenChange={setSettingsOpen}
         disabledAgents={disabledAgents}
         onToggleAgent={onToggleAgent}
+        onSetDisabledAgents={onSetDisabledAgents}
       />
+    </div>
+  );
+}
+   />
     </div>
   );
 }
