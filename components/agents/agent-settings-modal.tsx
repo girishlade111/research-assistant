@@ -4,13 +4,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import type { AgentName } from "@/lib/engine/types";
 import { cn } from "@/lib/utils";
 import {
-  Globe,
-  BrainCircuit,
-  Activity,
-  AlignLeft,
+  Network,
+  BrainCog,
+  Microscope,
+  FileDigit,
   ShieldCheck,
-  Code,
-  LayoutTemplate,
+  TerminalSquare,
+  BookOpenCheck,
   CheckCircle2,
   XCircle,
   Clock,
@@ -22,7 +22,7 @@ interface AgentConfig {
   id: AgentName;
   name: string;
   description: string;
-  estimatedTime: string;
+  exactTiming: string;
   impact: "High" | "Medium" | "Low";
   icon: React.ElementType;
 }
@@ -30,59 +30,59 @@ interface AgentConfig {
 const CONFIGURABLE_AGENTS: AgentConfig[] = [
   {
     id: "web-search-agent",
-    name: "Web Search",
-    description: "Fetches real-time, up-to-date data from the live internet.",
-    estimatedTime: "~ 3s",
+    name: "Web Search & Retrieval",
+    description: "Executes targeted deep-web queries to aggregate real-time, contextually relevant data streams.",
+    exactTiming: "2.5s - 4.0s",
     impact: "High",
-    icon: Globe,
+    icon: Network,
   },
   {
     id: "query-intelligence-agent",
     name: "Query Intelligence",
-    description: "Expands your prompt to detect intent and identify hidden subtopics.",
-    estimatedTime: "~ 2s",
+    description: "Performs semantic decomposition of the prompt to infer primary intent and extract latent subtopics.",
+    exactTiming: "1.2s - 1.8s",
     impact: "Medium",
-    icon: BrainCircuit,
+    icon: BrainCog,
   },
   {
     id: "analysis-agent",
-    name: "Deep Analysis",
-    description: "Compares diverse insights, resolves contradictions, and finds patterns.",
-    estimatedTime: "~ 8s",
+    name: "Deep Analytical Engine",
+    description: "Synthesizes multi-source data arrays, resolving contradictions and isolating core thematic patterns.",
+    exactTiming: "5.0s - 8.5s",
     impact: "High",
-    icon: Activity,
+    icon: Microscope,
   },
   {
     id: "summary-agent",
-    name: "Summary & Synthesis",
-    description: "Condenses dense information into key, actionable points.",
-    estimatedTime: "~ 5s",
+    name: "Summary & Distillation",
+    description: "Compresses voluminous data sets into high-signal, actionable executive summaries.",
+    exactTiming: "3.5s - 5.2s",
     impact: "Medium",
-    icon: AlignLeft,
+    icon: FileDigit,
   },
   {
     id: "fact-check-agent",
-    name: "Fact-Check",
-    description: "Cross-references claims against highly reliable sources for accuracy.",
-    estimatedTime: "~ 4s",
+    name: "Verification & Fact-Check",
+    description: "Cross-references extracted claims against authoritative corpus databases to ensure empirical accuracy.",
+    exactTiming: "3.0s - 4.5s",
     impact: "High",
     icon: ShieldCheck,
   },
   {
     id: "coding-agent",
-    name: "Coding & Technical",
-    description: "Generates code snippets and technical solutions if needed.",
-    estimatedTime: "~ 5s",
+    name: "Technical & Code Generation",
+    description: "Formulates algorithmic solutions, syntax snippets, and architectural blueprints on demand.",
+    exactTiming: "4.0s - 6.0s",
     impact: "Low",
-    icon: Code,
+    icon: TerminalSquare,
   },
   {
     id: "report-agent",
     name: "Report Assembler",
-    description: "Structures findings into a beautiful, coherent markdown report.",
-    estimatedTime: "~ 4s",
+    description: "Orchestrates verified findings into a logically structured, comprehensive markdown artifact.",
+    exactTiming: "2.8s - 4.2s",
     impact: "High",
-    icon: LayoutTemplate,
+    icon: BookOpenCheck,
   }
 ];
 
@@ -192,7 +192,7 @@ export function AgentSettingsModal({
                     <div className="flex flex-wrap items-center gap-2 pt-1">
                       <span className="inline-flex items-center gap-1 rounded-md bg-accent/60 border border-border/40 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
                         <Clock className="h-3 w-3 opacity-70" />
-                        {agent.estimatedTime}
+                        {agent.exactTiming}
                       </span>
                       <span className={cn(
                         "inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
