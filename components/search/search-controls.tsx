@@ -112,7 +112,3 @@ export function SearchControls({
     </div>
   );
 }
-   />
-    </div>
-  );
-}
