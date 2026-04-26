@@ -130,11 +130,36 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ResAgent",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "ResAgent is a production-grade multi-agent AI research engine that transforms raw queries into exhaustive, structured, and fact-checked intelligence reports.",
+    "author": {
+      "@type": "Person",
+      "name": "Girish Lade",
+      "url": "https://ladestack.in"
+    }
+  };
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${playfair.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="flex h-full min-h-dvh flex-col bg-background font-sans">
         {children}
       </body>
