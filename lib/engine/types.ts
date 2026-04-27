@@ -369,6 +369,36 @@ export interface ThinkingStep {
 
 export type ThinkingCallback = (step: ThinkingStep) => void;
 
+// ── Orchestrator (New Parallel Engine) ─────────────────────────
+
+export interface OrchestratorProgressEvent {
+  phase: 1 | 2 | 3;
+  type?: "plan_ready" | "models_assigned" | "agent_update" | "phase_complete" | "complete" | "error";
+  percent: number;
+  status: string;
+  sectionId?: string;
+  agentRole?: string;
+  completedSections?: string[];
+  failedSections?: number;
+  error?: string;
+}
+
+export interface OrchestratorInput {
+  userQuery: string;
+  userId?: string;
+  conversationId?: string;
+  researchMode: "fast" | "deep";
+  mode?: SearchMode;
+  files?: FileContext[];
+  conversationHistory?: LLMMessage[];
+  disabledAgents?: AgentName[];
+  apiKeys: ApiKeys;
+  onProgress: (event: OrchestratorProgressEvent) => void;
+  onChunk?: StreamCallback;
+  onAgentStatus?: AgentStatusCallback;
+  onThinking?: ThinkingCallback;
+}
+
 // ── API Route ──────────────────────────────────────────────────
 
 export interface ResearchRequest {
