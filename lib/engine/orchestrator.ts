@@ -10,7 +10,7 @@ import type {
 import { runQueryIntelligenceAgent } from "./agents/query-intelligence-agent";
 import { selectModelsForPlan } from "./agents/model-selector-agent";
 import { runSectionAgent } from "./agents/section-research-agent";
-import { runReportAgent } from "./agents/report-agent";
+import { runReportSynthesisAgent } from "./agents/report-synthesis-agent";
 
 // ── Mock DB & Cache (As requested in steps) ───────────────────────────
 
@@ -46,98 +46,6 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
     )
   ]);
 };
-
-// ── Report Synthesis Agent Wrapper ───────────────────────────────────
-
-async function runReportSynthesisAgent(params: {
-  plan: ResearchPlan;
-  completedSections: SectionResult[];
-  originalQuery: string;
-  userMemory: string;
-  apiKeys: any;
-}): Promise<ResearchResult> {
-  const { plan, completedSections, originalQuery, apiKeys } = params;
-  
-  // Aggregate all web results across sections
-  const dedupedWebResults: SearchResult[] = [];
-  const seenUrls = new Set<string>();
-  for (const sec of completedSections) {
-    for (const src of sec.sourcesUsed) {
-      if (!seenUrls.has(src.url)) {
-        seenUrls.add(src.url);
-        dedupedWebResults.push({
-          title: src.title,
-          url: src.url,
-          snippet: "",
-          domain: "",
-          relevanceScore: src.relevance === "high" ? 0.9 : 0.5,
-        });
-      }
-    }
-  }
-
-  const agentContext: AgentContext = {
-    query: originalQuery,
-    enhanced_query: originalQuery,
-    intent: "research",
-    subtopics: plan.dynamicSections.map(s => s.sectionTitle),
-    search_terms: [],
-    web_results: dedupedWebResults,
-    file_context: [],
-  };
-
-  const sectionSummary = completedSections.map(s =>
-    `[${s.agentRole}] ${s.sectionTitle}:\n${s.content}\nKey Findings: ${s.keyFindings.join("; ")}`
-  ).join("\n\n---\n\n");
-
-  const reportResult = await runReportAgent(
-    agentContext,
-    {
-      query: originalQuery,
-      enhanced_query: originalQuery,
-      queryOutput: { researchPlan: plan, researchType: "general" },
-      searchOutput: { sources: [], summaries: [], raw_results: dedupedWebResults },
-      analysisOutput: { analysis: sectionSummary, patterns: [], caveats: [], comparison: "" },
-      summaryOutput: { overview: plan.reportTitle, key_points: [], quick_facts: [], action_items: [] },
-      factCheckOutput: { verified_claims: [], unverified_claims: [], contradictions: [], warnings: [], reliability_score: 100, reliability_label: "High", fact_check_summary: "" },
-      codingOutput: {},
-      sources: dedupedWebResults.map((r, i) => ({
-        id: String(i + 1),
-        title: r.title,
-        snippet: r.snippet,
-        url: r.url,
-        domain: r.domain,
-      })),
-    },
-    apiKeys,
-    undefined
-  );
-
-  return {
-    overview: String((reportResult.output as any).overview || plan.reportTitle),
-    keyInsights: ((reportResult.output as any).key_insights as string[]) || [],
-    details: String((reportResult.output as any).details || sectionSummary),
-    comparison: String((reportResult.output as any).comparison || ""),
-    expertInsights: ((reportResult.output as any).expert_insights as string[]) || [],
-    conclusion: String((reportResult.output as any).conclusion || ""),
-    sources: dedupedWebResults.map((r, i) => ({
-      id: String(i + 1),
-      title: r.title,
-      snippet: r.snippet,
-      url: r.url,
-      domain: r.domain,
-    })),
-    references: [],
-    metadata: {
-      model: reportResult.model_used,
-      provider: reportResult.provider,
-      searchProvider: "multi",
-      intent: "research",
-      tokensUsed: 0,
-      durationMs: reportResult.durationMs,
-    }
-  };
-}
 
 // ── Orchestrator ────────────────────────────────────────────────────
 
@@ -221,8 +129,8 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
     .map(r => r.value);
 
   const failedSections = results
-    .map((r, i) => r.status === "rejected" ? { sectionId: plan.dynamicSections[i].id, error: r.reason } : null)
-    .filter(Boolean);
+    .map((r, i) => r.status === "rejected" ? { sectionId: plan.dynamicSections[i].id, error: String(r.reason) } : null)
+    .filter(Boolean) as { sectionId: string; error: string }[];
 
   onProgress({ 
     phase: 2, 
@@ -240,17 +148,37 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   const finalReport = await runReportSynthesisAgent({
     plan,
     completedSections,
+    failedSections: failedSections.map(f => f.sectionId),
     originalQuery: userQuery,
     userMemory,
     apiKeys
   });
 
+  const researchResult: ResearchResult = {
+    overview: finalReport.sections.executiveSummary,
+    keyInsights: finalReport.sections.keyFindings,
+    details: finalReport.sections.dynamic.map(d => `## ${d.title}\n\n${d.content}`).join("\n\n") + "\n\n" + finalReport.sections.crossSectionAnalysis + "\n\n" + finalReport.sections.confidenceAssessment,
+    comparison: "",
+    expertInsights: [],
+    conclusion: finalReport.sections.conclusions,
+    sources: finalReport.sources,
+    references: [],
+    metadata: {
+      model: finalReport.metadata.modelsUsed[0] || "nvidia/nemotron-3-super-120b-a12b",
+      provider: "nvidia",
+      searchProvider: "multi",
+      intent: "research",
+      tokensUsed: 0,
+      durationMs: 0,
+    }
+  };
+
   // Step 7: Save & Cache
   onProgress({ phase: 3, percent: 95, status: "Saving report..." });
-  await saveReport(userId, conversationId, finalReport);
-  await setCachedResponse(queryHash, finalReport, 3600);
+  await saveReport(userId, conversationId, researchResult);
+  await setCachedResponse(queryHash, researchResult, 3600);
 
   // Step 8: Return Complete Report
   onProgress({ phase: 3, percent: 100, status: "Report ready!", type: "complete" });
-  return finalReport;
+  return researchResult;
 }

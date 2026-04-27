@@ -469,3 +469,36 @@ export type AgentState = {
   isFallback?: boolean;
   error?: string;
 };
+
+// ── Report Synthesis Agent ─────────────────────────────────────
+
+export interface ReportSections {
+  executiveSummary: string;
+  dynamic: { id: string; title: string; content: string; order: number }[];
+  crossSectionAnalysis: string;
+  keyFindings: string[];
+  conclusions: string;
+  confidenceAssessment: string;
+}
+
+export interface ReportMetadata {
+  totalAgentsUsed: number;
+  successfulAgents: number;
+  failedAgents: number;
+  totalSourcesAnalyzed: number;
+  modelsUsed: string[];
+}
+
+export interface FinalReport {
+  reportId: string;
+  title: string;
+  subtitle: string;
+  generatedAt: string;
+  originalQuery: string;
+  estimatedReadTime: string;
+  totalWords: number;
+  totalPages: number;
+  sections: ReportSections;
+  sources: ResearchSource[];
+  metadata: ReportMetadata;
+}
