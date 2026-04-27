@@ -137,6 +137,32 @@ export interface QueryIntelligenceInput {
   researchMode: "fast" | "deep";
 }
 
+// ── Model Selector Agent ──────────────────────────────────────
+
+export type SectionTaskType =
+  | "web_search"
+  | "deep_reasoning"
+  | "code_generation"
+  | "fast_summary"
+  | "financial_analysis"
+  | "report_compilation"
+  | "fact_checking"
+  | "balanced_research";
+
+export interface ModelAssignment {
+  platform: "nvidia" | "openrouter";
+  modelId: string;
+}
+
+export interface AgentModelAssignment {
+  sectionId: string;
+  agentRole: string;
+  primaryModel: ModelAssignment;
+  fallbackModel: ModelAssignment;
+  taskType: SectionTaskType;
+  maxTokens: number;
+}
+
 // ── Search ─────────────────────────────────────────────────────
 
 export interface SearchResult {
