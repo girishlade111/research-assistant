@@ -163,6 +163,59 @@ export interface AgentModelAssignment {
   maxTokens: number;
 }
 
+// ── Section Research Agent ─────────────────────────────────────
+
+export interface SectionDataPoint {
+  metric: string;
+  value: string;
+  year?: string;
+  source?: string;
+}
+
+export interface SectionSourceRef {
+  title: string;
+  url: string;
+  relevance: "high" | "medium" | "low";
+}
+
+export interface SectionResult {
+  sectionId: string;
+  sectionTitle: string;
+  agentRole: string;
+  content: string;
+  keyFindings: string[];
+  dataPoints: SectionDataPoint[];
+  sourcesUsed: SectionSourceRef[];
+  confidenceScore: number;
+  dataQuality: "rich" | "moderate" | "limited";
+  wordCount: number;
+  modelUsed: string;
+  provider: string;
+  isFallback: boolean;
+  durationMs: number;
+  error?: string;
+}
+
+export interface SectionProgressEvent {
+  sectionId: string;
+  status: "searching" | "synthesizing" | "complete" | "failed";
+  agentRole: string;
+  wordCount?: number;
+  sourcesFound?: number;
+  confidence?: number;
+  error?: string;
+}
+
+export interface SectionAgentConfig {
+  section: DynamicSection;
+  assignedModel: AgentModelAssignment;
+  originalQuery: string;
+  globalSearchContext: string;
+  existingSearchResults?: SearchResult[];
+  apiKeys: ApiKeys;
+  onProgress?: (event: SectionProgressEvent) => void;
+}
+
 // ── Search ─────────────────────────────────────────────────────
 
 export interface SearchResult {
