@@ -243,11 +243,10 @@ export async function runResearch(
   const searchTerms = qr.search_terms || (queryResult.output?.search_terms as string[]) || [];
 
   if (!queryResult.error || queryResult.error !== "skipped") {
-    think(
-      "query-intelligence",
-      `Identified intent: "${queryResult.output?.intent ?? "general"}". Generated ${subtopics.length} subtopics and ${searchTerms.length} search terms.`,
-      "query-intelligence-agent"
-    );
+    const planInfo = researchPlan
+      ? `Research type: "${researchPlan.researchType}". Plan: "${researchPlan.reportTitle}" with ${researchPlan.dynamicSections.length} sections, ~${researchPlan.estimatedPages} pages.`
+      : `Generated ${subtopics.length} subtopics and ${searchTerms.length} search terms.`;
+    think("query-intelligence", planInfo, "query-intelligence-agent");
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -435,7 +434,7 @@ export async function runResearch(
     {
       query,
       enhanced_query: enhancedQuery,
-      queryOutput: queryResult.output,
+      queryOutput: researchPlan ? { ...queryResult.output, researchPlan } : queryResult.output,
       searchOutput: searchResult.output,
       analysisOutput: analysisResult.output,
       summaryOutput: summaryResult.output,
