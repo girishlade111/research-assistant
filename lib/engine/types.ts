@@ -89,6 +89,54 @@ export interface EnhancedQuery {
   subtopics: string[];
 }
 
+// ── Research Plan (Query Intelligence Agent output) ────────────
+
+export type ResearchType =
+  | "financial"
+  | "technical"
+  | "scientific"
+  | "news"
+  | "comparative"
+  | "general";
+
+export type SectionPriority = "high" | "medium" | "low";
+export type OutputLength = "long" | "medium" | "short";
+
+export interface FixedSection {
+  id: string;
+  title: string;
+  order: number;
+}
+
+export interface DynamicSection {
+  id: string;
+  agentRole: string;
+  sectionTitle: string;
+  focusArea: string;
+  priority: SectionPriority;
+  searchQueries: string[];
+  outputLength: OutputLength;
+  requiresWebSearch: boolean;
+}
+
+export interface ResearchPlan {
+  queryId: string;
+  originalQuery: string;
+  researchType: ResearchType;
+  reportTitle: string;
+  estimatedPages: number;
+  fixedSections: FixedSection[];
+  dynamicSections: DynamicSection[];
+  globalSearchContext: string;
+  totalAgentsNeeded: number;
+}
+
+export interface QueryIntelligenceInput {
+  userQuery: string;
+  userMemory: string;
+  researchMode: "fast" | "deep";
+}
+
 // ── Search ─────────────────────────────────────────────────────
 
 export interface SearchResult {
