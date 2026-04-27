@@ -1,102 +1,90 @@
-import type { ApiKeys, AgentResult } from "../types";
+import type { ApiKeys, AgentResult, ResearchPlan, QueryIntelligenceInput } from "../types";
 import { selectModel } from "../model-router";
 import { callWithFallback, safeParseJSON } from "./base-agent";
 import { TOKEN_LIMITS } from "../config";
 
 // ── Query Intelligence Agent ───────────────────────────────────
-// Role: Expand query, detect intent, generate subtopics
-// Primary: moonshotai/kimi-k2-thinking (nvidia)
+// Role: Senior Research Director — analyze query, produce structured research plan
+// Primary: mistralai/mistral-large-3-675b-instruct-2512 (nvidia)
 // Fallback: openai/gpt-oss-120b (openrouter)
 
-const SYSTEM_PROMPT = `You are the Query Intelligence Agent — the strategic brain of a multi-agent research pipeline. Your job is to transform ANY user query into a comprehensive, multi-layered research blueprint that will guide 5 downstream agents (Analysis, Summary, Fact-Check, Coding, Report) to each produce one full page of detailed content.
+const SYSTEM_PROMPT = `You are a Senior Research Director and Query Intelligence Specialist.
+Your job is to analyze a user's research query and create a precise,
+multi-dimensional research execution plan.
 
-═══════════════════════════════════════════════════════════════
-ROLE & RESPONSIBILITY
-═══════════════════════════════════════════════════════════════
+You must:
+1. Understand the core intent (informational/comparative/technical/financial/scientific)
+2. Identify ALL research dimensions that a comprehensive report needs
+3. Generate 6-8 specific research sections based on query complexity
+4. For each section, write 3 targeted search queries
+5. Determine which sections are mandatory vs optional
+6. Estimate total report pages (minimum 7, maximum unlimited)
 
-You are the FIRST agent in the pipeline. Every other agent depends on YOUR output to determine what to research, how deeply to explore, and what angles to cover. If your output is shallow, the entire report will be shallow. You must be exhaustive.
+RULES:
+- Never create duplicate or overlapping sections
+- Each section must have a distinct research focus
+- Search queries must be specific, not generic
+- Always include: Overview, Key Insights, Conclusion as fixed sections
+- Dynamic sections must be query-specific (never hardcode them)
+- Return ONLY valid JSON, no markdown, no explanation
 
-═══════════════════════════════════════════════════════════════
-OUTPUT SPECIFICATION (ALL FIELDS MANDATORY)
-═══════════════════════════════════════════════════════════════
-
-1. **enhanced_query** (string, MINIMUM 600-900 words):
-   A deeply structured research directive organized into these sections using ### markdown headers:
-
-   ### Research Context & Background
-   - What is this topic about? Why does it matter now? What is the broader landscape?
-   - Historical context, evolution, and current state of the field.
-
-   ### Core Research Objectives
-   - 5-8 specific, measurable research questions that the downstream agents must answer.
-   - Each objective should target a different dimension (technical, economic, social, practical, ethical).
-
-   ### Key Questions for Investigation
-   - 8-12 deeply specific questions organized by theme.
-   - Include questions about mechanisms, causality, evidence quality, counterarguments, and future implications.
-
-   ### Methodological Approach
-   - How should each downstream agent approach their analysis?
-   - What evidence standards should be applied? What frameworks are relevant?
-   - What biases or limitations should agents watch for?
-
-   ### Scope Boundaries
-   - What is in scope vs. out of scope for this research?
-   - What level of technical depth is appropriate?
-
-2. **intent** (string): Classify as exactly one of: coding | research | comparison | explanation | factual | general
-   - "coding" = code generation, debugging, implementation, algorithm design
-   - "research" = in-depth investigation, academic research, industry analysis
-   - "comparison" = evaluating alternatives, pros/cons, benchmarking
-   - "explanation" = explaining concepts, how things work, teaching
-   - "factual" = specific facts, data points, statistics, definitions
-   - "general" = broad topics that don't fit neatly into the above
-
-3. **subtopics** (array of strings, MINIMUM 8-12 items):
-   Each subtopic must be a self-contained research vector with enough detail for an agent to write a full paragraph.
-   Format: "**[Subtopic Title]** — [2-3 sentence description of what to investigate, what evidence to look for, and why this angle matters]"
-
-4. **key_concepts** (array of strings, MINIMUM 10-15 items):
-   Critical terms, frameworks, and ideas that every downstream agent needs to understand.
-   Format: "**[Term/Concept]** — [Precise definition + why it matters in this research context + how it relates to the query]"
-
-5. **search_terms** (array of strings, MINIMUM 10-15 items):
-   Highly optimized search queries designed to find authoritative sources.
-   Format: "**[Focus Area]** — [Optimized search string using specific terminology, Boolean operators where helpful]"
-   Include diverse source types: academic papers, official docs, industry reports, technical blogs, news articles.
-
-═══════════════════════════════════════════════════════════════
-CRITICAL RULES
-═══════════════════════════════════════════════════════════════
-
-- NEVER produce a shallow or abbreviated output. Even "simple" queries must be expanded into rich research directives.
-- Every field must contain substantive, detailed content — no placeholders, no generic filler.
-- The enhanced_query alone should be comprehensive enough that a researcher could use it as a research brief.
-- Subtopics must cover MULTIPLE dimensions: technical, practical, economic, ethical, historical, comparative, and future-oriented.
-- Search terms must target HIGH-QUALITY sources: arxiv.org, Wikipedia, official documentation, peer-reviewed journals, reputable news outlets, and authoritative technical blogs.
-
-Return ONLY valid JSON (no markdown fences, no extra text):
+OUTPUT FORMAT — return this exact JSON structure:
 {
-  "enhanced_query": "string (600-900 words with ### headers)",
-  "intent": "coding|research|comparison|explanation|factual|general",
-  "subtopics": ["**[Title]** — Detailed description", "..."],
-  "key_concepts": ["**[Term]** — Detailed definition and context", "..."],
-  "search_terms": ["**[Focus]** — Optimized search query", "..."]
-}`;
+  "queryId": "unique-id-string",
+  "originalQuery": "the user's original query",
+  "researchType": "financial|technical|scientific|news|comparative|general",
+  "reportTitle": "Professional Report Title",
+  "estimatedPages": 8,
+  "fixedSections": [
+    { "id": "overview", "title": "Executive Overview", "order": 1 },
+    { "id": "keyInsights", "title": "Key Insights", "order": 99 },
+    { "id": "conclusion", "title": "Conclusions & Recommendations", "order": 100 }
+  ],
+  "dynamicSections": [
+    {
+      "id": "section_<topic>",
+      "agentRole": "Specialist role name",
+      "sectionTitle": "Section Title",
+      "focusArea": "What this section investigates",
+      "priority": "high|medium|low",
+      "searchQueries": ["query 1", "query 2", "query 3"],
+      "outputLength": "long|medium|short",
+      "requiresWebSearch": true
+    }
+  ],
+  "globalSearchContext": "Overall search context string",
+  "totalAgentsNeeded": 7
+}
+
+SECTION GENERATION RULES:
+- fixedSections: Always exactly 3 (Overview order=1, Key Insights order=99, Conclusion order=100)
+- dynamicSections: Generate 6-8 sections, each with a unique research dimension
+- Each dynamicSection.searchQueries must have exactly 3 specific, actionable search queries
+- priority: "high" for core topic areas, "medium" for supporting context, "low" for supplementary
+- outputLength: "long" for high priority, "medium" for medium, "short" for low
+- requiresWebSearch: true for factual/current data, false for pure analytical sections
+- agentRole: A realistic specialist title (e.g., "Financial Analysis Specialist", "Technical Architecture Expert")
+- queryId: Generate a unique slug from the query (lowercase, hyphens, max 40 chars)
+- estimatedPages: Based on dynamicSections count — each high=1.5 pages, medium=1 page, low=0.5 pages, plus 2 pages for fixed sections`;
+
+const RESEARCH_MODE_MAP: Record<string, string> = {
+  fast: "Generate a focused plan with 6 high-priority sections. Optimize for speed — fewer but more targeted search queries.",
+  deep: "Generate an exhaustive plan with 8 sections covering every research dimension. Maximize breadth and depth.",
+  pro: "Generate a comprehensive plan with 7-8 sections balancing thoroughness with actionable insights.",
+  corpus: "Generate an analytical plan with 6-7 sections. Focus on AI knowledge synthesis — minimize web search dependency.",
+};
 
 export async function runQueryIntelligenceAgent(
   query: string,
   mode: "pro" | "deep" | "corpus",
-  apiKeys: ApiKeys
-): Promise<AgentResult & { enhanced_query: string; subtopics: string[]; search_terms: string[] }> {
+  apiKeys: ApiKeys,
+  input?: Partial<QueryIntelligenceInput>
+): Promise<AgentResult & { plan: ResearchPlan; enhanced_query: string; subtopics: string[]; search_terms: string[] }> {
   const start = Date.now();
   const chain = selectModel("query", query);
 
-  const modeHint: Record<string, string> = {
-    pro: "Professional, well-structured research expansion.",
-    deep: "Academic-grade query expansion with breadth and depth.",
-    corpus: "Literature and evidence-based search directives.",
-  };
+  const userMemory = input?.userMemory ?? "";
+  const researchMode = input?.researchMode ?? (mode === "deep" ? "deep" : "fast");
 
   const messages = [
     { role: "system" as const, content: SYSTEM_PROMPT },
@@ -104,18 +92,10 @@ export async function runQueryIntelligenceAgent(
       role: "user" as const,
       content: `USER QUERY: "${query}"
 
-RESEARCH MODE: ${mode} — ${modeHint[mode] ?? ""}
+RESEARCH MODE: ${researchMode} — ${RESEARCH_MODE_MAP[mode] ?? RESEARCH_MODE_MAP.pro}
+${userMemory ? `\nUSER CONTEXT: ${userMemory}` : ""}
 
-PIPELINE CONTEXT: Your output will be consumed by 5 downstream agents:
-1. Analysis Agent — produces deep multi-dimensional analysis (needs subtopics, key_concepts)
-2. Summary Agent — produces executive briefings (needs enhanced_query overview)
-3. Fact-Check Agent — validates claims and assesses reliability (needs search_terms, key_concepts)
-4. Coding Agent — generates code if intent=coding (needs technical context)
-5. Report Agent — synthesizes everything into a 5-6 page final report (needs ALL your fields)
-
-QUALITY GATE: If your enhanced_query is under 600 words, or you provide fewer than 8 subtopics, the downstream agents will produce shallow output and the final report will be inadequate. Be exhaustive.
-
-Return ONLY valid JSON.`,
+IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown fences, no explanation text.`,
     },
   ];
 
@@ -127,44 +107,179 @@ Return ONLY valid JSON.`,
       messages,
       TOKEN_LIMITS.agentMaxTokens,
       apiKeys,
-      { jsonMode: true }
+      { jsonMode: true, temperature: 0.4 }
     );
 
-    const parsed = safeParseJSON(result.content);
+    let parsed = safeParseJSON(result.content);
 
-    const enhanced_query = parsed
-      ? String(parsed.enhanced_query ?? query)
-      : query;
-    const subtopics: string[] = parsed
-      ? (Array.isArray(parsed.subtopics) ? (parsed.subtopics as string[]) : [])
-      : [];
-    const search_terms: string[] = parsed
-      ? (Array.isArray(parsed.search_terms) ? (parsed.search_terms as string[]) : [])
-      : [];
+    if (!parsed || !parsed.dynamicSections) {
+      const retryResult = await callWithFallback(
+        "query-intelligence-agent",
+        chain.primary,
+        chain.fallbacks[0],
+        [
+          ...messages,
+          { role: "assistant" as const, content: result.content },
+          { role: "user" as const, content: "Your response was not valid JSON or missing required fields. Return ONLY the JSON object with all required fields: queryId, originalQuery, researchType, reportTitle, estimatedPages, fixedSections, dynamicSections, globalSearchContext, totalAgentsNeeded." },
+        ],
+        TOKEN_LIMITS.agentMaxTokens,
+        apiKeys,
+        { jsonMode: true, temperature: 0.2 }
+      );
+      parsed = safeParseJSON(retryResult.content);
+    }
+
+    if (!parsed || !parsed.dynamicSections) {
+      throw new Error("Failed to parse research plan after retry");
+    }
+
+    const plan = normalizeResearchPlan(parsed, query);
+
+    const enhanced_query = plan.reportTitle + " — " + plan.globalSearchContext;
+    const subtopics = plan.dynamicSections.map(s => s.sectionTitle);
+    const search_terms = plan.dynamicSections.flatMap(s => s.searchQueries);
 
     return {
       agent: "query-intelligence-agent",
-      output: parsed ?? { enhanced_query, subtopics, search_terms },
+      output: plan as unknown as Record<string, unknown>,
       model_used: result.model_used,
       provider: result.provider,
       durationMs: Date.now() - start,
       isFallback: result.isFallback,
+      plan,
       enhanced_query,
       subtopics,
       search_terms,
     };
   } catch (err) {
+    const fallbackPlan = buildFallbackPlan(query);
+
     return {
       agent: "query-intelligence-agent",
-      output: { enhanced_query: query, subtopics: [], search_terms: [] },
+      output: fallbackPlan as unknown as Record<string, unknown>,
       model_used: "none",
       provider: "none",
       durationMs: Date.now() - start,
       isFallback: false,
-      error: err instanceof Error ? err.message : "Query agent failed",
+      error: err instanceof Error ? err.message : "Query intelligence agent failed",
+      plan: fallbackPlan,
       enhanced_query: query,
-      subtopics: [],
-      search_terms: [],
+      subtopics: fallbackPlan.dynamicSections.map(s => s.sectionTitle),
+      search_terms: fallbackPlan.dynamicSections.flatMap(s => s.searchQueries),
     };
   }
+}
+
+function normalizeResearchPlan(raw: Record<string, unknown>, query: string): ResearchPlan {
+  const dynamicSections = Array.isArray(raw.dynamicSections)
+    ? (raw.dynamicSections as Record<string, unknown>[]).map(s => ({
+        id: String(s.id ?? `section_${Math.random().toString(36).slice(2, 8)}`),
+        agentRole: String(s.agentRole ?? "Research Specialist"),
+        sectionTitle: String(s.sectionTitle ?? "Untitled Section"),
+        focusArea: String(s.focusArea ?? ""),
+        priority: validatePriority(s.priority),
+        searchQueries: Array.isArray(s.searchQueries)
+          ? (s.searchQueries as string[]).map(String).slice(0, 3)
+          : [],
+        outputLength: validateOutputLength(s.outputLength),
+        requiresWebSearch: Boolean(s.requiresWebSearch ?? true),
+      }))
+    : [];
+
+  const fixedSections = Array.isArray(raw.fixedSections)
+    ? (raw.fixedSections as Record<string, unknown>[]).map(s => ({
+        id: String(s.id ?? ""),
+        title: String(s.title ?? ""),
+        order: Number(s.order ?? 0),
+      }))
+    : [
+        { id: "overview", title: "Executive Overview", order: 1 },
+        { id: "keyInsights", title: "Key Insights", order: 99 },
+        { id: "conclusion", title: "Conclusions & Recommendations", order: 100 },
+      ];
+
+  return {
+    queryId: String(raw.queryId ?? generateQueryId(query)),
+    originalQuery: String(raw.originalQuery ?? query),
+    researchType: validateResearchType(raw.researchType),
+    reportTitle: String(raw.reportTitle ?? query),
+    estimatedPages: Math.max(7, Number(raw.estimatedPages) || 8),
+    fixedSections,
+    dynamicSections,
+    globalSearchContext: String(raw.globalSearchContext ?? query),
+    totalAgentsNeeded: Number(raw.totalAgentsNeeded) || dynamicSections.length + 3,
+  };
+}
+
+function buildFallbackPlan(query: string): ResearchPlan {
+  return {
+    queryId: generateQueryId(query),
+    originalQuery: query,
+    researchType: "general",
+    reportTitle: query,
+    estimatedPages: 7,
+    fixedSections: [
+      { id: "overview", title: "Executive Overview", order: 1 },
+      { id: "keyInsights", title: "Key Insights", order: 99 },
+      { id: "conclusion", title: "Conclusions & Recommendations", order: 100 },
+    ],
+    dynamicSections: [
+      {
+        id: "section_background",
+        agentRole: "Background Research Specialist",
+        sectionTitle: "Background & Context",
+        focusArea: "Historical context and current landscape",
+        priority: "high",
+        searchQueries: [`${query} overview`, `${query} background context`, `${query} current state 2025`],
+        outputLength: "long",
+        requiresWebSearch: true,
+      },
+      {
+        id: "section_analysis",
+        agentRole: "Analysis Specialist",
+        sectionTitle: "Detailed Analysis",
+        focusArea: "In-depth examination of key aspects",
+        priority: "high",
+        searchQueries: [`${query} analysis`, `${query} key factors`, `${query} detailed examination`],
+        outputLength: "long",
+        requiresWebSearch: true,
+      },
+      {
+        id: "section_trends",
+        agentRole: "Trends & Future Outlook Specialist",
+        sectionTitle: "Trends & Future Outlook",
+        focusArea: "Emerging trends and future projections",
+        priority: "medium",
+        searchQueries: [`${query} trends 2025`, `${query} future outlook`, `${query} predictions`],
+        outputLength: "medium",
+        requiresWebSearch: true,
+      },
+    ],
+    globalSearchContext: query,
+    totalAgentsNeeded: 6,
+  };
+}
+
+function generateQueryId(query: string): string {
+  return query
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 40);
+}
+
+function validateResearchType(val: unknown): ResearchPlan["researchType"] {
+  const valid = ["financial", "technical", "scientific", "news", "comparative", "general"];
+  return valid.includes(String(val)) ? (String(val) as ResearchPlan["researchType"]) : "general";
+}
+
+function validatePriority(val: unknown): "high" | "medium" | "low" {
+  const valid = ["high", "medium", "low"];
+  return valid.includes(String(val)) ? (String(val) as "high" | "medium" | "low") : "medium";
+}
+
+function validateOutputLength(val: unknown): "long" | "medium" | "short" {
+  const valid = ["long", "medium", "short"];
+  return valid.includes(String(val)) ? (String(val) as "long" | "medium" | "short") : "medium";
 }
