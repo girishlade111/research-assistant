@@ -58,9 +58,9 @@ OUTPUT FORMAT — Return exactly this structure:
   "content": "Full markdown content (600-900 words with ## subheadings)",
   "keyFindings": ["specific finding 1", "specific finding 2", "specific finding 3"],
   "dataPoints": [
-    { "metric": "Metric Name", "value": "value", "year": "2024", "source": "Source Name" }
+    { "metric": "Revenue", "value": "$97.69B", "year": "2024", "source": "Tesla 10-K" }
   ],
-  "sourcesUsed": [{ "title": "Source Title", "url": "https://...", "relevance": "high|medium|low" }],
+  "sourcesUsed": [{ "title": "", "url": "", "relevance": "high|medium|low" }],
   "confidenceScore": 0.85,
   "dataQuality": "rich|moderate|limited",
   "wordCount": 750
@@ -116,12 +116,9 @@ function buildSearchContext(sources: SearchResult[]): string {
     return "No web search results available. Use your internal knowledge to produce the best possible analysis. Clearly note any data limitations.";
   }
 
-  return sources
-    .map(
-      (s, i) =>
-        `SOURCE [${i + 1}] "${s.title}" (${s.url}):\n${s.snippet}`
-    )
-    .join("\n\n---\n\n");
+  return sources.map(s => 
+    `SOURCE [${s.title}] (${s.url}):\n${s.snippet}`
+  ).join('\n\n---\n\n');
 }
 
 // ── Step 3: Section Synthesis ─────────────────────────────────
@@ -135,16 +132,7 @@ async function callSynthesisModel(
   model: AgentModelAssignment,
   apiKeys: ApiKeys
 ): Promise<{ content: string; modelUsed: string; provider: string; isFallback: boolean }> {
-  const userMessage = `SEARCH RESULTS FOR YOUR SECTION:
-
-${searchContext}
-
-INSTRUCTIONS:
-Analyze the above sources and write your section: "${section.sectionTitle}"
-Focus area: ${section.focusArea}
-Expected output length: ${section.outputLength === "long" ? "600-900 words" : section.outputLength === "medium" ? "400-600 words" : "200-400 words"}
-
-Return ONLY valid JSON matching the output format specified in your instructions.`;
+  const userMessage = `${searchContext}\n\nAnalyze and write your section`;
 
   const messages: LLMMessage[] = [
     { role: "system", content: systemPrompt },
@@ -256,7 +244,7 @@ function emitProgress(
 
 export async function runSectionAgent(config: SectionAgentConfig): Promise<SectionResult> {
   const start = Date.now();
-  const { section, assignedModel, originalQuery, globalSearchContext, apiKeys } = config;
+  const { section, assignedModel, originalQuery, apiKeys } = config;
 
   // Step 1: Web Search
   emitProgress(config, { status: "searching" });
