@@ -186,7 +186,7 @@ export const AGENT_MODEL_MAP: Record<
   { primary: string; fallback: string }
 > = {
   query: {
-    primary: "moonshotai/kimi-k2-thinking",
+    primary: "mistralai/mistral-large-3-675b-instruct-2512",
     fallback: "openai/gpt-oss-120b:free",
   },
   search: {

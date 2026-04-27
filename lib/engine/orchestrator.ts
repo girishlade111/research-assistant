@@ -236,7 +236,8 @@ export async function runResearch(
         return r;
       }));
 
-  const qr = queryResult as AgentResult & { enhanced_query?: string; subtopics?: string[]; search_terms?: string[] };
+  const qr = queryResult as AgentResult & { plan?: import("./types").ResearchPlan; enhanced_query?: string; subtopics?: string[]; search_terms?: string[] };
+  const researchPlan = qr.plan ?? null;
   const enhancedQuery = qr.enhanced_query || queryResult.output?.enhanced_query || query;
   const subtopics = qr.subtopics || (queryResult.output?.subtopics as string[]) || [];
   const searchTerms = qr.search_terms || (queryResult.output?.search_terms as string[]) || [];
