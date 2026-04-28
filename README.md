@@ -9,9 +9,9 @@
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM-76B900?style=for-the-badge&logo=nvidia)](https://www.nvidia.com/en-us/ai/)
 
 **Next-Generation Multi-Agent Research Engine**  
-*Transform raw queries into exhaustive, structured, and fact-checked intelligence reports.*
+*Transforming raw queries into exhaustive, structured, and fact-checked intelligence reports using a fleet of specialized AI experts.*
 
-[Project Overview](#-project-overview) • [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Dev Stack](#-development-stack) • [Installation](#-installation--setup) • [Configuration](#-configuration) • [Project Stats](#-project-stats--metrics) • [Usage Guide](#-usage-guide)
+[Project Overview](#-project-overview) • [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Dev Stack](#-development-stack) • [Installation](#-installation--setup) • [Configuration](#-configuration) • [Project Stats](#-project-stats--metrics) • [Usage Guide](#-usage-guide) • [Maintainer](#-maintainer)
 
 </div>
 
@@ -39,7 +39,7 @@
 ### 🤖 Specialized Agent Fleet
 The system dynamically assigns models based on task complexity and domain expertise.
 
-| Agent | Primary Role | Primary Model (NVIDIA NIM) | Fallback (OpenRouter) |
+| Agent | Purpose | Primary Model (NVIDIA NIM) | Fallback (OpenRouter) |
 | :--- | :--- | :--- | :--- |
 | **Query Intelligence** | Refines queries & builds research plans | `mistral-large-3` | `gpt-oss-120b:free` |
 | **Web Search** | Concurrent real-time data retrieval | `dracarys-70b` | `llama-3.3-70b:free` |
@@ -202,9 +202,9 @@ To ensure zero hallucinations, the system uses a **Semantic Blackboard Architect
 ## 🚀 Installation & Setup
 
 ### 1. Prerequisites
-- Node.js 20+
-- NPM 10+
-- API Keys for NVIDIA NIM and OpenRouter.
+- **Node.js 20+**
+- **NPM 10+**
+- API Keys for **NVIDIA NIM**, **OpenRouter**, and **Perplexity**.
 
 ### 2. Clone & Install
 ```bash
@@ -216,10 +216,10 @@ npm install
 ### 3. Configure Environment
 Create a `.env.local` in the root and add your keys:
 ```env
-# Primary platform
+# Primary platform (NVIDIA NIM)
 NVIDIA_API_KEY=nvapi-your-key-here
 
-# Fallback platform
+# Fallback platform (OpenRouter)
 OPENROUTER_API_KEY=sk-or-your-key-here
 
 # Web Search (Perplexity)
@@ -253,6 +253,7 @@ The system uses a tiered token budgeting strategy based on task priority.
 - **3** Research Tiers: **Corpus** (Document-only), **Deep** (4 sources), **Pro** (8+ sources).
 - **4** File Types Supported: **PDF, DOCX, CSV, Image (OCR)**.
 - **0.2s** Stagger delay for concurrent agent launches to prevent rate limiting.
+- **100%** SSE-based real-time streaming for all agent activities.
 
 ---
 
@@ -270,18 +271,25 @@ The system uses a tiered token budgeting strategy based on task priority.
 
 ---
 
+## 👤 Maintainer
+
 <div align="center">
 
-### **Created by Girish Lade**
-*UI/UX Developer & AI Systems Engineer*
+### **Girish Lade**
+**Full-Stack AI Solutions Architect & UI/UX Expert**
+
+*Specializing in high-performance multi-agent systems and immersive AI-driven interfaces.*
 
 <br/>
 
-[Website](https://ladestack.in) • [LinkedIn](https://www.linkedin.com/in/girish-lade-075bba201/) • [GitHub](https://github.com/girishlade111)
+[![Website](https://img.shields.io/badge/Website-ladestack.in-000000?style=for-the-badge&logo=google-chrome&logoColor=white)](https://ladestack.in)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Girish_Lade-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/girish-lade-075bba201/)
+[![GitHub](https://img.shields.io/badge/GitHub-girishlade111-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/girishlade111)
+[![Email](https://img.shields.io/badge/Email-girishlade@ladestack.in-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:girishlade@ladestack.in)
 
 </div>
 
 ---
 
 ## 📄 License
-**Private and Proprietary.** Powered by the **Lade Stack** ecosystem.
+**Private and Proprietary.** Powered by the **Lade Stack** ecosystem. All rights reserved © 2026.
