@@ -214,6 +214,7 @@ export interface SectionAgentConfig {
   globalSearchContext: string;
   existingSearchResults?: SearchResult[];
   apiKeys: ApiKeys;
+  researchMode?: "fast" | "deep";
   onProgress?: (event: SectionProgressEvent) => void;
 }
 
