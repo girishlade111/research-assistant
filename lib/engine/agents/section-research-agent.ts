@@ -163,6 +163,7 @@ async function callSynthesisModel(
       modelUsed: model.primaryModel.modelId,
       provider: model.primaryModel.platform,
       isFallback: false,
+      tokensUsed: response.usage?.total_tokens ?? 0,
     };
   } catch (primaryErr) {
     const classified = classifyError(primaryErr, model.primaryModel.platform);
