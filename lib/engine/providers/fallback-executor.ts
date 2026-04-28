@@ -13,7 +13,7 @@ export interface AICallResult {
   content: string;
   modelUsed: string;
   platform: string;
-  tierUsed: number;
+  tierUsed: number;       // 1, 2, or 3
   isFallback: boolean;
   latencyMs: number;
   tokensUsed: number;
@@ -80,11 +80,10 @@ export async function executeWithFallback(
         allTierResults
       };
 
-    } catch (err) {
-      const error = err as Record<string, unknown>;
+    } catch (error: any) {
       const latencyMs = Date.now() - startTime;
-      const errorCode = Number(error?.status || error?.statusCode || 0);
-      const errorMessage = String(error?.message || 'Unknown error');
+      const errorCode = error?.status || error?.statusCode || 0;
+      const errorMessage = error?.message || 'Unknown error';
 
       const tierAttempt: TierAttempt = {
         tier: tierNumber,
