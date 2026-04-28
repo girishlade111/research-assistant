@@ -12,6 +12,14 @@ const REPORT_TIMEOUT_MS  = 180_000;  // report agent gets 3 min for 5-6 page syn
 // primary hasn't resolved, fire fallback concurrently. First to
 // succeed wins. If fallback also fails, keep waiting for primary.
 
+export interface CallWithFallbackResult {
+  content: string;
+  model_used: string;
+  provider: string;
+  isFallback: boolean;
+  usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+}
+
 export async function callWithFallback(
   agent: AgentName,
   primary: ResolvedModel,
@@ -20,7 +28,7 @@ export async function callWithFallback(
   maxTokens: number,
   apiKeys: ApiKeys,
   opts?: { temperature?: number; jsonMode?: boolean }
-): Promise<{ content: string; model_used: string; provider: string; isFallback: boolean }> {
+): Promise<CallWithFallbackResult> {
 
   const isReport = agent === "report-agent";
   const timeoutMs = isReport ? REPORT_TIMEOUT_MS : PRIMARY_TIMEOUT_MS;
@@ -54,6 +62,7 @@ export async function callWithFallback(
       model_used: primary.id,
       provider: primary.provider,
       isFallback: false,
+      usage: res.usage,
     };
   } catch (primaryErr) {
     const isRaceTimeout =
