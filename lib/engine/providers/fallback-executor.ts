@@ -40,6 +40,7 @@ export async function executeWithFallback(
 
   const allTierResults: TierAttempt[] = [];
   
+  // तिन्ही tiers sequentially try करा
   for (let tierIndex = 0; tierIndex < chain.tiers.length; tierIndex++) {
     const tier = chain.tiers[tierIndex];
     const tierNumber = tierIndex + 1;
@@ -52,9 +53,11 @@ export async function executeWithFallback(
     });
 
     try {
+      // Actual API call
       const result = await callModelByPlatform(tier, params);
       const latencyMs = Date.now() - startTime;
 
+      // Success — log करा आणि return करा
       const tierAttempt: TierAttempt = {
         tier: tierNumber,
         platform: tier.platform,
@@ -102,6 +105,8 @@ export async function executeWithFallback(
         errorMessage
       });
 
+      // Fatal error असेल तर पुढचा tier try करा
+      // Last tier असेल तर throw करा
       const isLastTier = tierIndex === chain.tiers.length - 1;
       
       if (isLastTier) {
@@ -109,6 +114,7 @@ export async function executeWithFallback(
           allTierResults.map(t => `Tier${t.tier}:${t.errorCode}`)
         );
         
+        // सगळे fail झाले तरी empty result return करा — throw नाही
         return {
           content: '',
           modelUsed: 'none',
@@ -121,15 +127,20 @@ export async function executeWithFallback(
         };
       }
 
-      const delay = tierIndex === 0 ? 500 : 1000;
+      // Next tier try करण्यापूर्वी short delay
+      const delay = tierIndex === 0 ? 500 : 1000; // Tier1→2: 500ms, Tier2→3: 1000ms
       console.log(`[Fallback] Waiting ${delay}ms before Tier ${tierNumber + 1}...`);
       await new Promise(r => setTimeout(r, delay));
+      
+      // Continue to next tier
     }
   }
 
+  // यहाँ कधीच येणार नाही — TypeScript साठी
   throw new Error('Fallback chain exhausted');
 }
 
+// Platform based routing
 async function callModelByPlatform(
   tier: FallbackTier,
   params: AICallParams
