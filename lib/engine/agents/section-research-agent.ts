@@ -351,7 +351,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean; tokensUsed: number };
   try {
     const userMessage = `${searchContext}\n\nAnalyze and write your section`;
-    const result = await executeWithFallback(section.agentRole as any, {
+    const result = await executeWithFallback(section.agentRole as keyof typeof AGENT_FALLBACK_CHAINS, {
       systemPrompt,
       userMessage,
       temperature: 0.3,
