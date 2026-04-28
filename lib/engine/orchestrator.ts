@@ -134,6 +134,16 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
 
   const results = await Promise.allSettled(agentPromises);
 
+  console.log('[AllAgents COMPLETE]', {
+    total: results.length,
+    fulfilled: results.filter(r => r.status === 'fulfilled').length,
+    rejected: results.filter(r => r.status === 'rejected').length,
+    rejectedReasons: results
+      .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+      .map(r => r.reason?.message ?? String(r.reason)),
+    timestamp: Date.now(),
+  });
+
   const completedSections = results
     .filter((r): r is PromiseFulfilledResult<SectionResult> => r.status === "fulfilled")
     .map(r => r.value);
@@ -152,6 +162,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   });
 
   // ━━━ PHASE 3: REPORT SYNTHESIS (Sequential) ━━━
+  console.log('[Orchestrator]', { phase: 'REPORT_SYNTHESIS', status: 'starting', completedSections: completedSections.length, failedSections: failedSections.length, timestamp: Date.now() });
 
   // Step 6: Report Synthesis Agent
   onProgress({ phase: 3, percent: 80, status: "Compiling final report..." });
