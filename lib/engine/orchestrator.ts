@@ -169,7 +169,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
           });
         }
       }),
-      90_000,
+      150_000,
       section
     );
   });

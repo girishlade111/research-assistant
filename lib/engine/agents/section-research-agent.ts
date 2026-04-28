@@ -20,7 +20,8 @@ import { safeParseJSON } from "./base-agent";
 const MAX_SOURCES_PER_SECTION = 15;
 const SYNTHESIS_MAX_TOKENS = 8000;
 const SYNTHESIS_TEMPERATURE = 0.3;
-const AGENT_TIMEOUT_MS = 90_000;
+const AGENT_TIMEOUT_MS = 150_000;
+const SEARCH_QUERY_TIMEOUT_MS = 20_000;
 
 // ── System Prompt Template ────────────────────────────────────
 
