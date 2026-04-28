@@ -254,6 +254,14 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   // Step 1: Web Search
   emitProgress(config, { status: "searching" });
 
+  console.log('[WebSearch START]', {
+    sectionId: section.id,
+    queries: section.searchQueries,
+    model: assignedModel?.primaryModel?.modelId,
+    requiresWebSearch: section.requiresWebSearch,
+    timestamp: new Date().toISOString(),
+  });
+
   let searchResults: SearchResult[];
   try {
     searchResults = section.requiresWebSearch
@@ -263,9 +271,20 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
         apiKeys
       )
       : config.existingSearchResults ?? [];
-  } catch {
+  } catch (searchErr) {
+    console.error('[WebSearch FAILED]', {
+      sectionId: section.id,
+      error: searchErr instanceof Error ? searchErr.message : String(searchErr),
+      timestamp: new Date().toISOString(),
+    });
     searchResults = config.existingSearchResults ?? [];
   }
+
+  console.log('[WebSearch RESULT]', {
+    sectionId: section.id,
+    sourcesFound: searchResults.length,
+    firstResultPreview: searchResults[0]?.snippet?.slice(0, 100),
+  });
 
   // Step 2: Context Building
   const searchContext = buildSearchContext(searchResults);
