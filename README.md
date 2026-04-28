@@ -37,15 +37,17 @@
     *   **Image OCR:** WebAssembly-powered text extraction from images via `Tesseract.js`.
 
 ### 🤖 Specialized Agent Fleet
+The system dynamically assigns models based on task complexity and domain expertise.
+
 | Agent | Primary Role | Primary Model (NVIDIA NIM) | Fallback (OpenRouter) |
 | :--- | :--- | :--- | :--- |
-| **Query Intelligence** | Refines and enhances raw user prompts | `mistral-large-3` | `gpt-oss-120b:free` |
+| **Query Intelligence** | Refines queries & builds research plans | `mistral-large-3` | `gpt-oss-120b:free` |
 | **Web Search** | Concurrent real-time data retrieval | `dracarys-70b` | `llama-3.3-70b:free` |
-| **Analysis** | Pattern recognition & correlation analysis | `nemotron-3-super` | `nemotron-3:free` |
-| **Fact-Check** | Automated verification of claims vs sources | `mistral-large-3` | `llama-3.3-70b:free` |
-| **Coding** | Specialized technical snippet generation | `qwen3-coder-480b` | `qwen3-coder:free` |
-| **Summary** | High-speed overview generation | `minimax-m2.7` | `gemma-4-31b:free` |
-| **Report** | Final markdown assembly & quality control | `kimi-k2-thinking` | `gpt-oss-120b:free` |
+| **Financial Analysis** | Market trends & fiscal data correlation | `deepseek-v3.2` | `gpt-oss-120b:free` |
+| **Deep Reasoning** | Risk assessment & complex logic | `kimi-k2-thinking` | `gpt-oss-120b:free` |
+| **Code Generation** | Technical snippet & algorithm generation | `qwen3-coder-480b` | `qwen3-coder:free` |
+| **Summarization** | High-speed overview generation | `minimax-m2.7` | `glm-4.5-air:free` |
+| **Report Synthesis** | Final markdown assembly & QC | `nemotron-3-super` | `nemotron-3:free` |
 
 ---
 
@@ -162,7 +164,7 @@ Unlike static LLM implementations, ResAgent employs a **Health-Aware Control Pla
 #### 2. Resilient Parallelization Framework
 The engine leverages Node.js asynchronous primitives and `Promise.allSettled` to manage the agent fleet:
 *   **Non-Blocking Aggregation:** Web searching and local document parsing run concurrently. Document parsing is handled via **WebAssembly (WASM)** threads, offloading CPU-intensive OCR tasks from the main event loop.
-*   **Graceful Degradation:** Each agent is wrapped in a `withGracefulTimeout` wrapper. If a sub-agent stalls (90s ceiling), the system returns a partial result with a clear "Data Limitations" notice, ensuring the final report is delivered even if one "expert" fails.
+*   **Graceful Degradation:** Each agent is wrapped in a `withGracefulTimeout` wrapper. If a sub-agent stalls (150s ceiling), the system returns a partial result with a clear "Data Limitations" notice, ensuring the final report is delivered even if one "expert" fails.
 
 #### 3. WASM-Powered Grounding Layer (RAG)
 To ensure zero hallucinations, the system uses a **Semantic Blackboard Architecture** (`context-builder.ts`):
@@ -174,40 +176,60 @@ To ensure zero hallucinations, the system uses a **Semantic Blackboard Architect
 ## 🛠️ Development Stack
 
 ### Frontend Core
-- **Framework:** Next.js 16.2.4 (App Router, Turbopack)
-- **Library:** React 19.2.4 (Concurrent Rendering)
-- **Styling:** Tailwind CSS v4 + `tw-animate-css`
-- **Animations:** Framer Motion 12.38.0
-- **Components:** shadcn/ui + Base UI
+- **Framework:** **Next.js 16.2.4** (App Router, Turbopack)
+- **Library:** **React 19.2.4** (Concurrent Rendering)
+- **Styling:** **Tailwind CSS v4** + `tw-animate-css`
+- **Animations:** **Framer Motion 12.38.0**
+- **Components:** **shadcn/ui** + **Base UI 1.4.0**
+- **State Management:** **Zustand** (Local UI state)
 
 ### AI & Orchestration
-- **Inference:** NVIDIA NIM (Primary), OpenRouter (Fallback)
-- **Web Search:** Perplexity Sonar API
-- **Data Parsing:** pdfjs-dist, Mammoth, PapaParse, Tesseract.js (WASM)
-- **Streaming:** Native Server-Sent Events (SSE)
+- **Inference:** **NVIDIA NIM** (Primary), **OpenRouter** (Fallback)
+- **Web Search:** **Perplexity Sonar API**
+- **Data Parsing:**
+    - **PDF:** `pdfjs-dist` (High-fidelity extraction)
+    - **DOCX:** `Mammoth` (Semantic HTML conversion)
+    - **CSV:** `PapaParse` (Stream parsing)
+    - **Images:** `Tesseract.js` (WASM OCR)
+- **Streaming:** Native **Server-Sent Events (SSE)** for real-time progress.
+
+### Export Engine
+- **PDF Export:** `jspdf` + `jspdf-autotable`
+- **Visuals:** `html-to-image` for capturing UI elements.
 
 ---
 
 ## 🚀 Installation & Setup
 
-### 1. Clone & Install
+### 1. Prerequisites
+- Node.js 20+
+- NPM 10+
+- API Keys for NVIDIA NIM and OpenRouter.
+
+### 2. Clone & Install
 ```bash
 git clone https://github.com/girishlade111/research-assistant.git
 cd research-assistant
 npm install
 ```
 
-### 2. Configure Environment
-Create a `.env.local` in the root:
+### 3. Configure Environment
+Create a `.env.local` in the root and add your keys:
 ```env
-NVIDIA_API_KEY=nvapi-your-key
-OPENROUTER_API_KEY=sk-or-your-key
+# Primary platform
+NVIDIA_API_KEY=nvapi-your-key-here
+
+# Fallback platform
+OPENROUTER_API_KEY=sk-or-your-key-here
+
+# Web Search (Perplexity)
+SONAR_API_KEY=pplx-your-key-here
 ```
 
-### 3. Launch Development
+### 4. Launch Development
 ```bash
 npm run dev
-# Open http://localhost:3000
+# Open http://localhost:3000 to see the application.
 ```
 
 ---
@@ -215,29 +237,36 @@ npm run dev
 ## ⚙️ Configuration & Stats
 
 ### Token Governance
+The system uses a tiered token budgeting strategy based on task priority.
+
 | Parameter | Value | Description |
 | :--- | :--- | :--- |
-| **Global Context** | 131,072 | Support for massive document sets |
-| **Max Response** | 32,768 | Budget for ultra-detailed reports |
-| **Per-Agent Cap** | 16,384 | Ensures depth in analysis |
-| **Race Timeout** | 60,000ms | Max wait before fallback trigger |
+| **Global Context** | **131,072** | Maximum supported context for massive document sets. |
+| **Max Response** | **32,768** | Total budget for the final synthesized report. |
+| **Per-Agent Cap** | **16,384** | Individual context budget for specialized sub-agents. |
+| **Agent Timeout** | **150,000ms** | Maximum duration before a sub-agent triggers graceful failure. |
+| **Health Check** | **4,000ms** | Maximum latency allowed for primary NVIDIA NIM endpoints. |
 
 ### Project Metrics
-- **7** Specialized Agents working in parallel.
-- **15** High-Performance LLMs Integrated in the model registry.
-- **3** Specialized Search Tiers: **Corpus** (AI), **Deep** (4 sources), **Pro** (8 sources).
-- **4** File Types Parsed: **PDF, DOCX, CSV, Image (OCR)**.
+- **8+** Specialized AI Agents working in parallel.
+- **15+** State-of-the-art LLMs integrated into the model registry.
+- **3** Research Tiers: **Corpus** (Document-only), **Deep** (4 sources), **Pro** (8+ sources).
+- **4** File Types Supported: **PDF, DOCX, CSV, Image (OCR)**.
+- **0.2s** Stagger delay for concurrent agent launches to prevent rate limiting.
 
 ---
 
 ## 📖 Usage Guide
 
-1.  **Select Mode:** Choose between **Corpus**, **Deep**, or **Pro**.
-2.  **Toggle Agents:** Customize your pipeline by enabling/disabling specific agents.
-3.  **Upload Context:** Drop in your PDFs or images to ground the research in your data.
-4.  **Execute:** Hit search and watch the real-time agent progression.
-5.  **Visualize:** Use the **Citation Graph** to see how insights are connected.
-6.  **Export:** Download your findings in high-fidelity PDF or Markdown formats.
+1.  **Select Research Mode:**
+    - **Corpus:** Focuses exclusively on your uploaded files.
+    - **Deep:** Combines files with targeted web search (4 sources).
+    - **Pro:** Exhaustive research using 8+ sources and deep reasoning agents.
+2.  **Toggle Specialized Agents:** Customize your pipeline by enabling/disabling specific agents (e.g., enable *Coding Agent* for technical queries).
+3.  **Context Injection:** Upload PDFs, DOCX, or Images to ground the AI in your local data.
+4.  **Real-Time Tracking:** Watch the **Thinking Panel** as agents progress through *Initialization*, *Research*, and *Synthesis*.
+5.  **Interactive Exploration:** Use the **Citation Graph** to visualize the connections between findings and sources.
+6.  **High-Fidelity Export:** Download your findings as professional **PDF** or **Markdown** reports.
 
 ---
 
