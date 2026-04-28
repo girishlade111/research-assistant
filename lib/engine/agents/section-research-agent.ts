@@ -69,8 +69,23 @@ OUTPUT FORMAT — Return exactly this structure:
 }
 
 // ── Step 1: Web Search Execution ──────────────────────────────
-// Runs section.searchQueries sequentially via search-router,
+// Runs all searchQueries in parallel with per-query timeout,
 // deduplicates by URL, caps at MAX_SOURCES_PER_SECTION.
+
+function searchWithTimeout(
+  query: string,
+  apiKeys: ApiKeys
+): Promise<{ query: string; results: SearchResult[] }> {
+  return Promise.race([
+    searchWithFallback(
+      { query, mode: "pro", maxResults: 5, search_terms: [query] },
+      apiKeys
+    ).then(({ results }) => ({ query, results })),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Search timeout for: ${query}`)), SEARCH_QUERY_TIMEOUT_MS)
+    ),
+  ]);
+}
 
 async function executeSearchQueries(
   queries: string[],
@@ -80,31 +95,28 @@ async function executeSearchQueries(
   const seenUrls = new Set<string>(existingResults.map(r => r.url));
   const allResults: SearchResult[] = [...existingResults];
 
-  for (const query of queries) {
+  console.log('[WebSearch PARALLEL]', { queryCount: queries.length, existingCount: existingResults.length });
+
+  const settled = await Promise.allSettled(
+    queries.map(query => {
+      console.log('[WebSearch QUERY]', { query, currentResultCount: allResults.length });
+      return searchWithTimeout(query, apiKeys);
+    })
+  );
+
+  for (const result of settled) {
     if (allResults.length >= MAX_SOURCES_PER_SECTION) break;
 
-    try {
-      console.log('[WebSearch QUERY]', { query, currentResultCount: allResults.length });
-      const { results } = await searchWithFallback(
-        {
-          query,
-          mode: "pro",
-          maxResults: 5,
-          search_terms: [query],
-        },
-        apiKeys
-      );
-
-      for (const result of results) {
+    if (result.status === "fulfilled") {
+      for (const sr of result.value.results) {
         if (allResults.length >= MAX_SOURCES_PER_SECTION) break;
-        if (seenUrls.has(result.url)) continue;
-        seenUrls.add(result.url);
-        allResults.push(result);
+        if (seenUrls.has(sr.url)) continue;
+        seenUrls.add(sr.url);
+        allResults.push(sr);
       }
-    } catch (searchErr) {
+    } else {
       console.error('[WebSearch FAILED]', {
-        query,
-        error: searchErr instanceof Error ? searchErr.message : String(searchErr),
+        error: result.reason instanceof Error ? result.reason.message : String(result.reason),
         timestamp: new Date().toISOString(),
       });
     }
