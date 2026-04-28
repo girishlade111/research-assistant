@@ -182,7 +182,7 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
     console.error('[QueryIntelligence FAILED]', {
       error: err instanceof Error ? err.message : String(err),
       errorCode: (err as Record<string, unknown>)?.status ?? (err as Record<string, unknown>)?.code,
-      model: chain.primary.modelId,
+      model: chain.primary.id,
       query,
       timestamp: new Date().toISOString(),
     });
