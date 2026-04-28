@@ -235,14 +235,55 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   const sectionsForReport = allSections.length > 0 ? allSections : completedSections;
 
   onProgress({ phase: 3, percent: 80, status: "Compiling final report..." });
-  const finalReport = await runReportSynthesisAgent({
-    plan,
-    completedSections: sectionsForReport,
-    failedSections: failedSections.map(f => f.sectionId),
-    originalQuery: userQuery,
-    userMemory,
-    apiKeys
-  });
+  let finalReport: Awaited<ReturnType<typeof runReportSynthesisAgent>>;
+  try {
+    finalReport = await runReportSynthesisAgent({
+      plan,
+      completedSections: sectionsForReport,
+      failedSections: failedSections.map(f => f.sectionId),
+      originalQuery: userQuery,
+      userMemory,
+      apiKeys
+    });
+  } catch (reportErr) {
+    console.error('[Orchestrator] Report synthesis failed, building from raw sections:', reportErr instanceof Error ? reportErr.message : reportErr);
+    onProgress({ phase: 3, percent: 85, status: "Report synthesis failed — assembling from sections..." });
+
+    finalReport = {
+      reportId: crypto.randomUUID(),
+      title: plan.reportTitle,
+      subtitle: "Generated Research Report",
+      generatedAt: new Date().toISOString(),
+      originalQuery: userQuery,
+      estimatedReadTime: `${Math.ceil(sectionsForReport.reduce((a, s) => a + s.wordCount, 0) / 200)} min`,
+      totalWords: sectionsForReport.reduce((a, s) => a + s.wordCount, 0),
+      totalPages: Math.ceil(sectionsForReport.reduce((a, s) => a + s.wordCount, 0) / 500),
+      sections: {
+        executiveSummary: `## Executive Summary\n\nThis report compiles findings from ${sectionsForReport.length} research sections on "${userQuery}". Report synthesis was unavailable — sections are presented as-is.`,
+        dynamic: sectionsForReport.map((s, i) => ({
+          id: s.sectionId,
+          title: s.sectionTitle,
+          content: s.content,
+          order: i + 1,
+        })),
+        crossSectionAnalysis: "",
+        keyFindings: sectionsForReport.flatMap(s => s.keyFindings),
+        conclusions: `## Conclusions\n\nPlease review individual sections above for detailed findings.`,
+        confidenceAssessment: "",
+      },
+      sources: sectionsForReport
+        .flatMap(s => s.sourcesUsed)
+        .filter((src, i, arr) => arr.findIndex(x => x.url === src.url) === i)
+        .map((src, i) => ({ id: String(i + 1), title: src.title, snippet: "", url: src.url, domain: "" })),
+      metadata: {
+        totalAgentsUsed: plan.dynamicSections.length,
+        successfulAgents: completedSections.length,
+        failedAgents: failedSections.length,
+        totalSourcesAnalyzed: sectionsForReport.flatMap(s => s.sourcesUsed).length,
+        modelsUsed: [...new Set(sectionsForReport.map(s => s.modelUsed).filter(m => m !== "none"))],
+      },
+    };
+  }
 
   const totalTokensUsed = allSections.reduce((sum, s) => sum + (s.tokensUsed ?? 0), 0);
   const totalDurationMs = Date.now() - orchestratorStart;
