@@ -140,6 +140,8 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   const totalAgents = plan.dynamicSections.length;
   let completedCount = 0;
 
+  const STAGGER_DELAY_MS = 200;
+
   const agentPromises = plan.dynamicSections.map((section, index) => {
     const modelAssignment = modelAssignments.find(m => m.sectionId === section.id) || {
       sectionId: section.id,
@@ -149,14 +151,18 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
       taskType: "balanced_research",
       maxTokens: 8000,
     };
-    
-    return withGracefulTimeout(
-      runSectionAgent({
+
+    const launchAgent = async (): Promise<SectionResult> => {
+      if (index > 0) {
+        await new Promise(r => setTimeout(r, index * STAGGER_DELAY_MS));
+      }
+      return runSectionAgent({
         section,
         assignedModel: modelAssignment,
         originalQuery: userQuery,
         globalSearchContext: plan.globalSearchContext,
         apiKeys,
+        researchMode,
         onProgress: (agentProgress) => {
           if (agentProgress.status === "complete") completedCount++;
           onProgress({
@@ -168,10 +174,10 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
             percent: 15 + Math.round((completedCount / totalAgents) * 55)
           });
         }
-      }),
-      150_000,
-      section
-    );
+      });
+    };
+
+    return withGracefulTimeout(launchAgent(), 150_000, section);
   });
 
   const results = await Promise.allSettled(agentPromises);
