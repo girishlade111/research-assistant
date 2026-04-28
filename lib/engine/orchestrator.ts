@@ -179,28 +179,36 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   // Extract all fulfilled results (withGracefulTimeout always resolves, so rejected should be rare)
   const allSections = results
     .filter((r): r is PromiseFulfilledResult<SectionResult> => r.status === "fulfilled")
-    .map(r => r.value);
-
-  // Separate successful from errored (but still fulfilled) sections
-  const completedSections = allSections.filter(s => !s.error);
-  const failedSections = allSections
-    .filter(s => !!s.error)
-    .map(s => ({ sectionId: s.sectionId, error: s.error! }));
+    .map(r => r.value)
+    .filter(s => s !== null && s !== undefined);
 
   // Also capture any truly rejected promises (shouldn't happen with graceful timeout, but be safe)
   const rejectedSections = results
     .map((r, i) => r.status === "rejected" ? { sectionId: plan.dynamicSections[i].id, error: String(r.reason) } : null)
     .filter(Boolean) as { sectionId: string; error: string }[];
 
-  failedSections.push(...rejectedSections);
+  // A section "completed" if it has real content (>50 chars), even if it also has an error
+  const completedSections = allSections.filter(s => s.content && s.content.length > 50 && s.modelUsed !== "none");
+  const failedSections = [
+    ...allSections
+      .filter(s => !s.content || s.content.length <= 50 || s.modelUsed === "none")
+      .map(s => ({ sectionId: s.sectionId, error: s.error ?? "No content produced" })),
+    ...rejectedSections,
+  ];
 
   console.log('[AllAgents COMPLETE]', {
     total: results.length,
     fulfilled: allSections.length,
     completed: completedSections.length,
     failed: failedSections.length,
-    rejectedPromises: rejectedSections.map(r => r.error),
-    failedReasons: failedSections.map(f => ({ id: f.sectionId, error: f.error })),
+    rejectedPromises: rejectedSections.length,
+    sectionDetails: allSections.map(s => ({
+      id: s.sectionId,
+      model: s.modelUsed,
+      contentLen: s.content?.length ?? 0,
+      hasError: !!s.error,
+      durationMs: s.durationMs,
+    })),
     timestamp: Date.now(),
   });
 
