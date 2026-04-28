@@ -57,7 +57,18 @@ export async function POST(req: Request) {
         });
         sendSSE({ type: "result", data: finalReport });
       } catch (error: any) {
-        sendSSE({ type: 'error', message: error.message });
+        const msg: string = error?.message ?? String(error);
+        console.error('[Pipeline Error]', msg);
+
+        const isRecoverable = /rate.?limit|429|openrouter|timeout|provider/i.test(msg);
+        if (isRecoverable) {
+          sendSSE({
+            type: 'warning',
+            message: 'Some sources were unavailable — results may be partial.',
+          });
+        } else {
+          sendSSE({ type: 'error', message: msg });
+        }
       } finally {
         writer.close();
       }
