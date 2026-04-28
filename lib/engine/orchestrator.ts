@@ -95,6 +95,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   onProgress({ phase: 1, percent: 15, status: "AI models assigned", type: "models_assigned" });
 
   // ━━━ PHASE 2: PARALLEL RESEARCH (All agents simultaneous) ━━━
+  console.log('[Orchestrator]', { phase: 'PARALLEL_RESEARCH', status: 'launching_agents', agentCount: plan.dynamicSections.length, timestamp: Date.now() });
 
   onProgress({ phase: 2, percent: 18, status: "Launching parallel research agents..." });
   const totalAgents = plan.dynamicSections.length;
