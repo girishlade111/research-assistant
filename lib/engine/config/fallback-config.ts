@@ -91,6 +91,7 @@ export interface FallbackChain {
   tiers: FallbackTier[];
 }
 
+// Error types जे next tier trigger करतात:
 export const RETRYABLE_ERRORS = [
   429,  // Rate limit
   500,  // Server error
@@ -101,4 +102,5 @@ export const RETRYABLE_ERRORS = [
 
 export const FATAL_ERRORS = [
   400,  // Bad request — retry नको
+  // 401 हटवला — key issue असेल तरी next tier try करा
 ];
