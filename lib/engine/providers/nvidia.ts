@@ -182,3 +182,46 @@ export async function nvidiaWithRetry(
 
   throw lastError ?? new ResearchError("NVIDIA: all retries exhausted", "unknown", { provider: "nvidia" });
 }
+
+export async function callNvidiaModel(params: {
+  modelId: string;
+  systemPrompt: string;
+  userMessage: string;
+  temperature?: number;
+  maxTokens?: number;
+}): Promise<{ content: string; tokensUsed: number }> {
+
+  const apiKey = process.env.NVIDIA_API_KEY;
+  if (!apiKey) throw Object.assign(new Error('NVIDIA API key missing'), { status: 401 });
+
+  const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: params.modelId,
+      messages: [
+        { role: 'system', content: params.systemPrompt },
+        { role: 'user', content: params.userMessage }
+      ],
+      temperature: params.temperature ?? 0.3,
+      max_tokens: params.maxTokens ?? 8192
+    })
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    const err = new Error(`NVIDIA API error: ${response.status}`) as any;
+    err.status = response.status;
+    err.body = errorBody;
+    throw err;
+  }
+
+  const data = await response.json();
+  return {
+    content: data.choices?.[0]?.message?.content || '',
+    tokensUsed: data.usage?.total_tokens || 0
+  };
+}

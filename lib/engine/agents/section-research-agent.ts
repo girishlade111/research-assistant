@@ -14,6 +14,7 @@ import { searchWithFallback } from "../search-router";
 import { generateAIResponse } from "../providers";
 import { classifyError } from "../errors";
 import { safeParseJSON } from "./base-agent";
+import { executeWithFallback } from "../providers/fallback-executor";
 
 // ── Constants ─────────────────────────────────────────────────
 

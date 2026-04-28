@@ -229,3 +229,48 @@ export async function openrouterWithRetry(
 
   throw lastError ?? new ResearchError("OpenRouter: all retries exhausted", "unknown", { provider: "openrouter" });
 }
+
+export async function callOpenRouterModel(params: {
+  modelId: string;
+  systemPrompt: string;
+  userMessage: string;
+  temperature?: number;
+  maxTokens?: number;
+}): Promise<{ content: string; tokensUsed: number }> {
+
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) throw Object.assign(new Error('OpenRouter API key missing'), { status: 401 });
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      'X-Title': 'ResAgent Research Assistant'
+    },
+    body: JSON.stringify({
+      model: params.modelId,
+      messages: [
+        { role: 'system', content: params.systemPrompt },
+        { role: 'user', content: params.userMessage }
+      ],
+      temperature: params.temperature ?? 0.3,
+      max_tokens: params.maxTokens ?? 8192
+    })
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    const err = new Error(`OpenRouter API error: ${response.status}`) as any;
+    err.status = response.status;
+    err.body = errorBody;
+    throw err;
+  }
+
+  const data = await response.json();
+  return {
+    content: data.choices?.[0]?.message?.content || '',
+    tokensUsed: data.usage?.total_tokens || 0
+  };
+}
