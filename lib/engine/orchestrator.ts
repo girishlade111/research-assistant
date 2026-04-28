@@ -53,6 +53,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   const { userQuery, userId, conversationId, researchMode, apiKeys, onProgress } = input;
 
   // ━━━ PHASE 1: INITIALIZATION (Sequential) ━━━
+  console.log('[Orchestrator]', { phase: 'INIT', status: 'starting', query: userQuery, researchMode, timestamp: Date.now() });
 
   // Step 1: Cache Check
   const queryHash = generateHash(userQuery + (researchMode || ""));
@@ -79,6 +80,14 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   }
 
   const plan = queryResult.plan;
+  console.log('[Orchestrator]', {
+    phase: 'PLAN_READY',
+    status: 'plan_created',
+    sectionsCount: plan.dynamicSections.length,
+    researchType: plan.researchType,
+    estimatedPages: plan.estimatedPages,
+    timestamp: Date.now(),
+  });
   onProgress({ phase: 1, percent: 10, status: "Research plan created", type: "plan_ready" });
 
   // Step 4: Model Selection
