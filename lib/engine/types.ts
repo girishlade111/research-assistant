@@ -193,6 +193,7 @@ export interface SectionResult {
   provider: string;
   isFallback: boolean;
   durationMs: number;
+  tokensUsed: number;
   error?: string;
 }
 
