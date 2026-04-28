@@ -200,7 +200,7 @@ async function callSynthesisModel(
 function parseAndNormalize(
   raw: string,
   section: DynamicSection
-): Omit<SectionResult, "modelUsed" | "provider" | "isFallback" | "durationMs" | "error"> {
+): Omit<SectionResult, "modelUsed" | "provider" | "isFallback" | "durationMs" | "tokensUsed" | "error"> {
   const parsed = safeParseJSON(raw);
 
   if (parsed && typeof parsed.content === "string") {
