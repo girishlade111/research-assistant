@@ -166,20 +166,26 @@ Please synthesize the above sections into the final research report JSON format.
       apiKeys
     });
     rawResponse = response.content;
-  } catch (error) {
-    console.warn("Primary nemotron failed, switching to fallback:", error);
-    const fallbackResponse = await generateAIResponse({
-      model: "nvidia/nemotron-3-super-120b-a12b:free",
-      provider: "openrouter",
-      messages,
-      stream: false,
-      maxTokens: 8000,
-      temperature: 0.4,
-      timeoutMs: 180_000,
-      jsonMode: true,
-      apiKeys
-    });
-    rawResponse = fallbackResponse.content;
+  } catch (primaryError) {
+    console.warn("[ReportSynthesis] Primary nemotron failed, trying OpenRouter fallback:", primaryError instanceof Error ? primaryError.message : primaryError);
+    try {
+      const fallbackResponse = await generateAIResponse({
+        model: "nvidia/nemotron-3-super-120b-a12b:free",
+        provider: "openrouter",
+        messages,
+        stream: false,
+        maxTokens: 8000,
+        temperature: 0.4,
+        timeoutMs: 180_000,
+        jsonMode: true,
+        apiKeys
+      });
+      rawResponse = fallbackResponse.content;
+    } catch (fallbackError) {
+      console.error("[ReportSynthesis] Both primary and fallback failed:", fallbackError instanceof Error ? fallbackError.message : fallbackError);
+      // Don't throw — return empty response so the fallback FinalReport construction below still works
+      rawResponse = "";
+    }
   }
 
   const parsed = (safeParseJSON(rawResponse) || {}) as Record<string, any>;
