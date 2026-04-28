@@ -305,7 +305,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
     timestamp: new Date().toISOString(),
   });
 
-  let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean };
+  let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean; tokensUsed: number };
   try {
     llmResult = await callSynthesisModel(
       systemPrompt,
