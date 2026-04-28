@@ -47,6 +47,44 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
   ]);
 };
 
+function withGracefulTimeout(
+  promise: Promise<SectionResult>,
+  ms: number,
+  section: { id: string; sectionTitle: string; agentRole: string }
+): Promise<SectionResult> {
+  return Promise.race([
+    promise,
+    new Promise<SectionResult>((resolve) =>
+      setTimeout(() => {
+        console.error('[SectionAgent TIMEOUT]', {
+          sectionId: section.id,
+          sectionTitle: section.sectionTitle,
+          timeoutMs: ms,
+          timestamp: Date.now(),
+        });
+        resolve({
+          sectionId: section.id,
+          sectionTitle: section.sectionTitle,
+          agentRole: section.agentRole,
+          content: `## ${section.sectionTitle}\n\nThis section timed out after ${ms / 1000}s. The research agent could not complete its analysis within the allotted time.`,
+          keyFindings: [],
+          dataPoints: [],
+          sourcesUsed: [],
+          confidenceScore: 0,
+          dataQuality: "limited",
+          wordCount: 0,
+          modelUsed: "none",
+          provider: "none",
+          isFallback: false,
+          durationMs: ms,
+          tokensUsed: 0,
+          error: `Timeout after ${ms}ms`,
+        });
+      }, ms)
+    ),
+  ]);
+}
+
 // ── Orchestrator ────────────────────────────────────────────────────
 
 export async function runResearchOrchestrator(input: OrchestratorInput): Promise<ResearchResult> {
