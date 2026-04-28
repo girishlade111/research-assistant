@@ -80,10 +80,11 @@ export async function executeWithFallback(
         allTierResults
       };
 
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Record<string, unknown>;
       const latencyMs = Date.now() - startTime;
-      const errorCode = error?.status || error?.statusCode || 0;
-      const errorMessage = error?.message || 'Unknown error';
+      const errorCode = Number(error?.status || error?.statusCode || 0);
+      const errorMessage = String(error?.message || 'Unknown error');
 
       const tierAttempt: TierAttempt = {
         tier: tierNumber,
