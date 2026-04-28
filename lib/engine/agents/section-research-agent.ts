@@ -343,6 +343,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
       provider: "none",
       isFallback: false,
       durationMs: Date.now() - start,
+      tokensUsed: 0,
       error: errMsg,
     };
   }
