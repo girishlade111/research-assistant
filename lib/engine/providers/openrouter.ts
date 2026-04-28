@@ -163,6 +163,16 @@ export async function openrouterStream(
   };
 }
 
+// ── Free model rotation for 429 rate limits ──────────────────
+
+const FREE_MODEL_ROTATION = [
+  "z-ai/glm-4.5-air:free",
+  "google/gemma-4-31b-it:free",
+  "minimax/minimax-m2.5:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "openai/gpt-oss-120b:free",
+];
+
 // ── Retry Wrapper ──────────────────────────────────────────────
 
 export async function openrouterWithRetry(
@@ -183,6 +193,28 @@ export async function openrouterWithRetry(
         err instanceof ResearchError
           ? err
           : new ResearchError(String(err), "unknown", { provider: "openrouter" });
+
+      // On 429: rotate to a different free model instead of retrying the same one
+      if (lastError.statusCode === 429 || lastError.kind === "rate_limit") {
+        const alternateModel = FREE_MODEL_ROTATION.find(m => m !== options.model);
+        if (alternateModel) {
+          console.warn(`[OpenRouter] 429 on ${options.model} — rotating to ${alternateModel}`);
+          try {
+            const altOptions = { ...options, model: alternateModel };
+            if (altOptions.stream && onChunk) {
+              return await openrouterStream(apiKey, altOptions, onChunk);
+            }
+            return await openrouterComplete(apiKey, altOptions);
+          } catch (altErr) {
+            console.warn(`[OpenRouter] Alternate model ${alternateModel} also failed`);
+            lastError =
+              altErr instanceof ResearchError
+                ? altErr
+                : new ResearchError(String(altErr), "unknown", { provider: "openrouter" });
+          }
+        }
+        break;
+      }
 
       if (!lastError.retryable || attempt === RETRY_CONFIG.maxRetries) break;
 
