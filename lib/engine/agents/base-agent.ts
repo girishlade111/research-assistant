@@ -77,6 +77,7 @@ export async function callWithFallback(
         model_used: primary.id,
         provider: primary.provider,
         isFallback: false,
+        usage: res.usage,
       }));
 
       const fallbackWrapped = callModel(fallback).then(res => ({
@@ -84,6 +85,7 @@ export async function callWithFallback(
         model_used: fallback.id,
         provider: fallback.provider,
         isFallback: true,
+        usage: res.usage,
       }));
 
       // Wait for whichever finishes first successfully
