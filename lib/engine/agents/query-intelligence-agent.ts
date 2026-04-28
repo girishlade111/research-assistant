@@ -102,8 +102,8 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
   console.log('[QueryIntelligence START]', {
     query,
     researchMode,
-    model: chain.primary.modelId,
-    fallbackModel: chain.fallbacks[0]?.modelId,
+    model: chain.primary.id,
+    fallbackModel: chain.fallbacks[0]?.id,
     timestamp: new Date().toISOString(),
   });
 
@@ -154,7 +154,7 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
     console.log('[QueryIntelligence RESPONSE]', {
       rawResponsePreview: JSON.stringify(parsed).slice(0, 500),
       parseSuccess: true,
-      sectionsCreated: parsed.dynamicSections?.length,
+      sectionsCreated: Array.isArray(parsed.dynamicSections) ? parsed.dynamicSections.length : 0,
       modelUsed: result.model_used,
       provider: result.provider,
       timestamp: new Date().toISOString(),
