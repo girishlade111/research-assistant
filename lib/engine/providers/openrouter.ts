@@ -194,11 +194,11 @@ export async function openrouterWithRetry(
           ? err
           : new ResearchError(String(err), "unknown", { provider: "openrouter" });
 
-      // On 429: rotate to a different free model instead of retrying the same one
+      // On 429: rotate through ALL alternate free models
       if (lastError.statusCode === 429 || lastError.kind === "rate_limit") {
-        const alternateModel = FREE_MODEL_ROTATION.find(m => m !== options.model);
-        if (alternateModel) {
-          console.warn(`[OpenRouter] 429 on ${options.model} — rotating to ${alternateModel}`);
+        const alternates = FREE_MODEL_ROTATION.filter(m => m !== options.model);
+        for (const alternateModel of alternates) {
+          console.warn(`[OpenRouter] 429 on ${options.model} — trying ${alternateModel}`);
           try {
             const altOptions = { ...options, model: alternateModel };
             if (altOptions.stream && onChunk) {
@@ -206,11 +206,12 @@ export async function openrouterWithRetry(
             }
             return await openrouterComplete(apiKey, altOptions);
           } catch (altErr) {
-            console.warn(`[OpenRouter] Alternate model ${alternateModel} also failed`);
-            lastError =
-              altErr instanceof ResearchError
-                ? altErr
-                : new ResearchError(String(altErr), "unknown", { provider: "openrouter" });
+            const altError = altErr instanceof ResearchError
+              ? altErr
+              : new ResearchError(String(altErr), "unknown", { provider: "openrouter" });
+            console.warn(`[OpenRouter] ${alternateModel} failed (${altError.kind})`);
+            lastError = altError;
+            if (altError.statusCode !== 429 && altError.kind !== "rate_limit") break;
           }
         }
         break;
