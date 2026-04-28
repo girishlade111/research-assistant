@@ -202,7 +202,6 @@ Create a `.env.local` in the root:
 ```env
 NVIDIA_API_KEY=nvapi-your-key
 OPENROUTER_API_KEY=sk-or-your-key
-PERPLEXITY_API_KEY=pplx-your-key
 ```
 
 ### 3. Launch Development
