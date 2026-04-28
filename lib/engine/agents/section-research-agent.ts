@@ -350,13 +350,32 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
 
   let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean; tokensUsed: number };
   try {
-    llmResult = await callSynthesisModel(
+    const userMessage = `${searchContext}\n\nAnalyze and write your section`;
+    const result = await executeWithFallback(section.agentRole as any, {
       systemPrompt,
-      searchContext,
-      section,
-      assignedModel,
-      apiKeys
-    );
+      userMessage,
+      temperature: 0.3,
+      maxTokens: 8192
+    });
+
+    console.log(`[SectionAgent] ${section.sectionTitle}:`, {
+      tierUsed: result.tierUsed,
+      model: result.modelUsed,
+      isFallback: result.isFallback,
+      tokens: result.tokensUsed
+    });
+
+    if (!result.content && result.modelUsed === 'none') {
+      throw new Error('All fallback tiers failed');
+    }
+
+    llmResult = {
+      content: result.content,
+      modelUsed: result.modelUsed,
+      provider: result.platform,
+      isFallback: result.isFallback,
+      tokensUsed: result.tokensUsed
+    };
   } catch (err) {
     // Step 4: Both models failed — return partial result
     const errMsg = err instanceof Error ? err.message : "Section synthesis failed";
