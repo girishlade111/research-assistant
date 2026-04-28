@@ -172,26 +172,48 @@ async function callSynthesisModel(
     );
   }
 
-  // Fallback model
-  const response = await generateAIResponse({
-    model: model.fallbackModel.modelId,
-    provider: model.fallbackModel.platform,
-    messages,
-    stream: false,
-    apiKeys,
-    maxTokens: SYNTHESIS_MAX_TOKENS,
-    temperature: SYNTHESIS_TEMPERATURE,
-    timeoutMs: AGENT_TIMEOUT_MS,
-    jsonMode: true,
+  // Fallback model — also guarded so caller gets a clear error
+  console.log('[SectionSynthesis FALLBACK]', {
+    sectionId: section.id,
+    fallbackModel: model.fallbackModel.modelId,
+    fallbackPlatform: model.fallbackModel.platform,
+    timestamp: new Date().toISOString(),
   });
 
-  return {
-    content: response.content,
-    modelUsed: model.fallbackModel.modelId,
-    provider: model.fallbackModel.platform,
-    isFallback: true,
-    tokensUsed: response.usage?.total_tokens ?? 0,
-  };
+  try {
+    const response = await generateAIResponse({
+      model: model.fallbackModel.modelId,
+      provider: model.fallbackModel.platform,
+      messages,
+      stream: false,
+      apiKeys,
+      maxTokens: SYNTHESIS_MAX_TOKENS,
+      temperature: SYNTHESIS_TEMPERATURE,
+      timeoutMs: AGENT_TIMEOUT_MS,
+      jsonMode: true,
+    });
+
+    return {
+      content: response.content,
+      modelUsed: model.fallbackModel.modelId,
+      provider: model.fallbackModel.platform,
+      isFallback: true,
+      tokensUsed: response.usage?.total_tokens ?? 0,
+    };
+  } catch (fallbackErr) {
+    const classified = classifyError(fallbackErr, model.fallbackModel.platform);
+    console.error('[SectionSynthesis FALLBACK_FAILED]', {
+      sectionId: section.id,
+      fallbackModel: model.fallbackModel.modelId,
+      errorKind: classified.kind,
+      error: classified.message,
+      statusCode: classified.statusCode,
+      timestamp: new Date().toISOString(),
+    });
+    throw new Error(
+      `[section-agent:${section.id}] Both models failed — primary: ${model.primaryModel.modelId}, fallback: ${model.fallbackModel.modelId} (${classified.kind})`
+    );
+  }
 }
 
 // ── Step 4: Parse & Validate Result ───────────────────────────
