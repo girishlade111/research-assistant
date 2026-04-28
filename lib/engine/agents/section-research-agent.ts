@@ -190,6 +190,7 @@ async function callSynthesisModel(
     modelUsed: model.fallbackModel.modelId,
     provider: model.fallbackModel.platform,
     isFallback: true,
+    tokensUsed: response.usage?.total_tokens ?? 0,
   };
 }
 
