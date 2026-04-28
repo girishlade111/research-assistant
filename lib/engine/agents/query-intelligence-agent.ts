@@ -144,8 +144,21 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
     }
 
     if (!parsed || !parsed.dynamicSections) {
+      console.error('[QueryIntelligence PARSE_FAIL_FINAL]', {
+        query,
+        timestamp: new Date().toISOString(),
+      });
       throw new Error("Failed to parse research plan after retry");
     }
+
+    console.log('[QueryIntelligence RESPONSE]', {
+      rawResponsePreview: JSON.stringify(parsed).slice(0, 500),
+      parseSuccess: true,
+      sectionsCreated: parsed.dynamicSections?.length,
+      modelUsed: result.model_used,
+      provider: result.provider,
+      timestamp: new Date().toISOString(),
+    });
 
     const plan = normalizeResearchPlan(parsed, query);
 
