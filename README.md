@@ -24,13 +24,6 @@
 > [!IMPORTANT]
 > **ResAgent** features **Dynamic Model Routing** with automatic fallback to high-capacity context models (up to **131,072 tokens**). A unique race-condition fallback mechanism ensures zero downtime by firing concurrent requests to OpenRouter if primary endpoints stall.
 
-### 🔹 Core Execution Phases
-
-*   **Phase 1: Intelligence Generation** — Deconstructs raw user intent into structured research vectors using reasoning-optimized models.
-*   **Phase 2: Data Aggregation** — Executes concurrent web searches and parses multi-modal document uploads (PDF, OCR, CSV).
-*   **Phase 3: Parallel Synthesis** — Runs Analysis, Summary, Fact-Check, and Coding agents simultaneously with dynamic model routing.
-*   **Phase 4: Massive Report Assembly** — Compiles all outputs into a 5-6 page cohesive research document via SSE streaming.
-
 ---
 
 ## ✨ Key Features
@@ -58,83 +51,97 @@
 
 ## 🏗️ System Architecture
 
-ResAgent is built on a decoupled, event-driven architecture that prioritizes parallel execution and fault tolerance.
+ResAgent utilizes a sophisticated **Control Plane vs. Data Plane** architecture to manage high-concurrency multi-agent workflows.
 
-### 🧩 High-Level Data Flow
+### 🧩 High-Level Orchestration Topology
 
 ```mermaid
 graph TB
-    subgraph Client ["Frontend (React 19)"]
-        UI["Main Chat UI"]
-        SSE_Rec["SSE Event Listener"]
-        State["Zustand Global State"]
-    end
-
-    subgraph API ["Serverless Gateway (Next.js)"]
-        Route["POST /api/research"]
-        SSE_Stream["SSE Stream Controller"]
-        Auth["API Key Validator"]
-    end
-
-    subgraph Core ["Orchestration Engine (Node.js)"]
+    subgraph CP ["Control Plane (Orchestration & Logic)"]
         direction TB
-        Orch["Research Orchestrator"]
-        subgraph P1 ["Phase 1: Intelligence"]
-            QI["Query Intel Agent"]
-            Plan["Research Blueprint"]
-        end
-        subgraph P2 ["Phase 2: Aggregation"]
-            WS["Web Search Agent"]
-            File["File Parser (OCR/PDF)"]
-        end
-        subgraph P3 ["Phase 3: Parallel Synthesis"]
+        UI(["🧑‍💻 User Intent"]) --> Router{"🧠 Intent Router"}
+        Router -->|Research| QI["🕵️ Query Intel Agent"]
+        QI --> Blueprint["📋 Dynamic Research Blueprint"]
+        Blueprint --> MS["⚖️ Model Selector Agent"]
+        MS --> Assignments["🎯 Agent-to-Model Map"]
+    end
+
+    subgraph DP ["Data Plane (Parallel Execution)"]
+        direction TB
+        Assignments --> Parallel["⚡ Parallel Agent Fleet"]
+        subgraph Agents ["Fleet Execution"]
             direction LR
-            AA["Analysis Agent"]
-            FC["Fact-Check Agent"]
-            CA["Coding Agent"]
-            SA["Summary Agent"]
+            A1["🔍 Analysis"]
+            A2["💻 Coding"]
+            A3["✅ Fact-Check"]
+            A4["📝 Summary"]
         end
-        subgraph P4 ["Phase 4: Finalization"]
-            RS["Report Synthesis Agent"]
-        end
+        Parallel --> Agents
     end
 
-    subgraph External ["Inference Providers"]
-        NVIDIA["NVIDIA NIM (Primary)"]
-        OR["OpenRouter (Fallback)"]
-        Sonar["Perplexity Sonar"]
+    subgraph Grounding ["Context Grounding Layer"]
+        direction LR
+        WS["🌐 Web Search (Perplexity)"]
+        OCR["📄 OCR/File Parser (WASM)"]
     end
 
-    UI -->|JSON| Route
-    Route --> Auth
-    Auth --> Orch
-    
-    Orch --> QI --> Plan
-    Plan --> WS & File
-    WS & File --> AA & FC & CA & SA
-    
-    AA & FC & CA & SA -->|Race Condition| RS
-    RS --> SSE_Stream
-    SSE_Stream -->|data: { agent_update }| SSE_Rec
-    SSE_Rec --> State --> UI
+    Grounding -->|Augmented Context| Agents
 
-    AA & FC & CA & SA -.->|Timeout > 60s| NVIDIA & OR
+    subgraph Resilience ["Fault Tolerance Layer"]
+        Race{"🔄 Fallback Race"}
+        NVIDIA["NVIDIA NIM"]
+        OR["OpenRouter"]
+    end
+
+    Agents --> Race
+    Race -->|Primary| NVIDIA
+    Race -.->|Timeout/Fail| OR
+
+    subgraph Delivery ["Report Assembly & Delivery"]
+        RS["✍️ Report Synthesis Agent"]
+        SSE["📡 SSE Streaming Engine"]
+        FinalMD(["📑 Final Research Report"])
+    end
+
+    Race --> RS
+    RS --> SSE
+    SSE --> FinalMD
+
+    classDef control fill:#1e1b4b,stroke:#4338ca,color:#fff
+    classDef data fill:#064e3b,stroke:#059669,color:#fff
+    classDef ground fill:#78350f,stroke:#d97706,color:#fff
+    classDef fallback fill:#701a75,stroke:#c026d3,color:#fff
+    
+    class UI,Router,QI,Blueprint,MS,Assignments control
+    class Parallel,A1,A2,A3,A4 data
+    class WS,OCR ground
+    class Race,NVIDIA,OR,RS,SSE fallback
 ```
 
-### 🛠️ Detailed Component Breakdown
+---
 
-#### 1. Server-Sent Events (SSE) Pipeline
-The system uses a **unidirectional SSE stream** to provide real-time feedback. Unlike standard REST, this allows the orchestrator to "push" updates as individual agents complete their tasks, ensuring the user is never left with a static loading spinner.
+### 🛡️ Technical Deep Dives
 
-#### 2. Four-Phase Orchestration Logic
-*   **Initialization:** Generates a SHA-256 hash of the query for instant Redis-backed cache lookup. If a miss occurs, the **Model Selector Agent** assigns specific LLMs to each research vector based on task complexity.
-*   **Parallelization:** Utilizes `Promise.allSettled` to launch all Phase 3 agents simultaneously. This architecture ensures that a slow-running Coding agent doesn't block the progress of the Fact-Check or Analysis agents.
-*   **Graceful Degradation:** Each agent is wrapped in a `withGracefulTimeout` wrapper. If an agent fails or stalls (default 90s), the system returns a placeholder error block for that section rather than crashing the entire report.
-*   **Synthesis & Assembly:** The **Report Synthesis Agent** acts as a "Chief Editor," merging heterogeneous JSON outputs into a cohesive, logically flowing Markdown document.
+#### 1. The Model Routing Engine
+Unlike simple LLM wrappers, ResAgent employs a **static + dynamic routing layer** (`model-selector-agent.ts`):
+*   **Role Classification:** Every research section is classified into one of 8 task types (e.g., `web_search`, `financial_analysis`, `deep_reasoning`).
+*   **Health-Aware Routing:** Before assignment, the system pings the **NVIDIA NIM health endpoint**. If latency exceeds 4s or the service is down, the Control Plane automatically swaps primary assignments to OpenRouter fallbacks *before* execution begins.
+*   **Priority Token Budgeting:** High-priority sections (e.g., "Critical Risks") are dynamically assigned higher token budgets (up to **16,384**) compared to overview sections.
 
-#### 3. Reliability & Fallback Strategy
-*   **The Fallback Racer:** If the primary NVIDIA NIM endpoint returns a 5xx error or stalls, the system concurrently fires the same request to an OpenRouter fallback. The orchestrator accepts the first successful response.
-*   **Context Grounding:** Every agent receives a dynamic `AgentContext` object containing strictly parsed search results and OCR-extracted text, preventing "hallucination" by forcing the model to cite its provided sources.
+#### 2. Parallel Execution Framework
+The engine leverages Node.js asynchronous primitives to achieve maximum throughput:
+*   **Non-Blocking Aggregation:** Web searching and local file OCR parsing run concurrently. OCR is executed via **WebAssembly (WASM)** threads, ensuring zero UI thread blocking for large document ingestion.
+*   **Section-Level Parallelism:** Each research section is an independent execution unit. The orchestrator uses `Promise.allSettled` to manage the fleet, allowing the report to compile even if a non-critical sub-agent times out.
+
+#### 3. Intelligent Context Grounding
+To eliminate hallucinations, ResAgent uses a **"Blackboard Architecture"** for shared state:
+*   **Global Search Context:** Query Intelligence generates a 2000-token summary of initial search results that is injected into *every* sub-agent.
+*   **Citation Enforcement:** Sub-agents are forced to return structured JSON containing `sourcesUsed` and `dataPoints`. The final **Report Synthesis Agent** cross-references these against the master source list before generating the final Markdown.
+
+#### 4. Fallback Race Condition Logic
+The system implements a **Concurrent Competitive Request** pattern:
+*   **Race Trigger:** If a primary model call stalls beyond **60 seconds**, an identical request is fired to the designated fallback model.
+*   **First-to-Finish:** The orchestrator listens for the first valid response header and immediately terminates the laggard connection, minimizing total research time under heavy load or API instability.
 
 ---
 
