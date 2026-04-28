@@ -217,10 +217,13 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   console.log('[Orchestrator]', { phase: 'REPORT_SYNTHESIS', status: 'starting', completedSections: completedSections.length, failedSections: failedSections.length, timestamp: Date.now() });
 
   // Step 6: Report Synthesis Agent
+  // Pass all fulfilled sections (including errored ones with partial content) so the report isn't empty
+  const sectionsForReport = allSections.length > 0 ? allSections : completedSections;
+
   onProgress({ phase: 3, percent: 80, status: "Compiling final report..." });
   const finalReport = await runReportSynthesisAgent({
     plan,
-    completedSections,
+    completedSections: sectionsForReport,
     failedSections: failedSections.map(f => f.sectionId),
     originalQuery: userQuery,
     userMemory,
