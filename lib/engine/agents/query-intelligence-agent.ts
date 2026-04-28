@@ -179,6 +179,13 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
       search_terms,
     };
   } catch (err) {
+    console.error('[QueryIntelligence FAILED]', {
+      error: err instanceof Error ? err.message : String(err),
+      errorCode: (err as Record<string, unknown>)?.status ?? (err as Record<string, unknown>)?.code,
+      model: chain.primary.modelId,
+      query,
+      timestamp: new Date().toISOString(),
+    });
     const fallbackPlan = buildFallbackPlan(query);
 
     return {
