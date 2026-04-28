@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { runResearchOrchestrator } from "@/lib/engine/orchestrator";
+import { runAllConnectionTests } from "@/lib/engine/debug/api-test";
 import type { ApiKeys } from "@/lib/engine/types";
 
 function getApiKeys(): ApiKeys {
