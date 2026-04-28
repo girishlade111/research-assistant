@@ -200,6 +200,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   await setCachedResponse(queryHash, researchResult, 3600);
 
   // Step 8: Return Complete Report
+  console.log('[Orchestrator]', { phase: 'COMPLETE', status: 'report_ready', timestamp: Date.now() });
   onProgress({ phase: 3, percent: 100, status: "Report ready!", type: "complete" });
   return researchResult;
 }
