@@ -99,6 +99,14 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
     },
   ];
 
+  console.log('[QueryIntelligence START]', {
+    query,
+    researchMode,
+    model: chain.primary.modelId,
+    fallbackModel: chain.fallbacks[0]?.modelId,
+    timestamp: new Date().toISOString(),
+  });
+
   try {
     const result = await callWithFallback(
       "query-intelligence-agent",
@@ -113,6 +121,12 @@ IMPORTANT: Return ONLY valid JSON matching the exact schema above. No markdown f
     let parsed = safeParseJSON(result.content);
 
     if (!parsed || !parsed.dynamicSections) {
+      console.warn('[QueryIntelligence PARSE_FAIL]', {
+        rawResponsePreview: result.content?.slice(0, 500),
+        modelUsed: result.model_used,
+        retrying: true,
+        timestamp: new Date().toISOString(),
+      });
       const retryResult = await callWithFallback(
         "query-intelligence-agent",
         chain.primary,
