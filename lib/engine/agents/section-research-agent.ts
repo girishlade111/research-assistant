@@ -376,6 +376,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
     provider: llmResult.provider,
     isFallback: llmResult.isFallback,
     durationMs: Date.now() - start,
+    tokensUsed: llmResult.tokensUsed,
   };
 
   // Step 5: Progress Callback
