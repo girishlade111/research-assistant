@@ -41,6 +41,12 @@ export async function POST(req: Request) {
     // Background execution
     (async () => {
       try {
+        // Debug: test API connectivity before research
+        if (process.env.NODE_ENV === "development") {
+          const testResults = await runAllConnectionTests(apiKeys);
+          sendSSE({ type: "debug", apiTests: testResults });
+        }
+
         const finalReport = await runResearchOrchestrator({
           userQuery: query,
           userId,
