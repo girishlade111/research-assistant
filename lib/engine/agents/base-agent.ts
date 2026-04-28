@@ -110,6 +110,7 @@ export async function callWithFallback(
         model_used: fallback.id,
         provider: fallback.provider,
         isFallback: true,
+        usage: res.usage,
       };
     } catch (fallbackErr) {
       const fbErr = classifyError(fallbackErr, fallback.provider);
