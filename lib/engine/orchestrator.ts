@@ -50,10 +50,11 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
 // ── Orchestrator ────────────────────────────────────────────────────
 
 export async function runResearchOrchestrator(input: OrchestratorInput): Promise<ResearchResult> {
+  const orchestratorStart = Date.now();
   const { userQuery, userId, conversationId, researchMode, apiKeys, onProgress } = input;
 
   // ━━━ PHASE 1: INITIALIZATION (Sequential) ━━━
-  console.log('[Orchestrator]', { phase: 'INIT', status: 'starting', query: userQuery, researchMode, timestamp: Date.now() });
+  console.log('[Orchestrator]', { phase: 'INIT', status: 'starting', query: userQuery, researchMode, timestamp: orchestratorStart });
 
   // Step 1: Cache Check
   const queryHash = generateHash(userQuery + (researchMode || ""));
