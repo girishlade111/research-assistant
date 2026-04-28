@@ -150,25 +150,28 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
       maxTokens: 8000,
     };
     
-    // Applying 90s individual timeout
-    return withTimeout(runSectionAgent({
-      section,
-      assignedModel: modelAssignment,
-      originalQuery: userQuery,
-      globalSearchContext: plan.globalSearchContext,
-      apiKeys,
-      onProgress: (agentProgress) => {
-        if (agentProgress.status === "complete") completedCount++;
-        onProgress({
-          phase: 2,
-          type: "agent_update",
-          sectionId: section.id,
-          agentRole: section.agentRole,
-          status: agentProgress.status,
-          percent: 15 + Math.round((completedCount / totalAgents) * 55)
-        });
-      }
-    }), 90_000);
+    return withGracefulTimeout(
+      runSectionAgent({
+        section,
+        assignedModel: modelAssignment,
+        originalQuery: userQuery,
+        globalSearchContext: plan.globalSearchContext,
+        apiKeys,
+        onProgress: (agentProgress) => {
+          if (agentProgress.status === "complete") completedCount++;
+          onProgress({
+            phase: 2,
+            type: "agent_update",
+            sectionId: section.id,
+            agentRole: section.agentRole,
+            status: agentProgress.status,
+            percent: 15 + Math.round((completedCount / totalAgents) * 55)
+          });
+        }
+      }),
+      90_000,
+      section
+    );
   });
 
   const results = await Promise.allSettled(agentPromises);
