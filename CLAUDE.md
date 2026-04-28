@@ -32,3 +32,5 @@
 - **Tokens**: Monitor `TOKEN_LIMITS` strictly to avoid context blowout.
 
 - **Testing**: Write unit tests for all agents and orchestration logic.
+
+- **Documentation**: Document all public functions and types.
