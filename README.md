@@ -53,95 +53,127 @@
 
 ResAgent utilizes a sophisticated **Control Plane vs. Data Plane** architecture to manage high-concurrency multi-agent workflows.
 
-### 🧩 High-Level Orchestration Topology
+### 🧩 Granular Orchestration Workflow
 
 ```mermaid
-graph TB
-    subgraph CP ["Control Plane (Orchestration & Logic)"]
-        direction TB
-        UI(["🧑‍💻 User Intent"]) --> Router{"🧠 Intent Router"}
-        Router -->|Research| QI["🕵️ Query Intel Agent"]
-        QI --> Blueprint["📋 Dynamic Research Blueprint"]
-        Blueprint --> MS["⚖️ Model Selector Agent"]
-        MS --> Assignments["🎯 Agent-to-Model Map"]
+flowchart TB
+    subgraph Client ["<b>1. Presentation Layer (React 19)</b>"]
+        UI["Main Chat UI"]
+        State["Zustand State Manager"]
+        SSE_Rec["SSE Stream Consumer"]
+        MD_Render["Progressive MD Renderer"]
     end
 
-    subgraph DP ["Data Plane (Parallel Execution)"]
+    subgraph API ["<b>2. Service Gateway (Next.js)</b>"]
+        Route["POST /api/research"]
+        Cache["SHA-256 Hashing & Cache Look-up"]
+        SSE_Push["SSE Stream Controller"]
+    end
+
+    subgraph Control_Plane ["<b>3. Control Plane (Logic & Intelligence)</b>"]
         direction TB
-        Assignments --> Parallel["⚡ Parallel Agent Fleet"]
-        subgraph Agents ["Fleet Execution"]
-            direction LR
-            A1["🔍 Analysis"]
-            A2["💻 Coding"]
-            A3["✅ Fact-Check"]
-            A4["📝 Summary"]
+        QI["🕵️ Query Intelligence Agent"]
+        BP["📋 Research Blueprint Generation"]
+        MS["⚖️ Model Selector Agent"]
+        Assignments["🎯 Agent-to-Model Mapping"]
+        Health["🛡️ Health Check (NVIDIA NIM)"]
+    end
+
+    subgraph Data_Plane ["<b>4. Data Plane (Parallel Fleet)</b>"]
+        direction TB
+        Parallel["⚡ Parallel Execution Engine"]
+        subgraph SubAgents ["Fleet Instances"]
+            A1["🔍 Analysis Agent"]
+            A2["💻 Coding Agent"]
+            A3["✅ Fact-Check Agent"]
+            A4["📝 Summary Agent"]
         end
-        Parallel --> Agents
     end
 
-    subgraph Grounding ["Context Grounding Layer"]
+    subgraph Grounding ["<b>5. Grounding Layer (RAG & WASM)</b>"]
         direction LR
         WS["🌐 Web Search (Perplexity)"]
-        OCR["📄 OCR/File Parser (WASM)"]
+        OCR["📄 OCR / PDF Parser (WASM)"]
+        Semantic["🧠 Semantic Chunking & Scoring"]
     end
 
-    Grounding -->|Augmented Context| Agents
-
-    subgraph Resilience ["Fault Tolerance Layer"]
-        Race{"🔄 Fallback Race"}
-        NVIDIA["NVIDIA NIM"]
-        OR["OpenRouter"]
+    subgraph Resilience ["<b>6. Resilience Layer (Auto-Fallback)</b>"]
+        Race["🔄 Fallback Race Condition"]
+        NIM["Primary: NVIDIA NIM"]
+        OR["Fallback: OpenRouter"]
     end
 
-    Agents --> Race
-    Race -->|Primary| NVIDIA
-    Race -.->|Timeout/Fail| OR
-
-    subgraph Delivery ["Report Assembly & Delivery"]
+    subgraph Assembly ["<b>7. Finalization Layer</b>"]
         RS["✍️ Report Synthesis Agent"]
-        SSE["📡 SSE Streaming Engine"]
-        FinalMD(["📑 Final Research Report"])
+        Export["📑 MD/PDF Export Engine"]
     end
 
-    Race --> RS
-    RS --> SSE
-    SSE --> FinalMD
-
-    classDef control fill:#1e1b4b,stroke:#4338ca,color:#fff
-    classDef data fill:#064e3b,stroke:#059669,color:#fff
-    classDef ground fill:#78350f,stroke:#d97706,color:#fff
-    classDef fallback fill:#701a75,stroke:#c026d3,color:#fff
+    %% Flow Connections
+    UI -->|JSON Request| Route
+    Route --> Cache
+    Cache -->|Miss| Control_Plane
     
-    class UI,Router,QI,Blueprint,MS,Assignments control
+    QI --> BP
+    BP --> MS
+    MS --> Health
+    Health --> Assignments
+    Assignments --> Parallel
+    
+    Parallel --> SubAgents
+    Grounding -->|Augmented Context| SubAgents
+    
+    SubAgents --> Race
+    Race --> NIM
+    Race -.->|Timeout > 60s| OR
+    
+    Race --> Assembly
+    RS --> SSE_Push
+    SSE_Push -->|data: { type: 'agent_update' }| SSE_Rec
+    SSE_Rec --> State
+    State --> MD_Render
+    MD_Render --> UI
+
+    %% Styling
+    classDef client fill:#0f172a,stroke:#38bdf8,color:#fff
+    classDef api fill:#1e1b4b,stroke:#818cf8,color:#fff
+    classDef control fill:#312e81,stroke:#a5b4fc,color:#fff
+    classDef data fill:#064e3b,stroke:#34d399,color:#fff
+    classDef grounding fill:#78350f,stroke:#fbbf24,color:#fff
+    classDef resilience fill:#701a75,stroke:#f0abfc,color:#fff
+    classDef assembly fill:#92400e,stroke:#f59e0b,color:#fff
+
+    class UI,State,SSE_Rec,MD_Render client
+    class Route,Cache,SSE_Push api
+    class QI,BP,MS,Assignments,Health control
     class Parallel,A1,A2,A3,A4 data
-    class WS,OCR ground
-    class Race,NVIDIA,OR,RS,SSE fallback
+    class WS,OCR,Semantic grounding
+    class Race,NIM,OR resilience
+    class RS,Export assembly
 ```
 
 ---
 
 ### 🛡️ Technical Deep Dives
 
-#### 1. The Model Routing Engine
-Unlike simple LLM wrappers, ResAgent employs a **static + dynamic routing layer** (`model-selector-agent.ts`):
-*   **Role Classification:** Every research section is classified into one of 8 task types (e.g., `web_search`, `financial_analysis`, `deep_reasoning`).
-*   **Health-Aware Routing:** Before assignment, the system pings the **NVIDIA NIM health endpoint**. If latency exceeds 4s or the service is down, the Control Plane automatically swaps primary assignments to OpenRouter fallbacks *before* execution begins.
-*   **Priority Token Budgeting:** High-priority sections (e.g., "Critical Risks") are dynamically assigned higher token budgets (up to **16,384**) compared to overview sections.
+#### 1. The Model Routing & Health Plane
+Unlike static LLM implementations, ResAgent employs a **Health-Aware Control Plane** (`model-selector-agent.ts`):
+*   **Dynamic Task Classification:** Every research section is classified into 8 specialized task types (e.g., `web_search`, `financial_analysis`, `code_generation`).
+*   **Pre-emptive Health Checks:** The system pings the **NVIDIA NIM health endpoint** with a 4s timeout. If latency exceeds this threshold or the service returns a non-200 status, the Control Plane automatically swaps primary assignments to OpenRouter fallbacks *before* the expensive research phase begins.
 
-#### 2. Parallel Execution Framework
-The engine leverages Node.js asynchronous primitives to achieve maximum throughput:
-*   **Non-Blocking Aggregation:** Web searching and local file OCR parsing run concurrently. OCR is executed via **WebAssembly (WASM)** threads, ensuring zero UI thread blocking for large document ingestion.
-*   **Section-Level Parallelism:** Each research section is an independent execution unit. The orchestrator uses `Promise.allSettled` to manage the fleet, allowing the report to compile even if a non-critical sub-agent times out.
+#### 2. Resilient Parallelization Framework
+The engine leverages Node.js asynchronous primitives and `Promise.allSettled` to manage the agent fleet:
+*   **Non-Blocking Aggregation:** Web searching and local document parsing run concurrently. Document parsing is handled via **WebAssembly (WASM)** threads, offloading CPU-intensive OCR tasks from the main event loop.
+*   **Graceful Degradation:** Each agent is wrapped in a `withGracefulTimeout` wrapper. If a sub-agent stalls (90s ceiling), the system returns a partial result with a clear "Data Limitations" notice, ensuring the final report is delivered even if one "expert" fails.
 
-#### 3. Intelligent Context Grounding
-To eliminate hallucinations, ResAgent uses a **"Blackboard Architecture"** for shared state:
-*   **Global Search Context:** Query Intelligence generates a 2000-token summary of initial search results that is injected into *every* sub-agent.
-*   **Citation Enforcement:** Sub-agents are forced to return structured JSON containing `sourcesUsed` and `dataPoints`. The final **Report Synthesis Agent** cross-references these against the master source list before generating the final Markdown.
+#### 3. WASM-Powered Grounding Layer (RAG)
+To ensure zero hallucinations, the system uses a **Semantic Blackboard Architecture** (`context-builder.ts`):
+*   **Semantic Scoring:** Text extracted from files and web results is chunked and scored against the research query using keyword density and relevance proximity.
+*   **Token Budgeting (70/30 Split):** The system intelligently allocates context window space, prioritizing local file content (70% budget) over web search results (30% budget) to ensure groundedness in user-provided data.
 
-#### 4. Fallback Race Condition Logic
-The system implements a **Concurrent Competitive Request** pattern:
-*   **Race Trigger:** If a primary model call stalls beyond **60 seconds**, an identical request is fired to the designated fallback model.
-*   **First-to-Finish:** The orchestrator listens for the first valid response header and immediately terminates the laggard connection, minimizing total research time under heavy load or API instability.
+#### 4. The SSE Streaming Pipeline
+The system utilizes a **Structured Event-Stream Protocol** to maintain high-fidelity UI synchronization:
+*   **Event Typing:** The stream emits typed events (`agent_update`, `plan_ready`, `models_assigned`, `debug`) that allow the UI to animate specific agents, update progress bars, and reveal Markdown sections progressively without a full page re-render.
+*   **Progressive Markdown Reveal:** Using a memoized Markdown renderer on the frontend, the stream allows users to read sections as they are generated by individual sub-agents.
 
 ---
 
@@ -177,12 +209,6 @@ Create a `.env.local` in the root:
 NVIDIA_API_KEY=nvapi-your-key
 OPENROUTER_API_KEY=sk-or-your-key
 PERPLEXITY_API_KEY=pplx-your-key
-```
-
-### 3. Launch Development
-```bash
-npm run dev
-# Open http://localhost:3000
 ```
 
 ---
