@@ -136,7 +136,7 @@ async function callSynthesisModel(
   section: DynamicSection,
   model: AgentModelAssignment,
   apiKeys: ApiKeys
-): Promise<{ content: string; modelUsed: string; provider: string; isFallback: boolean }> {
+): Promise<{ content: string; modelUsed: string; provider: string; isFallback: boolean; tokensUsed: number }> {
   const userMessage = `${searchContext}\n\nAnalyze and write your section`;
 
   const messages: LLMMessage[] = [
