@@ -54,67 +54,87 @@
 | **Summary** | High-speed overview generation | `minimax-m2.7` | `gemma-4-31b:free` |
 | **Report** | Final markdown assembly & quality control | `kimi-k2-thinking` | `gpt-oss-120b:free` |
 
-### ⚡ Next-Gen UI Experience
-*   **Progressive Streaming:** Real-time Markdown reveal powered by Server-Sent Events (SSE).
-*   **Citation Graph:** Visual relationship mapping between research sources and insights.
-*   **Thinking Panel:** Transparent view into each agent's reasoning process and current task.
-*   **Model Selector:** Hot-swappable model configurations for granular control.
-*   **Multi-Format Export:** High-quality PDF (with auto-tables), Markdown, and TXT downloads.
-
 ---
 
 ## 🏗️ System Architecture
 
-ResAgent utilizes an asynchronous state machine to manage complex multi-agent workflows.
+ResAgent is built on a decoupled, event-driven architecture that prioritizes parallel execution and fault tolerance.
+
+### 🧩 High-Level Data Flow
 
 ```mermaid
-graph TD
-    subgraph UI ["User Interface Layer"]
-        User(["🧑‍💻 User Query + Documents"])
-        SSE["📡 SSE Stream Handler"]
-        MD["✨ Progressive Markdown UI"]
+graph TB
+    subgraph Client ["Frontend (React 19)"]
+        UI["Main Chat UI"]
+        SSE_Rec["SSE Event Listener"]
+        State["Zustand Global State"]
     end
 
-    subgraph Router ["Orchestration Layer"]
-        Intent{"🧠 Intent Classifier"}
-        Cache["💾 Query Cache"]
-        Fallbacks{"🔄 Fallback Racer"}
+    subgraph API ["Serverless Gateway (Next.js)"]
+        Route["POST /api/research"]
+        SSE_Stream["SSE Stream Controller"]
+        Auth["API Key Validator"]
     end
 
-    subgraph Agents ["Specialized Agent Fleet (Parallel)"]
-        QI["🕵️ Query Intel"]
-        WS["🌐 Web Search"]
-        AA["🔍 Analysis Agent"]
-        FC["✅ Fact-Check"]
-        CA["💻 Coding Agent"]
-        SA["📝 Summary Agent"]
+    subgraph Core ["Orchestration Engine (Node.js)"]
+        direction TB
+        Orch["Research Orchestrator"]
+        subgraph P1 ["Phase 1: Intelligence"]
+            QI["Query Intel Agent"]
+            Plan["Research Blueprint"]
+        end
+        subgraph P2 ["Phase 2: Aggregation"]
+            WS["Web Search Agent"]
+            File["File Parser (OCR/PDF)"]
+        end
+        subgraph P3 ["Phase 3: Parallel Synthesis"]
+            direction LR
+            AA["Analysis Agent"]
+            FC["Fact-Check Agent"]
+            CA["Coding Agent"]
+            SA["Summary Agent"]
+        end
+        subgraph P4 ["Phase 4: Finalization"]
+            RS["Report Synthesis Agent"]
+        end
     end
 
-    subgraph Assembly ["Finalization Layer"]
-        RA["✍️ Report Synthesis Agent"]
-        PDF["📑 PDF/MD Export Engine"]
+    subgraph External ["Inference Providers"]
+        NVIDIA["NVIDIA NIM (Primary)"]
+        OR["OpenRouter (Fallback)"]
+        Sonar["Perplexity Sonar"]
     end
 
-    User --> Intent
-    Intent --> Cache
-    Cache -->|Miss| QI
-    QI --> WS
-    WS --> AA & FC & CA & SA
-    AA & FC & CA & SA --> Fallbacks
-    Fallbacks --> RA
-    RA --> SSE
-    SSE --> MD
-    MD --> PDF
-
-    classDef default fill:#111,stroke:#333,color:#fff
-    classDef highlight fill:#4c1d95,stroke:#a78bfa,color:#fff
-    classDef agent fill:#0f766e,stroke:#2dd4bf,color:#fff
-    classDef logic fill:#92400e,stroke:#fbbf24,color:#fff
+    UI -->|JSON| Route
+    Route --> Auth
+    Auth --> Orch
     
-    class User,MD highlight
-    class QI,WS,AA,FC,CA,SA,RA agent
-    class Intent,Fallbacks logic
+    Orch --> QI --> Plan
+    Plan --> WS & File
+    WS & File --> AA & FC & CA & SA
+    
+    AA & FC & CA & SA -->|Race Condition| RS
+    RS --> SSE_Stream
+    SSE_Stream -->|data: { agent_update }| SSE_Rec
+    SSE_Rec --> State --> UI
+
+    AA & FC & CA & SA -.->|Timeout > 60s| NVIDIA & OR
 ```
+
+### 🛠️ Detailed Component Breakdown
+
+#### 1. Server-Sent Events (SSE) Pipeline
+The system uses a **unidirectional SSE stream** to provide real-time feedback. Unlike standard REST, this allows the orchestrator to "push" updates as individual agents complete their tasks, ensuring the user is never left with a static loading spinner.
+
+#### 2. Four-Phase Orchestration Logic
+*   **Initialization:** Generates a SHA-256 hash of the query for instant Redis-backed cache lookup. If a miss occurs, the **Model Selector Agent** assigns specific LLMs to each research vector based on task complexity.
+*   **Parallelization:** Utilizes `Promise.allSettled` to launch all Phase 3 agents simultaneously. This architecture ensures that a slow-running Coding agent doesn't block the progress of the Fact-Check or Analysis agents.
+*   **Graceful Degradation:** Each agent is wrapped in a `withGracefulTimeout` wrapper. If an agent fails or stalls (default 90s), the system returns a placeholder error block for that section rather than crashing the entire report.
+*   **Synthesis & Assembly:** The **Report Synthesis Agent** acts as a "Chief Editor," merging heterogeneous JSON outputs into a cohesive, logically flowing Markdown document.
+
+#### 3. Reliability & Fallback Strategy
+*   **The Fallback Racer:** If the primary NVIDIA NIM endpoint returns a 5xx error or stalls, the system concurrently fires the same request to an OpenRouter fallback. The orchestrator accepts the first successful response.
+*   **Context Grounding:** Every agent receives a dynamic `AgentContext` object containing strictly parsed search results and OCR-extracted text, preventing "hallucination" by forcing the model to cite its provided sources.
 
 ---
 
