@@ -211,6 +211,7 @@ export async function callNvidiaModel(params: {
     })
   });
 
+  // HTTP error असेल तर status code सहित throw करा
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
     const err = new Error(`NVIDIA API error: ${response.status}`) as any;
