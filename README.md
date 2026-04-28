@@ -57,94 +57,93 @@ ResAgent utilizes a sophisticated **Control Plane vs. Data Plane** architecture 
 
 ```mermaid
 flowchart TB
-    subgraph Client ["<b>1. Presentation Layer (React 19)</b>"]
-        UI["Main Chat UI"]
-        State["Zustand State Manager"]
-        SSE_Rec["SSE Stream Consumer"]
-        MD_Render["Progressive MD Renderer"]
+    %% 1. Presentation Layer
+    subgraph Client [Presentation Layer - React 19]
+        UI[Main Chat UI]
+        State[Zustand State Manager]
+        SSE_Rec[SSE Stream Consumer]
+        MD_Render[Progressive MD Renderer]
     end
 
-    subgraph API ["<b>2. Service Gateway (Next.js)</b>"]
-        Route["POST /api/research"]
-        Cache["SHA-256 Hashing & Cache Look-up"]
-        SSE_Push["SSE Stream Controller"]
+    %% 2. Service Gateway
+    subgraph API [Service Gateway - Next.js]
+        Route[POST /api/research]
+        Cache[SHA-256 Cache Check]
+        SSE_Push[SSE Stream Controller]
     end
 
-    subgraph Control_Plane ["<b>3. Control Plane (Logic & Intelligence)</b>"]
-        direction TB
-        QI["🕵️ Query Intelligence Agent"]
-        BP["📋 Research Blueprint Generation"]
-        MS["⚖️ Model Selector Agent"]
-        Assignments["🎯 Agent-to-Model Mapping"]
-        Health["🛡️ Health Check (NVIDIA NIM)"]
+    %% 3. Control Plane
+    subgraph Control_Plane [Control Plane - Logic]
+        QI[Query Intel Agent]
+        BP[Research Blueprint]
+        MS[Model Selector Agent]
+        Health[NIM Health Check]
     end
 
-    subgraph Data_Plane ["<b>4. Data Plane (Parallel Fleet)</b>"]
-        direction TB
-        Parallel["⚡ Parallel Execution Engine"]
-        subgraph SubAgents ["Fleet Instances"]
-            A1["🔍 Analysis Agent"]
-            A2["💻 Coding Agent"]
-            A3["✅ Fact-Check Agent"]
-            A4["📝 Summary Agent"]
-        end
+    %% 4. Data Plane
+    subgraph Data_Plane [Data Plane - Parallel Fleet]
+        Parallel[Parallel Execution Engine]
+        A1[Analysis Agent]
+        A2[Coding Agent]
+        A3[Fact-Check Agent]
+        A4[Summary Agent]
     end
 
-    subgraph Grounding ["<b>5. Grounding Layer (RAG & WASM)</b>"]
-        direction LR
-        WS["🌐 Web Search (Perplexity)"]
-        OCR["📄 OCR / PDF Parser (WASM)"]
-        Semantic["🧠 Semantic Chunking & Scoring"]
+    %% 5. Grounding Layer
+    subgraph Grounding [Grounding Layer - RAG]
+        WS[Web Search - Perplexity]
+        OCR[File Parser - WASM]
+        Semantic[Semantic Scoring]
     end
 
-    subgraph Resilience ["<b>6. Resilience Layer (Auto-Fallback)</b>"]
-        Race["🔄 Fallback Race Condition"]
-        NIM["Primary: NVIDIA NIM"]
-        OR["Fallback: OpenRouter"]
+    %% 6. Resilience Layer
+    subgraph Resilience [Resilience - Auto-Fallback]
+        Race[Fallback Race Condition]
+        NIM[Primary: NVIDIA NIM]
+        OR[Fallback: OpenRouter]
     end
 
-    subgraph Assembly ["<b>7. Finalization Layer</b>"]
-        RS["✍️ Report Synthesis Agent"]
-        Export["📑 MD/PDF Export Engine"]
+    %% 7. Finalization Layer
+    subgraph Assembly [Finalization Layer]
+        RS[Report Synthesis Agent]
+        Export[MD/PDF Export Engine]
     end
 
-    %% Flow Connections
-    UI -->|JSON Request| Route
+    %% Connections
+    UI --> Route
     Route --> Cache
-    Cache -->|Miss| Control_Plane
-    
+    Cache --> QI
     QI --> BP
     BP --> MS
     MS --> Health
-    Health --> Assignments
-    Assignments --> Parallel
+    Health --> Parallel
     
-    Parallel --> SubAgents
-    Grounding -->|Augmented Context| SubAgents
+    Parallel --> A1 & A2 & A3 & A4
+    WS & OCR & Semantic --> A1 & A2 & A3 & A4
     
-    SubAgents --> Race
+    A1 & A2 & A3 & A4 --> Race
     Race --> NIM
-    Race -.->|Timeout > 60s| OR
+    Race -.-> OR
     
-    Race --> Assembly
+    NIM & OR --> RS
     RS --> SSE_Push
-    SSE_Push -->|data: { type: 'agent_update' }| SSE_Rec
+    SSE_Push --> SSE_Rec
     SSE_Rec --> State
     State --> MD_Render
     MD_Render --> UI
 
     %% Styling
-    classDef client fill:#0f172a,stroke:#38bdf8,color:#fff
-    classDef api fill:#1e1b4b,stroke:#818cf8,color:#fff
-    classDef control fill:#312e81,stroke:#a5b4fc,color:#fff
-    classDef data fill:#064e3b,stroke:#34d399,color:#fff
-    classDef grounding fill:#78350f,stroke:#fbbf24,color:#fff
-    classDef resilience fill:#701a75,stroke:#f0abfc,color:#fff
-    classDef assembly fill:#92400e,stroke:#f59e0b,color:#fff
+    classDef client fill:#111,stroke:#38bdf8,color:#fff
+    classDef api fill:#111,stroke:#818cf8,color:#fff
+    classDef control fill:#111,stroke:#a5b4fc,color:#fff
+    classDef data fill:#111,stroke:#34d399,color:#fff
+    classDef grounding fill:#111,stroke:#fbbf24,color:#fff
+    classDef resilience fill:#111,stroke:#f0abfc,color:#fff
+    classDef assembly fill:#111,stroke:#f59e0b,color:#fff
 
     class UI,State,SSE_Rec,MD_Render client
     class Route,Cache,SSE_Push api
-    class QI,BP,MS,Assignments,Health control
+    class QI,BP,MS,Health control
     class Parallel,A1,A2,A3,A4 data
     class WS,OCR,Semantic grounding
     class Race,NIM,OR resilience
