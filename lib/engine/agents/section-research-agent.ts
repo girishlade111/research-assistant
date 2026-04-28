@@ -286,14 +286,21 @@ function emitProgress(
 
 export async function runSectionAgent(config: SectionAgentConfig): Promise<SectionResult> {
   const start = Date.now();
-  const { section, assignedModel, originalQuery, apiKeys } = config;
+  const { section, assignedModel, originalQuery, apiKeys, researchMode } = config;
+
+  // Fast mode: only use first search query to reduce latency
+  const queriesToRun = researchMode === "fast"
+    ? section.searchQueries.slice(0, 1)
+    : section.searchQueries;
 
   // Step 1: Web Search
   emitProgress(config, { status: "searching" });
 
   console.log('[WebSearch START]', {
     sectionId: section.id,
-    queries: section.searchQueries,
+    queries: queriesToRun,
+    totalQueries: section.searchQueries.length,
+    mode: researchMode ?? "deep",
     model: assignedModel?.primaryModel?.modelId,
     requiresWebSearch: section.requiresWebSearch,
     timestamp: new Date().toISOString(),
@@ -303,7 +310,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   try {
     searchResults = section.requiresWebSearch
       ? await executeSearchQueries(
-        section.searchQueries,
+        queriesToRun,
         config.existingSearchResults ?? [],
         apiKeys
       )
