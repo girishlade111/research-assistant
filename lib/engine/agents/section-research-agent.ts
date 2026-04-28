@@ -294,6 +294,15 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
 
   const systemPrompt = buildSystemPrompt(section, originalQuery);
 
+  console.log('[SectionSynthesis START]', {
+    sectionId: section.id,
+    model: assignedModel?.primaryModel?.modelId,
+    fallbackModel: assignedModel?.fallbackModel?.modelId,
+    contextLength: searchContext?.length,
+    searchResultsCount: searchResults.length,
+    timestamp: new Date().toISOString(),
+  });
+
   let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean };
   try {
     llmResult = await callSynthesisModel(
@@ -306,6 +315,16 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   } catch (err) {
     // Step 4: Both models failed — return partial result
     const errMsg = err instanceof Error ? err.message : "Section synthesis failed";
+    console.error('[SectionAgent FAILED]', {
+      sectionId: section.id,
+      sectionTitle: section.sectionTitle,
+      agentRole: section.agentRole,
+      assignedModel: assignedModel?.primaryModel?.modelId,
+      fallbackModel: assignedModel?.fallbackModel?.modelId,
+      error: errMsg,
+      errorCode: (err as Record<string, unknown>)?.status ?? (err as Record<string, unknown>)?.code,
+      timestamp: new Date().toISOString(),
+    });
     emitProgress(config, { status: "failed", error: errMsg });
     return {
       sectionId: section.id,
@@ -327,7 +346,26 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   }
 
   // Step 4: Parse & Validate
+  console.log('[SectionSynthesis RESULT]', {
+    sectionId: section.id,
+    modelUsed: llmResult.modelUsed,
+    provider: llmResult.provider,
+    isFallback: llmResult.isFallback,
+    rawResponseLength: llmResult.content?.length,
+    rawResponsePreview: llmResult.content?.slice(0, 200),
+    timestamp: new Date().toISOString(),
+  });
+
   const parsed = parseAndNormalize(llmResult.content, section);
+
+  console.log('[SectionParse RESULT]', {
+    sectionId: section.id,
+    parseSuccess: parsed.content !== llmResult.content,
+    contentLength: parsed.content?.length,
+    keyFindingsCount: parsed.keyFindings?.length,
+    dataPointsCount: parsed.dataPoints?.length,
+    confidenceScore: parsed.confidenceScore,
+  });
 
   const result: SectionResult = {
     ...parsed,
