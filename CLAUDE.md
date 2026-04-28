@@ -30,11 +30,8 @@
 - **Error Handling**: Use `lib/engine/errors.ts` for classifying and displaying user-facing errors.
 - **Retries**: Follow `RETRY_CONFIG` (1 max retry, prefer fallback chain).
 - **Tokens**: Monitor `TOKEN_LIMITS` strictly to avoid context blowout.
-
 - **Testing**: Write unit tests for all agents and orchestration logic.
-
 - **Documentation**: Document all public functions and types.
-
 - **Performance**: Optimize for speed and efficiency. Use caching where appropriate.
 
 - **Security**: Follow security best practices. Use environment variables for sensitive information.
