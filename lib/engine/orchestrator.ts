@@ -176,26 +176,36 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
 
   const results = await Promise.allSettled(agentPromises);
 
-  console.log('[AllAgents COMPLETE]', {
-    total: results.length,
-    fulfilled: results.filter(r => r.status === 'fulfilled').length,
-    rejected: results.filter(r => r.status === 'rejected').length,
-    rejectedReasons: results
-      .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
-      .map(r => r.reason?.message ?? String(r.reason)),
-    timestamp: Date.now(),
-  });
-
-  const completedSections = results
+  // Extract all fulfilled results (withGracefulTimeout always resolves, so rejected should be rare)
+  const allSections = results
     .filter((r): r is PromiseFulfilledResult<SectionResult> => r.status === "fulfilled")
     .map(r => r.value);
 
-  const failedSections = results
+  // Separate successful from errored (but still fulfilled) sections
+  const completedSections = allSections.filter(s => !s.error);
+  const failedSections = allSections
+    .filter(s => !!s.error)
+    .map(s => ({ sectionId: s.sectionId, error: s.error! }));
+
+  // Also capture any truly rejected promises (shouldn't happen with graceful timeout, but be safe)
+  const rejectedSections = results
     .map((r, i) => r.status === "rejected" ? { sectionId: plan.dynamicSections[i].id, error: String(r.reason) } : null)
     .filter(Boolean) as { sectionId: string; error: string }[];
 
-  onProgress({ 
-    phase: 2, 
+  failedSections.push(...rejectedSections);
+
+  console.log('[AllAgents COMPLETE]', {
+    total: results.length,
+    fulfilled: allSections.length,
+    completed: completedSections.length,
+    failed: failedSections.length,
+    rejectedPromises: rejectedSections.map(r => r.error),
+    failedReasons: failedSections.map(f => ({ id: f.sectionId, error: f.error })),
+    timestamp: Date.now(),
+  });
+
+  onProgress({
+    phase: 2,
     percent: 70,
     status: `Research complete: ${completedSections.length}/${plan.dynamicSections.length} sections`,
     type: "phase_complete",
