@@ -83,6 +83,7 @@ async function executeSearchQueries(
     if (allResults.length >= MAX_SOURCES_PER_SECTION) break;
 
     try {
+      console.log('[WebSearch QUERY]', { query, currentResultCount: allResults.length });
       const { results } = await searchWithFallback(
         {
           query,
@@ -99,8 +100,12 @@ async function executeSearchQueries(
         seenUrls.add(result.url);
         allResults.push(result);
       }
-    } catch {
-      // Individual search query failure is non-fatal — continue with remaining queries
+    } catch (searchErr) {
+      console.error('[WebSearch FAILED]', {
+        query,
+        error: searchErr instanceof Error ? searchErr.message : String(searchErr),
+        timestamp: new Date().toISOString(),
+      });
     }
   }
 
