@@ -34,3 +34,11 @@
 - **Testing**: Write unit tests for all agents and orchestration logic.
 
 - **Documentation**: Document all public functions and types.
+
+- **Performance**: Optimize for speed and efficiency. Use caching where appropriate.
+
+- **Security**: Follow security best practices. Use environment variables for sensitive information.
+
+- **Accessibility**: Follow accessibility best practices. Use semantic HTML and ARIA labels where appropriate.
+
+- **Code Quality**: Write clean, maintainable code. Follow the SOLID principles. Use design patterns where appropriate.
