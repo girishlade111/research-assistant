@@ -230,13 +230,13 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
     apiKeys
   });
 
-  const totalTokensUsed = completedSections.reduce((sum, s) => sum + (s.tokensUsed ?? 0), 0);
+  const totalTokensUsed = allSections.reduce((sum, s) => sum + (s.tokensUsed ?? 0), 0);
   const totalDurationMs = Date.now() - orchestratorStart;
 
   console.log('[Orchestrator METRICS]', {
     totalTokensUsed,
     totalDurationMs,
-    perSection: completedSections.map(s => ({ id: s.sectionId, tokens: s.tokensUsed, durationMs: s.durationMs })),
+    perSection: allSections.map(s => ({ id: s.sectionId, tokens: s.tokensUsed, durationMs: s.durationMs, error: s.error })),
   });
 
   const researchResult: ResearchResult = {
