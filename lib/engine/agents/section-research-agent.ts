@@ -15,6 +15,7 @@ import { generateAIResponse } from "../providers";
 import { classifyError } from "../errors";
 import { safeParseJSON } from "./base-agent";
 import { executeWithFallback } from "../providers/fallback-executor";
+import { AGENT_FALLBACK_CHAINS } from "../config/fallback-config";
 
 // ── Constants ─────────────────────────────────────────────────
 
