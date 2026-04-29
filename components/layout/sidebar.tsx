@@ -85,6 +85,9 @@ export function Sidebar({
   const [historySearch, setHistorySearch] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [now, setNow] = useState(0);
+  
+  useEffect(() => { setNow(Date.now()); }, []);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -157,7 +160,7 @@ for (const entry of filteredHistory) {
     if (older.length) groups.push({ label: "Older", items: older });
 
     return groups;
-  }, [filteredHistory, now]);
+  }, [filteredHistory]);
 
   const navItems = [
     {
