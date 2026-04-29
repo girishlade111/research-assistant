@@ -188,7 +188,7 @@ Please synthesize the above sections into the final research report JSON format.
     }
   }
 
-  const parsed = (safeParseJSON(rawResponse) || {}) as Record<string, any>;
+  const parsed = (safeParseJSON(rawResponse) || {}) as Record<string, unknown>;
 
   // Construct FinalReport with fallbacks
   const finalReport: FinalReport = {
