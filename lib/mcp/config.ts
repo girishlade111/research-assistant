@@ -93,6 +93,32 @@ export const defaultMCPConfig: MCPConfig = {
     "gcloud": {
       "command": "npx",
       "args": ["-y", "@google-cloud/gcloud-mcp"]
+    },
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "@awslabs/mcp-server"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": process.env.AWS_ACCESS_KEY_ID || "",
+        "AWS_SECRET_ACCESS_KEY": process.env.AWS_SECRET_ACCESS_KEY || "",
+        "AWS_REGION": process.env.AWS_REGION || "us-east-1"
+      }
+    },
+    "aws-kb-retrieval": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws-kb-retrieval"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": process.env.AWS_ACCESS_KEY_ID || "",
+        "AWS_SECRET_ACCESS_KEY": process.env.AWS_SECRET_ACCESS_KEY || "",
+        "AWS_REGION": process.env.AWS_REGION || "us-east-1"
+      }
+    },
+    "aws-iac": {
+      "command": "uvx",
+      "args": ["-y", "awslabs-aws-iac-mcp-server@latest"]
+    },
+    "aws-docs": {
+      "command": "uvx",
+      "args": ["-y", "awslabs-aws-docs-mcp-server@latest"]
     }
   }
 };
