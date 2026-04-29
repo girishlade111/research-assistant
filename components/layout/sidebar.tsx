@@ -85,13 +85,9 @@ export function Sidebar({
   const [historySearch, setHistorySearch] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [nowTimestamp, setNowTimestamp] = useState<number>(0);
+  const nowTimestampRef = useRef(Date.now());
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setNowTimestamp(Date.now());
-  }, []);
 
   // Keyboard shortcuts: Esc to close sidebar, / to focus search
   useEffect(() => {
@@ -139,7 +135,7 @@ export function Sidebar({
 
 const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
-    const now = nowTimestamp;
+    const now = nowTimestampRef.current;
     const today: HistoryEntry[] = [];
     const yesterday: HistoryEntry[] = [];
     const thisWeek: HistoryEntry[] = [];
