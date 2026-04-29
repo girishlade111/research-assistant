@@ -346,6 +346,11 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **azure** | Azure services | `npx @azure/mcp` |
 | **azure-ai** | Azure OpenAI | `npx @azure/ai-mcp` |
 | **azure-vm** | Azure Virtual Machines | `npx @azure/mcp vm` |
+| **m365** | Microsoft 365 (all) | `npx @Softeria/ms-365-mcp-server` |
+| **outlook** | Outlook email | `npx outlook-mcp` |
+| **teams** | Microsoft Teams | `npx teams-mcp` |
+| **onedrive** | OneDrive files | `npx onedrive-mcp` |
+| **sharepoint** | SharePoint sites | `npx sharepoint-mcp` |
 | **netlify** | Netlify deployments | `npx @netlify/mcp` |
 | **firebase** | Firebase services | `npx firebase-tools mcp` |
 | **supabase** | Supabase database | `npx @supabase/mcp-server-supabase` |
