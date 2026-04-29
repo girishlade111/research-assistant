@@ -313,6 +313,10 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **notion** | Notion workspace | `npx notion-mcp-server` |
 | **puppeteer** | Browser automation | `npx @anthropic/server-puppeteer` |
 | **playwright** | Browser testing | `npx @playwright/mcp-server` |
+| **google-search** | Google search | `npx @mcp-server/google-search-mcp` |
+| **google-maps** | Google Maps API | `npx @modelcontextprotocol/server-google-maps` |
+| **google-workspace** | Google Docs/Sheets/Calend... | `npx @google-workspace/mcp` |
+| **gcloud** | Google Cloud CLI | `npx @google-cloud/gcloud-mcp` |
 
 ### MCP API Endpoint
 
