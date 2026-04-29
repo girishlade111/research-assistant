@@ -351,6 +351,35 @@ export const defaultMCPConfig: MCPConfig = {
         "SEARXNG_URL": process.env.SEARXNG_URL || ""
       }
     },
+    "eslint": {
+      "command": "npx",
+      "args": ["-y", "@eslint/mcp"]
+    },
+    "prettier": {
+      "command": "npx",
+      "args": ["-y", "prettier-mcp"],
+      "env": {
+        "PRETTIER_CONFIG_PATH": process.env.PRETTIER_CONFIG_PATH || ""
+      }
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "env": {
+        "GIT_REPO_PATH": process.env.GIT_REPO_PATH || "."
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
+      "env": {
+        "ALLOWED_DIRECTORIES": process.env.ALLOWED_DIRECTORIES || "./"
+      }
+    },
+    "registry": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/registry"]
+    },
     "appwrite": {
       "command": "uvx",
       "args": ["-y", "mcp-server-appwrite"],
