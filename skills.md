@@ -317,6 +317,10 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **google-maps** | Google Maps API | `npx @modelcontextprotocol/server-google-maps` |
 | **google-workspace** | Google Docs/Sheets/Calend... | `npx @google-workspace/mcp` |
 | **gcloud** | Google Cloud CLI | `npx @google-cloud/gcloud-mcp` |
+| **aws** | AWS services | `npx @awslabs/mcp-server` |
+| **aws-kb-retrieval** | AWS Bedrock KB | `npx @modelcontextprotocol/server-aws-kb-retrieval` |
+| **aws-iac** | AWS IaC | `uvx awslabs-aws-iac-mcp-server` |
+| **aws-docs** | AWS documentation | `uvx awslabs-aws-docs-mcp-server` |
 
 ### MCP API Endpoint
 
