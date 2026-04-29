@@ -203,6 +203,21 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "APPWRITE_ENDPOINT": "https://appwrite.io/docs"
       }
+    },
+    "google-sheets": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gspread"],
+      "env": {
+        "GOOGLE_SERVICE_ACCOUNT_JSON": process.env.GOOGLE_SERVICE_ACCOUNT_JSON || "",
+        "GOOGLE_SHEETS_ID": process.env.GOOGLE_SHEETS_ID || ""
+      }
+    },
+    "excel": {
+      "command": "uvx",
+      "args": ["-y", "excel-mcp"],
+      "env": {
+        "EXCEL_FILES_PATH": "./excel_files"
+      }
     }
   }
 };
