@@ -173,6 +173,20 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "FIGMA_API_KEY": process.env.FIGMA_API_KEY || ""
       }
+    },
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "@mzxrai/mcp-openai@latest"],
+      "env": {
+        "OPENAI_API_KEY": process.env.OPENAI_API_KEY || ""
+      }
+    },
+    "openai-full": {
+      "command": "npx",
+      "args": ["-y", "openai-mcp-server"],
+      "env": {
+        "OPENAI_API_KEY": process.env.OPENAI_API_KEY || ""
+      }
     }
   }
 };
