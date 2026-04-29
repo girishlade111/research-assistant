@@ -55,28 +55,11 @@ export async function GET() {
       puppeteer: "Browser automation",
       playwright: "Browser testing",
       "google-search": "Google search",
-      "google-maps": "Google Maps API",
+"google-maps": "Google Maps API",
       "google-workspace": "Google Docs/Sheets/Calendar",
       gcloud: "Google Cloud CLI",
-      aws: "AWS services",
-      "aws-kb-retrieval": "AWS Bedrock KB",
-      "aws-iac": "AWS IaC",
-      "aws-docs": "AWS documentation",
-      azure: "Azure services",
-      "azure-ai": "Azure OpenAI",
-      "azure-vm": "Azure VMs",
-      netlify: "Netlify deployments",
-      firebase: "Firebase services",
-      supabase: "Supabase database",
-      figma: "Figma designs",
-      openai: "OpenAI chat models",
-      "openai-full": "Full OpenAI API",
-      appwrite: "Appwrite backend",
-      "appwrite-docs": "Appwrite docs",
-      "google-sheets": "Google Sheets",
-      excel: "Excel files",
-      "mcp-everything": "Test server (all MCP features)",
-      "anthropic-sdk": "Build MCP servers"
+      "browserbase": "Cloud browser automation",
+      "cloudflare-browser": "Cloudflare browser"
     }
   });
 }
