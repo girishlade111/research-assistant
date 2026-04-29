@@ -205,6 +205,9 @@ Please synthesize the above sections into the final research report JSON format.
       conclusions?: string;
       confidenceAssessment?: string;
     };
+    metadata?: {
+      modelsUsed?: string[];
+    };
   };
   const finalReport: FinalReport = {
     reportId: parsedData.reportId || crypto.randomUUID(),
@@ -234,7 +237,7 @@ Please synthesize the above sections into the final research report JSON format.
       successfulAgents: completedSections.length,
       failedAgents: failedSections.length,
       totalSourcesAnalyzed: uniqueSources.length,
-      modelsUsed: parsed.metadata?.modelsUsed || ["nvidia/nemotron-3-super-120b-a12b"]
+      modelsUsed: parsedData.metadata?.modelsUsed || ["nvidia/nemotron-3-super-120b-a12b"]
     }
   };
 
