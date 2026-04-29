@@ -319,6 +319,9 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **mongodb** | MongoDB databases | `npx mongodb-mcp-server` |
 | **memory** | Knowledge graph | `npx @modelcontextprotocol/server-memory` |
 | **slack** | Slack messaging | `npx @modelcontextprotocol/server-slack` |
+| **linear** | Linear issues | `npx linear-mcp-server` |
+| **todoist** | Todoist tasks | `npx todoist-mcp` |
+| **discord** | Discord bot | `npx @modelcontextprotocol/server-discord` |
 | **notion** | Notion workspace | `npx notion-mcp-server` |
 | **puppeteer** | Browser automation | `npx @anthropic/server-puppeteer` |
 | **playwright** | Browser automation (advanced) | `npx @playwright/mcp` |
