@@ -328,7 +328,17 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **google-search** | Google search | `npx @mcp-server/google-search-mcp` |
 | **google-maps** | Google Maps API | `npx @modelcontextprotocol/server-google-maps` |
 | **google-workspace** | Google Docs/Sheets/Calend... | `npx @google-workspace/mcp` |
+| **gmail** | Gmail email | `npx @alanxchen/google-workspace-mcp` |
+| **google-calendar** | Google Calendar | `npx @modelcontextprotocol/server-google-calendar` |
+| **google-drive** | Google Drive files | `npx @modelcontextprotocol/server-gdrive` |
+| **google-docs** | Google Docs | `npx google-docs-mcp` |
+| **google-sheets-api** | Google Sheets | `npx @modelcontextprotocol/server-gspread` |
+| **google-slides** | Google Slides | `npx google-slides-mcp` |
+| **google-people** | Google Contacts | `npx google-people-mcp` |
 | **gcloud** | Google Cloud CLI | `npx @google-cloud/gcloud-mcp` |
+| **google-maps** | Google Maps API | `npx @modelcontextprotocol/server-google-maps` |
+| **google-search** | Google search | `npx @mcp-server/google-search-mcp` |
+| **google-all** | All Google services | `npx @salviz/google-mcp-server` |
 | **aws** | AWS services | `npx @awslabs/mcp-server` |
 | **aws-kb-retrieval** | AWS Bedrock KB | `npx @modelcontextprotocol/server-aws-kb-retrieval` |
 | **aws-iac** | AWS IaC | `uvx awslabs-aws-iac-mcp-server` |
