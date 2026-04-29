@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    availableServers: Object.keys({
+    availableServers: {
       filesystem: "File system operations",
       fetch: "Web content fetching",
       brave_search: "Real-time search",
@@ -53,7 +53,11 @@ export async function GET() {
       slack: "Slack messaging",
       notion: "Notion workspace",
       puppeteer: "Browser automation",
-      playwright: "Browser testing"
-    })
+      playwright: "Browser testing",
+      "google-search": "Google search",
+      "google-maps": "Google Maps API",
+      "google-workspace": "Google Docs/Sheets/Calendar",
+      gcloud: "Google Cloud CLI"
+    }
   });
 }
