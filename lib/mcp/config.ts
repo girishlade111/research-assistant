@@ -48,6 +48,13 @@ export const defaultMCPConfig: MCPConfig = {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sqlite", "./data.db"]
     },
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest", "--readOnly"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": process.env.MDB_MCP_CONNECTION_STRING || "mongodb://localhost:27017/myDatabase"
+      }
+    },
     "memory": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"]
