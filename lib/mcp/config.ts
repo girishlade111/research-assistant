@@ -316,6 +316,41 @@ export const defaultMCPConfig: MCPConfig = {
         "CF_ACCOUNT_ID": process.env.CF_ACCOUNT_ID || ""
       }
     },
+    "arxiv": {
+      "command": "npx",
+      "args": ["-y", "arxiv-mcp"],
+      "env": {
+        "ARXIV_CACHE_DIR": process.env.ARXIV_CACHE_DIR || "./papers"
+      }
+    },
+    "semantic-scholar": {
+      "command": "npx",
+      "args": ["-y", "semantic-scholar-mcp"],
+      "env": {
+        "SEMANTIC_API_KEY": process.env.SEMANTIC_API_KEY || ""
+      }
+    },
+    "academic-search": {
+      "command": "npx",
+      "args": ["-y", "academic-research-mcp"],
+      "env": {
+        "OPENALEX_API_KEY": process.env.OPENALEX_API_KEY || ""
+      }
+    },
+    "pubmed": {
+      "command": "npx",
+      "args": ["-y", "pubmed-mcp"],
+      "env": {
+        "PUBMED_API_KEY": process.env.PUBMED_API_KEY || ""
+      }
+    },
+    "exasearch": {
+      "command": "npx",
+      "args": ["-y", "mcp-searxng"],
+      "env": {
+        "SEARXNG_URL": process.env.SEARXNG_URL || ""
+      }
+    },
     "appwrite": {
       "command": "uvx",
       "args": ["-y", "mcp-server-appwrite"],
