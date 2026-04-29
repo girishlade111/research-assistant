@@ -133,7 +133,7 @@ export function Sidebar({
     return history.filter((h) => h.query.toLowerCase().includes(q));
   }, [history, historySearch]);
 
-const now = useMemo(() => Date.now(), []);
+  const now = React.useMemo(() => Date.now(), []);
   
   const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
