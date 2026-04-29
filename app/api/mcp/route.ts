@@ -53,6 +53,7 @@ export async function GET() {
       gitlab: "GitLab API",
       postgres: "PostgreSQL database",
       sqlite: "SQLite database",
+      mongodb: "MongoDB databases",
       memory: "Persistent knowledge graph",
       slack: "Slack messaging",
       notion: "Notion workspace",
