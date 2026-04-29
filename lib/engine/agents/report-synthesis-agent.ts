@@ -189,27 +189,44 @@ Please synthesize the above sections into the final research report JSON format.
   }
 
   const parsed = safeParseJSON(rawResponse) || {};
+  const parsedData = parsed as {
+    reportId?: string;
+    title?: string;
+    subtitle?: string;
+    generatedAt?: string;
+    estimatedReadTime?: string;
+    totalWords?: number;
+    totalPages?: number;
+    sections?: {
+      executiveSummary?: string;
+      dynamic?: { id: string; title: string; content: string; order: number }[];
+      crossSectionAnalysis?: string;
+      keyFindings?: string[];
+      conclusions?: string;
+      confidenceAssessment?: string;
+    };
+  };
   const finalReport: FinalReport = {
-    reportId: (parsed.reportId as string) || crypto.randomUUID(),
-    title: (parsed.title as string) || plan.reportTitle,
-    subtitle: (parsed.subtitle as string) || "Generated Research Report",
-    generatedAt: (parsed.generatedAt as string) || new Date().toISOString(),
+    reportId: parsedData.reportId || crypto.randomUUID(),
+    title: parsedData.title || plan.reportTitle,
+    subtitle: parsedData.subtitle || "Generated Research Report",
+    generatedAt: parsedData.generatedAt || new Date().toISOString(),
     originalQuery,
-    estimatedReadTime: (parsed.estimatedReadTime as string) || "15 min",
-    totalWords: (parsed.totalWords as number) || orderedSections.reduce((acc, sec) => acc + sec.wordCount, 0),
-    totalPages: Math.ceil(((parsed.totalWords as number) || 4000) / 500),
+    estimatedReadTime: parsedData.estimatedReadTime || "15 min",
+    totalWords: parsedData.totalWords || orderedSections.reduce((acc, sec) => acc + sec.wordCount, 0),
+    totalPages: parsedData.totalPages || Math.ceil((parsedData.totalWords || 4000) / 500),
     sections: {
-      executiveSummary: (parsed.sections?.executiveSummary as string) || "## Executive Summary\n\nData missing.",
-      dynamic: (parsed.sections?.dynamic as { id: string; title: string; content: string; order: number }[]) || orderedSections.map((s, i) => ({
+      executiveSummary: parsedData.sections?.executiveSummary || "## Executive Summary\n\nData missing.",
+      dynamic: parsedData.sections?.dynamic || orderedSections.map((s, i) => ({
         id: s.sectionId,
         title: s.sectionTitle,
         content: s.content,
         order: i + 1
       })),
-      crossSectionAnalysis: (parsed.sections?.crossSectionAnalysis as string) || "## Cross-Section Analysis\n\nData missing.",
-      keyFindings: (parsed.sections?.keyFindings as string[]) || orderedSections.flatMap(s => s.keyFindings),
-      conclusions: (parsed.sections?.conclusions as string) || "## Conclusions & Recommendations\n\nData missing.",
-      confidenceAssessment: (parsed.sections?.confidenceAssessment as string) || "## Data Confidence Assessment\n\nData missing."
+      crossSectionAnalysis: parsedData.sections?.crossSectionAnalysis || "## Cross-Section Analysis\n\nData missing.",
+      keyFindings: parsedData.sections?.keyFindings || orderedSections.flatMap(s => s.keyFindings),
+      conclusions: parsedData.sections?.conclusions || "## Conclusions & Recommendations\n\nData missing.",
+      confidenceAssessment: parsedData.sections?.confidenceAssessment || "## Data Confidence Assessment\n\nData missing."
     },
     sources: uniqueSources,
     metadata: {
