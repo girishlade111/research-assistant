@@ -83,7 +83,7 @@ export async function executeWithFallback(
         allTierResults
       };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       const latencyMs = Date.now() - startTime;
       const errorCode = error?.status || error?.statusCode || 0;
       const errorMessage = error?.message || 'Unknown error';
