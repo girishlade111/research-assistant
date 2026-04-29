@@ -326,6 +326,7 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **azure-vm** | Azure Virtual Machines | `npx @azure/mcp vm` |
 | **netlify** | Netlify deployments | `npx @netlify/mcp` |
 | **firebase** | Firebase services | `npx firebase-tools mcp` |
+| **supabase** | Supabase database | `npx @supabase/mcp-server-supabase` |
 
 ### MCP API Endpoint
 
