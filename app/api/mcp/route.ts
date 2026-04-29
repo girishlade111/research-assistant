@@ -74,7 +74,9 @@ export async function GET() {
       appwrite: "Appwrite backend",
       "appwrite-docs": "Appwrite docs",
       "google-sheets": "Google Sheets",
-      excel: "Excel files"
+      excel: "Excel files",
+      "mcp-everything": "Test server (all MCP features)",
+      "anthropic-sdk": "Build MCP servers"
     }
   });
 }
