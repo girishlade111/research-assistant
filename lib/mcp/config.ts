@@ -299,6 +299,33 @@ export const defaultMCPConfig: MCPConfig = {
         "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
       }
     },
+    "jira": {
+      "command": "npx",
+      "args": ["-y", "@tarasrushchak/jira-mcp-server"],
+      "env": {
+        "JIRA_HOST": process.env.JIRA_HOST || "",
+        "JIRA_EMAIL": process.env.JIRA_EMAIL || "",
+        "JIRA_API_TOKEN": process.env.JIRA_API_TOKEN || ""
+      }
+    },
+    "jira-cloud": {
+      "command": "npx",
+      "args": ["-y", "@aaronsb/jira-cloud-mcp"],
+      "env": {
+        "JIRA_HOST": process.env.JIRA_HOST || "",
+        "JIRA_EMAIL": process.env.JIRA_EMAIL || "",
+        "JIRA_API_TOKEN": process.env.JIRA_API_TOKEN || ""
+      }
+    },
+    "confluence": {
+      "command": "npx",
+      "args": ["-y", "@tarasrushchak/jira-mcp-server"],
+      "env": {
+        "JIRA_HOST": process.env.JIRA_HOST || "",
+        "JIRA_EMAIL": process.env.JIRA_EMAIL || "",
+        "JIRA_API_TOKEN": process.env.JIRA_API_TOKEN || ""
+      }
+    },
     "azure": {
       "command": "npx",
       "args": ["-y", "@azure/mcp@latest", "server", "start"],
