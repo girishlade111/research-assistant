@@ -71,7 +71,22 @@ export const defaultMCPConfig: MCPConfig = {
     },
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp-server"]
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "browserbase": {
+      "command": "npx",
+      "args": ["-y", "@browserbase/mcp-server"],
+      "env": {
+        "BROWSERBASE_API_KEY": process.env.BROWSERBASE_API_KEY || "",
+        "BROWSERBASE_PROJECT_ID": process.env.BROWSERBASE_PROJECT_ID || ""
+      }
+    },
+    "cloudflare-browser": {
+      "command": "npx",
+      "args": ["-y", "@cloudflare/mcp-browser"],
+      "env": {
+        "CF_API_TOKEN": process.env.CF_API_TOKEN || ""
+      }
     },
     "google-search": {
       "command": "npx",
