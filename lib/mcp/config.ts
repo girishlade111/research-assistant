@@ -128,6 +128,24 @@ export const defaultMCPConfig: MCPConfig = {
       "args": ["-y", "notion-mcp-server"],
       "env": { "NOTION_API_KEY": process.env.NOTION_API_KEY || "" }
     },
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "linear-mcp-server"],
+      "env": { "LINEAR_API_KEY": process.env.LINEAR_API_KEY || "" }
+    },
+    "todoist": {
+      "command": "npx",
+      "args": ["-y", "todoist-mcp"],
+      "env": { "TODOIST_API_KEY": process.env.TODOIST_API_KEY || "" }
+    },
+    "discord": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-discord"],
+      "env": {
+        "DISCORD_BOT_TOKEN": process.env.DISCORD_BOT_TOKEN || "",
+        "DISCORD_GUILD_ID": process.env.DISCORD_GUILD_ID || ""
+      }
+    },
     "puppeteer": {
       "command": "npx",
       "args": ["-y", "@anthropic/server-puppeteer"]
