@@ -5,7 +5,15 @@ import type { FinalReport } from "../engine/types";
 // Extends jsPDF type for the autoTable plugin
 declare module "jspdf" {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF;
+    autoTable: (options: {
+      body: unknown[];
+      startY: number;
+      margin: { left: number; right: number };
+      styles: { fontSize?: number; cellPadding?: number; font?: string };
+      headStyles?: { fillColor: number[]; textColor: number[]; fontStyle?: string };
+      alternateRowStyles?: { fillColor: number[] };
+      didDrawPage?: (data: { cursor: { y: number } }) => void;
+    }) => jsPDF;
     lastAutoTable: { finalY: number };
   }
 }
@@ -323,7 +331,7 @@ class PDFExporter {
       styles: { fontSize: 9, cellPadding: 3, font: "helvetica" },
       headStyles: { fillColor: [15, 23, 42], textColor: [248, 250, 252], fontStyle: "bold" },
       alternateRowStyles: { fillColor: [248, 250, 252] },
-      didDrawPage: (data: any) => { 
+      didDrawPage: (data: { cursor: { y: number } }) => { 
         this.currentY = data.cursor.y + 8; 
       }
     });
@@ -444,7 +452,6 @@ export const exportToMarkdown = (report: FinalReport): string => {
 };
 
 export const exportToTxt = (report: FinalReport): string => {
-  // Simple conversion from MD to TXT
-  let md = exportToMarkdown(report);
+  const md = exportToMarkdown(report);
   return md.replace(/#/g, "").replace(/\*\*/g, "").trim();
 };
