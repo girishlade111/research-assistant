@@ -1,6 +1,5 @@
 "use client";
 
-/ eslint-disable-next-line react-hooks/purity
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import {
