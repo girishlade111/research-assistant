@@ -321,6 +321,9 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **aws-kb-retrieval** | AWS Bedrock KB | `npx @modelcontextprotocol/server-aws-kb-retrieval` |
 | **aws-iac** | AWS IaC | `uvx awslabs-aws-iac-mcp-server` |
 | **aws-docs** | AWS documentation | `uvx awslabs-aws-docs-mcp-server` |
+| **azure** | Azure services | `npx @azure/mcp` |
+| **azure-ai** | Azure OpenAI | `npx @azure/ai-mcp` |
+| **azure-vm** | Azure Virtual Machines | `npx @azure/mcp vm` |
 
 ### MCP API Endpoint
 
