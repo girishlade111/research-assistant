@@ -355,6 +355,11 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **academic-search** | Multi-source research | `npx academic-research-mcp` |
 | **pubmed** | Medical literature | `npx pubmed-mcp` |
 | **exasearch** | Academic search engine | `npx mcp-searxng` |
+| **eslint** | ESLint code analysis | `npx @eslint/mcp` |
+| **prettier** | Prettier code formatting | `npx prettier-mcp` |
+| **git** | Git operations | `npx @modelcontextprotocol/server-git` |
+| **filesystem** | File system operations | `npx @modelcontextprotocol/server-filesystem` |
+| **registry** | MCP server registry | `npx @modelcontextprotocol/registry` |
 
 ### MCP API Endpoint
 
