@@ -85,11 +85,6 @@ export function Sidebar({
   const [historySearch, setHistorySearch] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [now, setNow] = useState(0);
-  
-  useEffect(() => {
-    setNow(Date.now());
-  }, []);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -136,11 +131,19 @@ export function Sidebar({
     if (!historySearch.trim()) return history;
     const q = historySearch.toLowerCase();
     return history.filter((h) => h.query.toLowerCase().includes(q));
-  }, [history, historySearch]);
+}, [history, historySearch]);
 
+  // eslint-disable-next-line react-hooks/purity
   const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
+    const now = Date.now();
     const today: HistoryEntry[] = [];
+    const yesterday: HistoryEntry[] = [];
+    const thisWeek: HistoryEntry[] = [];
+    const older: HistoryEntry[] = [];
+
+    for (const entry of filteredHistory) {
+      const diff = now - entry.timestamp;
     const yesterday: HistoryEntry[] = [];
     const thisWeek: HistoryEntry[] = [];
     const older: HistoryEntry[] = [];
