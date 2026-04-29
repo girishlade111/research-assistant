@@ -291,3 +291,50 @@ SONAR_API_KEY=pplx-...
 - **Endpoint**: NVIDIA NIM health API
 - **Timeout**: 4,000ms
 - **Failure Action**: Auto-swap to OpenRouter
+
+---
+
+## MCP Integration
+
+ResAgent supports Model Context Protocol (MCP) servers for extended capabilities.
+
+### Available MCP Servers
+
+| Server | Purpose | Install |
+|--------|---------|---------|
+| **filesystem** | Local file operations | `npx @modelcontextprotocol/server-filesystem` |
+| **fetch** | Web content fetching | `npx @modelcontextprotocol/server-fetch` |
+| **brave-search** | Real-time web search | `npx @anthropic/server-brave-search` |
+| **github** | GitHub API operations | `npx @github/mcp-server` |
+| **postgres** | PostgreSQL queries | `npx @modelcontextprotocol/server-postgres` |
+| **sqlite** | SQLite databases | `npx @modelcontextprotocol/server-sqlite` |
+| **memory** | Knowledge graph | `npx @modelcontextprotocol/server-memory` |
+| **slack** | Slack messaging | `npx @modelcontextprotocol/server-slack` |
+| **notion** | Notion workspace | `npx notion-mcp-server` |
+| **puppeteer** | Browser automation | `npx @anthropic/server-puppeteer` |
+| **playwright** | Browser testing | `npx @playwright/mcp-server` |
+
+### MCP API Endpoint
+
+```
+POST /api/mcp
+```
+
+**Request:**
+```json
+{
+  "server": "filesystem",
+  "tool": "read_file",
+  "args": { "path": "/uploads/document.pdf" }
+}
+```
+
+### MCP Environment Variables
+
+```env
+GITHUB_TOKEN=ghp_...
+BRAVE_API_KEY=...
+DATABASE_URL=postgresql://...
+SLACK_BOT_TOKEN=xoxb-...
+NOTION_API_KEY=secret_...
+```
