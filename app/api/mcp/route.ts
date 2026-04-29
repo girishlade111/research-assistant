@@ -57,7 +57,11 @@ export async function GET() {
       "google-search": "Google search",
       "google-maps": "Google Maps API",
       "google-workspace": "Google Docs/Sheets/Calendar",
-      gcloud: "Google Cloud CLI"
+      gcloud: "Google Cloud CLI",
+      aws: "AWS services",
+      "aws-kb-retrieval": "AWS Bedrock KB",
+      "aws-iac": "AWS IaC",
+      "aws-docs": "AWS documentation"
     }
   });
 }
