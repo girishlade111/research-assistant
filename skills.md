@@ -137,3 +137,157 @@ Final reports can be exported as:
 
 - **Markdown** (.md)
 - **PDF** (via jspdf + autotable)
+
+---
+
+## Agent Detailed Specifications
+
+### 1. Query Intelligence Agent
+
+**Purpose**: Refines raw user queries and creates a structured research blueprint.
+
+**Key Responsibilities**:
+- Intent classification (coding, research, comparison, explanation, factual, general)
+- Query expansion with relevant keywords and subtopics
+- Dynamic section planning based on research type
+- Token budget estimation
+
+**Function**: `runQueryIntelligenceAgent(query, searchMode, apiKeys, context)`
+
+**Input**: Raw user query + uploaded files context
+**Output**: Research plan with dynamic sections, enhanced query, subtopics
+
+---
+
+### 2. Web Search Agent
+
+**Purpose**: Real-time data retrieval from the web using Perplexity Sonar API.
+
+**Key Responsibilities**:
+- Concurrent search requests across multiple sources
+- Result ranking by relevance and recency
+- Source citation extraction
+- Snippet generation for context
+
+**Function**: Performs search using `dracarys-70b` model
+**Search Provider**: Perplexity Sonar API
+**Max Sources**: 8 (Pro mode), 4 (Deep mode)
+
+---
+
+### 3. Strategic Analysis Agent
+
+**Purpose**: Pattern recognition and correlation analysis.
+
+**Key Responsibilities**:
+- Trend identification from data
+- Correlation mapping between entities
+- Risk assessment
+- Comparative analysis
+
+**Model**: `nemotron-3-super` (primary), `nemotron-3:free` (fallback)
+
+---
+
+### 4. Fact-Check Agent
+
+**Purpose**: Verifies claims against source materials.
+
+**Key Responsibilities**:
+- Claim extraction from generated content
+- Source verification
+- Accuracy scoring
+- Flagging unverified statements
+
+**Model**: `mistral-large-3` (primary), `gpt-oss-120b:free` (fallback)
+
+---
+
+### 5. Coding Agent
+
+**Purpose**: Technical snippet and algorithm generation.
+
+**Key Responsibilities**:
+- Code generation in multiple languages
+- Algorithm explanation
+- Optimization suggestions
+- Bug detection and fixes
+
+**Model**: `qwen3-coder-480b` (primary), `qwen3-coder:free` (fallback)
+**Supported Languages**: TypeScript, JavaScript, Python, Go, Rust, C++
+
+---
+
+### 6. Summary Agent
+
+**Purpose**: High-speed overview generation.
+
+**Key Responsibilities**:
+- Key finding extraction
+- Concise summarization
+- Bullet point generation
+- Executive summary creation
+
+**Model**: `minimax-m2.7` (primary), `glm-4.5-air:free` (fallback)
+
+---
+
+### 7. Report Synthesis Agent
+
+**Purpose**: Final markdown assembly and quality control.
+
+**Key Responsibilities**:
+- Merging all agent outputs
+- Format standardization
+- Citation integration
+- Final QA check
+
+**Model**: `kimi-k2-thinking` (primary), `gpt-oss-120b:free` (fallback)
+
+---
+
+## Model Registry
+
+### NVIDIA NIM Models (Primary)
+
+| Model | Context | Purpose |
+|-------|---------|---------|
+| `kimi-k2-thinking` | 131K | Reasoning & planning |
+| `dracarys-70b` | 131K | Web search |
+| `nemotron-3-super` | 131K | Strategic analysis |
+| `mistral-large-3` | 131K | General tasks |
+| `qwen3-coder-480b` | 131K | Code generation |
+| `minimax-m2.7` | 131K | Summarization |
+
+### OpenRouter Models (Fallback)
+
+| Model | Context | Purpose |
+|-------|---------|---------|
+| `gpt-oss-120b:free` | 32K | General tasks |
+| `llama-3.3-70b:free` | 32K | Search fallback |
+| `nemotron-3:free` | 32K | Analysis |
+| `qwen3-coder:free` | 32K | Code |
+| `glm-4.5-air:free` | 32K | Summary |
+
+---
+
+## API Integration
+
+### Environment Variables Required
+
+```env
+# Primary (NVIDIA NIM)
+NVIDIA_API_KEY=nvapi-...
+
+# Fallback (OpenRouter)
+OPENROUTER_API_KEY=sk-or-...
+
+# Web Search (Perplexity)
+SONAR_API_KEY=pplx-...
+```
+
+### Health Check
+
+- **Endpoint**: NVIDIA NIM health API
+- **Timeout**: 4,000ms
+- **Failure Action**: Auto-swap to OpenRouter
