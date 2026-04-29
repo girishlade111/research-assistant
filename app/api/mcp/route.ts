@@ -78,7 +78,10 @@ export async function GET() {
       outlook: "Outlook email",
       teams: "Microsoft Teams",
       onedrive: "OneDrive files",
-      sharepoint: "SharePoint sites"
+      sharepoint: "SharePoint sites",
+      jira: "Jira issues & projects",
+      "jira-cloud": "Jira Cloud",
+      confluence: "Confluence pages"
     }
   });
 }

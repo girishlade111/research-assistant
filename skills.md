@@ -351,6 +351,9 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **teams** | Microsoft Teams | `npx teams-mcp` |
 | **onedrive** | OneDrive files | `npx onedrive-mcp` |
 | **sharepoint** | SharePoint sites | `npx sharepoint-mcp` |
+| **jira** | Jira issues & projects | `npx @tarasrushchak/jira-mcp-server` |
+| **jira-cloud** | Jira Cloud | `npx @aaronsb/jira-cloud-mcp` |
+| **confluence** | Confluence pages | `npx @tarasrushchak/jira-mcp-server` |
 | **netlify** | Netlify deployments | `npx @netlify/mcp` |
 | **firebase** | Firebase services | `npx firebase-tools mcp` |
 | **supabase** | Supabase database | `npx @supabase/mcp-server-supabase` |
