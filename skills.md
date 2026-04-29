@@ -342,11 +342,10 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **figma** | Figma designs | `npx figma-developer-mcp` |
 | **openai** | OpenAI chat models | `npx @mzxrai/mcp-openai` |
 | **openai-full** | Full OpenAI API | `npx openai-mcp-server` |
-| **appwrite** | Appwrite backend | `uvx mcp-server-appwrite` |
-| **appwrite-docs** | Appwrite docs | `uvx mcp-server-appwrite` |
-| **google-sheets** | Google Sheets | `npx @modelcontextprotocol/server-gspread` |
-| **excel** | Excel files | `uvx excel-mcp` |
-| **mcp-everything** | Test server (all features) | `npx @modelcontextprotocol/server-everything` |
+| **ollama** | Local LLM models | `npx ollama-mcp` |
+| **claude-api** | Claude API access | `npx claude-mcp` |
+| **lmstudio** | LM Studio local models | `npx lmstudio-mcp` |
+| **groq** | Groq fast inference | `npx groq-mcp` |
 | **anthropic-sdk** | Build MCP servers | `npm i @anthropic-ai/sdk` |
 
 ### MCP API Endpoint
