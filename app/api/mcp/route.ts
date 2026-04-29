@@ -72,7 +72,9 @@ export async function GET() {
       openai: "OpenAI chat models",
       "openai-full": "Full OpenAI API",
       appwrite: "Appwrite backend",
-      "appwrite-docs": "Appwrite docs"
+      "appwrite-docs": "Appwrite docs",
+      "google-sheets": "Google Sheets",
+      excel: "Excel files"
     }
   });
 }
