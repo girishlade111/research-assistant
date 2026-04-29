@@ -188,9 +188,6 @@ Please synthesize the above sections into the final research report JSON format.
     }
   }
 
-  const parsed = (safeParseJSON(rawResponse) || {}) as Record<string, unknown>;
-
-  // Construct FinalReport with fallbacks
   const parsed = safeParseJSON(rawResponse) || {};
   const finalReport: FinalReport = {
     reportId: (parsed.reportId as string) || crypto.randomUUID(),
