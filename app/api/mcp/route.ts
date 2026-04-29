@@ -64,7 +64,8 @@ export async function GET() {
       "aws-docs": "AWS documentation",
       azure: "Azure services",
       "azure-ai": "Azure OpenAI",
-      "azure-vm": "Azure VMs"
+      "azure-vm": "Azure VMs",
+      netlify: "Netlify deployments"
     }
   });
 }
