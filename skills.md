@@ -350,6 +350,11 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **replicate** | Replicate AI models | `npx replicate-mcp` |
 | **cloudflare-ai** | Cloudflare AI workers | `npx @cloudflare/ai-mcp` |
 | **anthropic-sdk** | Build MCP servers | `npm i @anthropic-ai/sdk` |
+| **arxiv** | arXiv papers | `npx arxiv-mcp` |
+| **semantic-scholar** | Academic papers | `npx semantic-scholar-mcp` |
+| **academic-search** | Multi-source research | `npx academic-research-mcp` |
+| **pubmed** | Medical literature | `npx pubmed-mcp` |
+| **exasearch** | Academic search engine | `npx mcp-searxng` |
 
 ### MCP API Endpoint
 
