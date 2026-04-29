@@ -76,7 +76,12 @@ export async function GET() {
       groq: "Groq fast inference",
       huggingface: "Hugging Face Hub",
       replicate: "Replicate AI models",
-      "cloudflare-ai": "Cloudflare AI workers"
+      "cloudflare-ai": "Cloudflare AI workers",
+      arxiv: "arXiv papers",
+      "semantic-scholar": "Academic papers",
+      "academic-search": "Multi-source research",
+      pubmed: "Medical literature",
+      exasearch: "Academic search engine"
     }
   });
 }
