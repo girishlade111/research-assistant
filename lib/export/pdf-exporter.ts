@@ -6,6 +6,7 @@ import type { FinalReport } from "../engine/types";
 declare module "jspdf" {
   interface jsPDF {
     autoTable: (options: {
+      head?: string[][];
       body: unknown[];
       startY: number;
       margin: { left: number; right: number };
