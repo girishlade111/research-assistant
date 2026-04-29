@@ -81,7 +81,12 @@ export async function GET() {
       "semantic-scholar": "Academic papers",
       "academic-search": "Multi-source research",
       pubmed: "Medical literature",
-      exasearch: "Academic search engine"
+      exasearch: "Academic search engine",
+      eslint: "ESLint code analysis",
+      prettier: "Prettier code formatting",
+      git: "Git operations",
+      filesystem: "File system operations",
+      registry: "MCP server registry"
     }
   });
 }
