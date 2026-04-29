@@ -142,13 +142,7 @@ export function Sidebar({
     const thisWeek: HistoryEntry[] = [];
     const older: HistoryEntry[] = [];
 
-    for (const entry of filteredHistory) {
-      const diff = now - entry.timestamp;
-    const yesterday: HistoryEntry[] = [];
-    const thisWeek: HistoryEntry[] = [];
-    const older: HistoryEntry[] = [];
-
-    for (const entry of filteredHistory) {
+for (const entry of filteredHistory) {
       const diff = now - entry.timestamp;
       const days = Math.floor(diff / (24 * 60 * 60 * 1000));
       if (days === 0) today.push(entry);
