@@ -158,6 +158,14 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": process.env.GOOGLE_APPLICATION_CREDENTIALS || ""
       }
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase"],
+      "env": {
+        "SUPABASE_PROJECT_REF": process.env.SUPABASE_PROJECT_REF || "",
+        "SUPABASE_ACCESS_TOKEN": process.env.SUPABASE_ACCESS_TOKEN || ""
+      }
     }
   }
 };
