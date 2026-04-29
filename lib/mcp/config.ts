@@ -266,6 +266,34 @@ export const defaultMCPConfig: MCPConfig = {
         "OPENAI_API_KEY": process.env.OPENAI_API_KEY || ""
       }
     },
+    "ollama": {
+      "command": "npx",
+      "args": ["-y", "ollama-mcp"],
+      "env": {
+        "OLLAMA_HOST": process.env.OLLAMA_HOST || "http://localhost:11434"
+      }
+    },
+    "claude-api": {
+      "command": "npx",
+      "args": ["-y", "claude-mcp"],
+      "env": {
+        "ANTHROPIC_API_KEY": process.env.ANTHROPIC_API_KEY || ""
+      }
+    },
+    "lmstudio": {
+      "command": "npx",
+      "args": ["-y", "lmstudio-mcp"],
+      "env": {
+        "LMSTUDIO_HOST": process.env.LMSTUDIO_HOST || "http://localhost:1234"
+      }
+    },
+    "groq": {
+      "command": "npx",
+      "args": ["-y", "groq-mcp"],
+      "env": {
+        "GROQ_API_KEY": process.env.GROQ_API_KEY || ""
+      }
+    },
     "appwrite": {
       "command": "uvx",
       "args": ["-y", "mcp-server-appwrite"],
