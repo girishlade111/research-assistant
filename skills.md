@@ -306,6 +306,14 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **fetch** | Web content fetching | `npx @modelcontextprotocol/server-fetch` |
 | **brave-search** | Real-time web search | `npx @anthropic/server-brave-search` |
 | **github** | GitHub API operations | `npx @github/mcp-server` |
+| **github-actions** | GitHub Actions CI/CD | `npx @modelcontextprotocol/server-github-actions` |
+| **docker** | Docker containers | `npx @modelcontextprotocol/server-docker` |
+| **kubernetes** | Kubernetes clusters | `npx kubernetes-mcp-server` |
+| **gitlab** | GitLab API | `npx @modelcontextprotocol/server-gitlab` |
+| **sentry** | Error tracking | `npx @sentryio/sentry-mcp` |
+| **vercel** | Vercel deployments | `npx @vercel/mcp` |
+| **railway** | Railway deployments | `npx railway-mcp` |
+| **tunnel** | Tunnel/Ssh operations | `npx @modelcontextprotocol/server-tunnel` |
 | **postgres** | PostgreSQL queries | `npx @modelcontextprotocol/server-postgres` |
 | **sqlite** | SQLite databases | `npx @modelcontextprotocol/server-sqlite` |
 | **memory** | Knowledge graph | `npx @modelcontextprotocol/server-memory` |
