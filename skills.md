@@ -330,6 +330,8 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **figma** | Figma designs | `npx figma-developer-mcp` |
 | **openai** | OpenAI chat models | `npx @mzxrai/mcp-openai` |
 | **openai-full** | Full OpenAI API | `npx openai-mcp-server` |
+| **appwrite** | Appwrite backend | `uvx mcp-server-appwrite` |
+| **appwrite-docs** | Appwrite docs | `uvx mcp-server-appwrite` |
 
 ### MCP API Endpoint
 

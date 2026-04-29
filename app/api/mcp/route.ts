@@ -70,7 +70,9 @@ export async function GET() {
       supabase: "Supabase database",
       figma: "Figma designs",
       openai: "OpenAI chat models",
-      "openai-full": "Full OpenAI API"
+      "openai-full": "Full OpenAI API",
+      appwrite: "Appwrite backend",
+      "appwrite-docs": "Appwrite docs"
     }
   });
 }
