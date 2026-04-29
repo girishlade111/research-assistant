@@ -72,6 +72,27 @@ export const defaultMCPConfig: MCPConfig = {
     "playwright": {
       "command": "npx",
       "args": ["-y", "@playwright/mcp-server"]
+    },
+    "google-search": {
+      "command": "npx",
+      "args": ["-y", "@mcp-server/google-search-mcp"]
+    },
+    "google-maps": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+      "env": { "GOOGLE_MAPS_API_KEY": process.env.GOOGLE_MAPS_API_KEY || "" }
+    },
+    "google-workspace": {
+      "command": "npx",
+      "args": ["-y", "@google-workspace/mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "gcloud": {
+      "command": "npx",
+      "args": ["-y", "@google-cloud/gcloud-mcp"]
     }
   }
 };
