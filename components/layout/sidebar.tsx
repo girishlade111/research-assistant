@@ -135,9 +135,10 @@ export function Sidebar({
     return history.filter((h) => h.query.toLowerCase().includes(q));
   }, [history, historySearch]);
 
-const groupedHistory = useMemo(() => {
+const now = useMemo(() => Date.now(), []);
+  
+  const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
-    const now = getNow();
     const today: HistoryEntry[] = [];
     const yesterday: HistoryEntry[] = [];
     const thisWeek: HistoryEntry[] = [];
