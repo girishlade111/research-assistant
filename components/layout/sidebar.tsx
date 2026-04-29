@@ -85,6 +85,11 @@ export function Sidebar({
   const [historySearch, setHistorySearch] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [now, setNow] = useState(0);
+  
+  useEffect(() => {
+    setNow(Date.now());
+  }, []);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -133,11 +138,8 @@ export function Sidebar({
     return history.filter((h) => h.query.toLowerCase().includes(q));
   }, [history, historySearch]);
 
-  const now = React.useMemo(() => {
-    if (typeof window === 'undefined') return 0;
-    return Date.now();
-  }, []);
-
+  const now = 0;
+  
   const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
     const today: HistoryEntry[] = [];
