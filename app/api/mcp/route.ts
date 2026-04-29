@@ -68,7 +68,9 @@ export async function GET() {
       netlify: "Netlify deployments",
       firebase: "Firebase services",
       supabase: "Supabase database",
-      figma: "Figma designs"
+      figma: "Figma designs",
+      openai: "OpenAI chat models",
+      "openai-full": "Full OpenAI API"
     }
   });
 }

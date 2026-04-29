@@ -328,6 +328,8 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **firebase** | Firebase services | `npx firebase-tools mcp` |
 | **supabase** | Supabase database | `npx @supabase/mcp-server-supabase` |
 | **figma** | Figma designs | `npx figma-developer-mcp` |
+| **openai** | OpenAI chat models | `npx @mzxrai/mcp-openai` |
+| **openai-full** | Full OpenAI API | `npx openai-mcp-server` |
 
 ### MCP API Endpoint
 
