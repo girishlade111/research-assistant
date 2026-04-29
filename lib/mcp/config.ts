@@ -119,6 +119,31 @@ export const defaultMCPConfig: MCPConfig = {
     "aws-docs": {
       "command": "uvx",
       "args": ["-y", "awslabs-aws-docs-mcp-server@latest"]
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"],
+      "env": {
+        "AZURE_SUBSCRIPTION_ID": process.env.AZURE_SUBSCRIPTION_ID || "",
+        "AZURE_TENANT_ID": process.env.AZURE_TENANT_ID || "",
+        "AZURE_CLIENT_ID": process.env.AZURE_CLIENT_ID || "",
+        "AZURE_CLIENT_SECRET": process.env.AZURE_CLIENT_SECRET || ""
+      }
+    },
+    "azure-ai": {
+      "command": "npx",
+      "args": ["-y", "@azure/ai-mcp"],
+      "env": {
+        "AZURE_OPENAI_ENDPOINT": process.env.AZURE_OPENAI_ENDPOINT || "",
+        "AZURE_OPENAI_API_KEY": process.env.AZURE_OPENAI_API_KEY || ""
+      }
+    },
+    "azure-vm": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "vm"],
+      "env": {
+        "AZURE_SUBSCRIPTION_ID": process.env.AZURE_SUBSCRIPTION_ID || ""
+      }
     }
   }
 };
