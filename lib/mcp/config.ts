@@ -144,6 +144,13 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "AZURE_SUBSCRIPTION_ID": process.env.AZURE_SUBSCRIPTION_ID || ""
       }
+    },
+    "netlify": {
+      "command": "npx",
+      "args": ["-y", "@netlify/mcp"],
+      "env": {
+        "NETLIFY_PERSONAL_ACCESS_TOKEN": process.env.NETLIFY_PERSONAL_ACCESS_TOKEN || ""
+      }
     }
   }
 };
