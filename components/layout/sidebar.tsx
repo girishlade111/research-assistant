@@ -137,7 +137,7 @@ export function Sidebar({
 
 const groupedHistory = useMemo(() => {
     const groups: { label: string; items: HistoryEntry[] }[] = [];
-    const now = nowTimestampRef.current;
+    const now = getNow();
     const today: HistoryEntry[] = [];
     const yesterday: HistoryEntry[] = [];
     const thisWeek: HistoryEntry[] = [];
