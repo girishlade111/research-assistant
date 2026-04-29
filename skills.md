@@ -334,6 +334,8 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **appwrite-docs** | Appwrite docs | `uvx mcp-server-appwrite` |
 | **google-sheets** | Google Sheets | `npx @modelcontextprotocol/server-gspread` |
 | **excel** | Excel files | `uvx excel-mcp` |
+| **mcp-everything** | Test server (all features) | `npx @modelcontextprotocol/server-everything` |
+| **anthropic-sdk** | Build MCP servers | `npm i @anthropic-ai/sdk` |
 
 ### MCP API Endpoint
 
