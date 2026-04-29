@@ -67,7 +67,13 @@ export async function GET() {
       "cloudflare-browser": "Cloudflare browser",
       sentry: "Error tracking",
       vercel: "Vercel deployments",
-      railway: "Railway deployments"
+      railway: "Railway deployments",
+      openai: "OpenAI chat models",
+      "openai-full": "Full OpenAI API",
+      ollama: "Local LLM models",
+      "claude-api": "Claude API access",
+      lmstudio: "LM Studio local models",
+      groq: "Groq fast inference"
     }
   });
 }
