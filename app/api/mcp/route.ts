@@ -70,7 +70,15 @@ export async function GET() {
       "google-slides": "Google Slides",
       "google-people": "Google Contacts",
       gcloud: "Google Cloud CLI",
-      "google-all": "All Google services (240 tools)"
+      "google-all": "All Google services (240 tools)",
+      azure: "Azure cloud services",
+      "azure-ai": "Azure OpenAI",
+      "azure-vm": "Azure VMs",
+      m365: "Microsoft 365 (all services)",
+      outlook: "Outlook email",
+      teams: "Microsoft Teams",
+      onedrive: "OneDrive files",
+      sharepoint: "SharePoint sites"
     }
   });
 }
