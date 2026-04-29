@@ -61,7 +61,10 @@ export async function GET() {
       aws: "AWS services",
       "aws-kb-retrieval": "AWS Bedrock KB",
       "aws-iac": "AWS IaC",
-      "aws-docs": "AWS documentation"
+      "aws-docs": "AWS documentation",
+      azure: "Azure services",
+      "azure-ai": "Azure OpenAI",
+      "azure-vm": "Azure VMs"
     }
   });
 }
