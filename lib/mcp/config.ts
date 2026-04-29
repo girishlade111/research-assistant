@@ -52,6 +52,62 @@ export const defaultMCPConfig: MCPConfig = {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"]
     },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "kubernetes-mcp-server"],
+      "env": {
+        "KUBECONFIG": process.env.KUBECONFIG || ""
+      }
+    },
+    "github-actions": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github-actions"],
+      "env": {
+        "GITHUB_TOKEN": process.env.GITHUB_TOKEN || ""
+      }
+    },
+    "gitlab": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gitlab"],
+      "env": {
+        "GITLAB_TOKEN": process.env.GITLAB_TOKEN || "",
+        "GITLAB_URL": process.env.GITLAB_URL || "https://gitlab.com"
+      }
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@sentryio/sentry-mcp"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": process.env.SENTRY_AUTH_TOKEN || "",
+        "SENTRY_ORG": process.env.SENTRY_ORG || ""
+      }
+    },
+    "vercel": {
+      "command": "npx",
+      "args": ["-y", "@vercel/mcp"],
+      "env": {
+        "VERCEL_API_TOKEN": process.env.VERCEL_API_TOKEN || "",
+        "VERCEL_PROJECT_ID": process.env.VERCEL_PROJECT_ID || ""
+      }
+    },
+    "railway": {
+      "command": "npx",
+      "args": ["-y", "railway-mcp"],
+      "env": {
+        "RAILWAY_API_TOKEN": process.env.RAILWAY_API_TOKEN || ""
+      }
+    },
+    "tunnel": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-tunnel"],
+      "env": {
+        "TUNNEL_API_TOKEN": process.env.TUNNEL_API_TOKEN || ""
+      }
+    },
     "slack": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-slack"],
