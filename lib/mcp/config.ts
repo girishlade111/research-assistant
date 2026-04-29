@@ -254,6 +254,51 @@ export const defaultMCPConfig: MCPConfig = {
       "command": "uvx",
       "args": ["-y", "awslabs-aws-docs-mcp-server@latest"]
     },
+    "m365": {
+      "command": "npx",
+      "args": ["-y", "@Softeria/ms-365-mcp-server"],
+      "env": {
+        "TENANT_ID": process.env.TENANT_ID || "",
+        "CLIENT_ID": process.env.CLIENT_ID || "",
+        "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
+      }
+    },
+    "outlook": {
+      "command": "npx",
+      "args": ["-y", "outlook-mcp"],
+      "env": {
+        "TENANT_ID": process.env.TENANT_ID || "",
+        "CLIENT_ID": process.env.CLIENT_ID || "",
+        "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
+      }
+    },
+    "teams": {
+      "command": "npx",
+      "args": ["-y", "teams-mcp"],
+      "env": {
+        "TENANT_ID": process.env.TENANT_ID || "",
+        "CLIENT_ID": process.env.CLIENT_ID || "",
+        "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
+      }
+    },
+    "onedrive": {
+      "command": "npx",
+      "args": ["-y", "onedrive-mcp"],
+      "env": {
+        "TENANT_ID": process.env.TENANT_ID || "",
+        "CLIENT_ID": process.env.CLIENT_ID || "",
+        "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
+      }
+    },
+    "sharepoint": {
+      "command": "npx",
+      "args": ["-y", "sharepoint-mcp"],
+      "env": {
+        "TENANT_ID": process.env.TENANT_ID || "",
+        "CLIENT_ID": process.env.CLIENT_ID || "",
+        "CLIENT_SECRET": process.env.CLIENT_SECRET || ""
+      }
+    },
     "azure": {
       "command": "npx",
       "args": ["-y", "@azure/mcp@latest", "server", "start"],
