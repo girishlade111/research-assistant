@@ -294,6 +294,28 @@ export const defaultMCPConfig: MCPConfig = {
         "GROQ_API_KEY": process.env.GROQ_API_KEY || ""
       }
     },
+    "huggingface": {
+      "command": "npx",
+      "args": ["-y", "@llmindset/hf-mcp-server"],
+      "env": {
+        "HF_TOKEN": process.env.HF_TOKEN || ""
+      }
+    },
+    "replicate": {
+      "command": "npx",
+      "args": ["-y", "replicate-mcp"],
+      "env": {
+        "REPLICATE_API_TOKEN": process.env.REPLICATE_API_TOKEN || ""
+      }
+    },
+    "cloudflare-ai": {
+      "command": "npx",
+      "args": ["-y", "@cloudflare/ai-mcp"],
+      "env": {
+        "CF_API_TOKEN": process.env.CF_API_TOKEN || "",
+        "CF_ACCOUNT_ID": process.env.CF_ACCOUNT_ID || ""
+      }
+    },
     "appwrite": {
       "command": "uvx",
       "args": ["-y", "mcp-server-appwrite"],
