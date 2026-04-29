@@ -218,6 +218,18 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "EXCEL_FILES_PATH": "./excel_files"
       }
+    },
+    "anthropic-sdk": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/sdk"]
+    },
+    "mcp-everything": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-everything"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
     }
   }
 };
