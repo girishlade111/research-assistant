@@ -65,7 +65,8 @@ export async function GET() {
       azure: "Azure services",
       "azure-ai": "Azure OpenAI",
       "azure-vm": "Azure VMs",
-      netlify: "Netlify deployments"
+      netlify: "Netlify deployments",
+      firebase: "Firebase services"
     }
   });
 }
