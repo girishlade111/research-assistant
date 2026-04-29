@@ -316,6 +316,7 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **tunnel** | Tunnel/Ssh operations | `npx @modelcontextprotocol/server-tunnel` |
 | **postgres** | PostgreSQL queries | `npx @modelcontextprotocol/server-postgres` |
 | **sqlite** | SQLite databases | `npx @modelcontextprotocol/server-sqlite` |
+| **mongodb** | MongoDB databases | `npx mongodb-mcp-server` |
 | **memory** | Knowledge graph | `npx @modelcontextprotocol/server-memory` |
 | **slack** | Slack messaging | `npx @modelcontextprotocol/server-slack` |
 | **notion** | Notion workspace | `npx notion-mcp-server` |
