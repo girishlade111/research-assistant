@@ -47,6 +47,10 @@ export async function GET() {
       fetch: "Web content fetching",
       brave_search: "Real-time search",
       github: "GitHub repository operations",
+      "github-actions": "GitHub Actions CI/CD",
+      docker: "Docker containers",
+      kubernetes: "Kubernetes clusters",
+      gitlab: "GitLab API",
       postgres: "PostgreSQL database",
       sqlite: "SQLite database",
       memory: "Persistent knowledge graph",
@@ -55,11 +59,14 @@ export async function GET() {
       puppeteer: "Browser automation",
       playwright: "Browser testing",
       "google-search": "Google search",
-"google-maps": "Google Maps API",
+      "google-maps": "Google Maps API",
       "google-workspace": "Google Docs/Sheets/Calendar",
       gcloud: "Google Cloud CLI",
       "browserbase": "Cloud browser automation",
-      "cloudflare-browser": "Cloudflare browser"
+      "cloudflare-browser": "Cloudflare browser",
+      sentry: "Error tracking",
+      vercel: "Vercel deployments",
+      railway: "Railway deployments"
     }
   });
 }
