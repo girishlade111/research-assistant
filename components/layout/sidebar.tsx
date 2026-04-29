@@ -87,6 +87,8 @@ export function Sidebar({
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   
   const getNow = () => Date.now();
+  
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Keyboard shortcuts: Esc to close sidebar, / to focus search
