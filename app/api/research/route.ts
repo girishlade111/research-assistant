@@ -56,8 +56,8 @@ export async function POST(req: Request) {
           onProgress: sendSSE
         });
         sendSSE({ type: "result", data: finalReport });
-      } catch (error: any) {
-        const msg: string = error?.message ?? String(error);
+      } catch (error: unknown) {
+        const msg: string = error instanceof Error ? error.message : String(error);
         console.error('[Pipeline Error]', msg);
 
         const isRecoverable = /rate.?limit|429|openrouter|timeout|provider/i.test(msg);
@@ -82,9 +82,9 @@ export async function POST(req: Request) {
         'X-Accel-Buffering': 'no'  // Nginx buffering disable
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
