@@ -191,27 +191,28 @@ Please synthesize the above sections into the final research report JSON format.
   const parsed = (safeParseJSON(rawResponse) || {}) as Record<string, unknown>;
 
   // Construct FinalReport with fallbacks
+  const parsed = safeParseJSON(rawResponse) || {};
   const finalReport: FinalReport = {
-    reportId: parsed.reportId || crypto.randomUUID(),
-    title: parsed.title || plan.reportTitle,
-    subtitle: parsed.subtitle || "Generated Research Report",
-    generatedAt: parsed.generatedAt || new Date().toISOString(),
+    reportId: (parsed.reportId as string) || crypto.randomUUID(),
+    title: (parsed.title as string) || plan.reportTitle,
+    subtitle: (parsed.subtitle as string) || "Generated Research Report",
+    generatedAt: (parsed.generatedAt as string) || new Date().toISOString(),
     originalQuery,
-    estimatedReadTime: parsed.estimatedReadTime || "15 min",
-    totalWords: parsed.totalWords || orderedSections.reduce((acc, sec) => acc + sec.wordCount, 0),
-    totalPages: parsed.totalPages || Math.ceil((parsed.totalWords || 4000) / 500),
+    estimatedReadTime: (parsed.estimatedReadTime as string) || "15 min",
+    totalWords: (parsed.totalWords as number) || orderedSections.reduce((acc, sec) => acc + sec.wordCount, 0),
+    totalPages: Math.ceil(((parsed.totalWords as number) || 4000) / 500),
     sections: {
-      executiveSummary: parsed.sections?.executiveSummary || "## Executive Summary\n\nData missing.",
-      dynamic: parsed.sections?.dynamic || orderedSections.map((s, i) => ({
+      executiveSummary: (parsed.sections?.executiveSummary as string) || "## Executive Summary\n\nData missing.",
+      dynamic: (parsed.sections?.dynamic as { id: string; title: string; content: string; order: number }[]) || orderedSections.map((s, i) => ({
         id: s.sectionId,
         title: s.sectionTitle,
         content: s.content,
         order: i + 1
       })),
-      crossSectionAnalysis: parsed.sections?.crossSectionAnalysis || "## Cross-Section Analysis\n\nData missing.",
-      keyFindings: parsed.sections?.keyFindings || orderedSections.flatMap(s => s.keyFindings),
-      conclusions: parsed.sections?.conclusions || "## Conclusions & Recommendations\n\nData missing.",
-      confidenceAssessment: parsed.sections?.confidenceAssessment || "## Data Confidence Assessment\n\nData missing."
+      crossSectionAnalysis: (parsed.sections?.crossSectionAnalysis as string) || "## Cross-Section Analysis\n\nData missing.",
+      keyFindings: (parsed.sections?.keyFindings as string[]) || orderedSections.flatMap(s => s.keyFindings),
+      conclusions: (parsed.sections?.conclusions as string) || "## Conclusions & Recommendations\n\nData missing.",
+      confidenceAssessment: (parsed.sections?.confidenceAssessment as string) || "## Data Confidence Assessment\n\nData missing."
     },
     sources: uniqueSources,
     metadata: {
