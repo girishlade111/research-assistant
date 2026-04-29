@@ -67,7 +67,8 @@ export async function GET() {
       "azure-vm": "Azure VMs",
       netlify: "Netlify deployments",
       firebase: "Firebase services",
-      supabase: "Supabase database"
+      supabase: "Supabase database",
+      figma: "Figma designs"
     }
   });
 }
