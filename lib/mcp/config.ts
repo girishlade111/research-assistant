@@ -151,6 +151,13 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "NETLIFY_PERSONAL_ACCESS_TOKEN": process.env.NETLIFY_PERSONAL_ACCESS_TOKEN || ""
       }
+    },
+    "firebase": {
+      "command": "npx",
+      "args": ["-y", "firebase-tools@latest", "mcp"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": process.env.GOOGLE_APPLICATION_CREDENTIALS || ""
+      }
     }
   }
 };
