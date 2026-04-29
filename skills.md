@@ -346,6 +346,9 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **claude-api** | Claude API access | `npx claude-mcp` |
 | **lmstudio** | LM Studio local models | `npx lmstudio-mcp` |
 | **groq** | Groq fast inference | `npx groq-mcp` |
+| **huggingface** | Hugging Face Hub | `npx @llmindset/hf-mcp-server` |
+| **replicate** | Replicate AI models | `npx replicate-mcp` |
+| **cloudflare-ai** | Cloudflare AI workers | `npx @cloudflare/ai-mcp` |
 | **anthropic-sdk** | Build MCP servers | `npm i @anthropic-ai/sdk` |
 
 ### MCP API Endpoint

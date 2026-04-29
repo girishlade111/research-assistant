@@ -73,7 +73,10 @@ export async function GET() {
       ollama: "Local LLM models",
       "claude-api": "Claude API access",
       lmstudio: "LM Studio local models",
-      groq: "Groq fast inference"
+      groq: "Groq fast inference",
+      huggingface: "Hugging Face Hub",
+      replicate: "Replicate AI models",
+      "cloudflare-ai": "Cloudflare AI workers"
     }
   });
 }
