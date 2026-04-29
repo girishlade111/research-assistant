@@ -187,6 +187,22 @@ export const defaultMCPConfig: MCPConfig = {
       "env": {
         "OPENAI_API_KEY": process.env.OPENAI_API_KEY || ""
       }
+    },
+    "appwrite": {
+      "command": "uvx",
+      "args": ["-y", "mcp-server-appwrite"],
+      "env": {
+        "APPWRITE_ENDPOINT": process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": process.env.APPWRITE_PROJECT_ID || "",
+        "APPWRITE_API_KEY": process.env.APPWRITE_API_KEY || ""
+      }
+    },
+    "appwrite-docs": {
+      "command": "uvx",
+      "args": ["-y", "mcp-server-appwrite"],
+      "env": {
+        "APPWRITE_ENDPOINT": "https://appwrite.io/docs"
+      }
     }
   }
 };
