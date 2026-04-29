@@ -85,13 +85,9 @@ export function Sidebar({
   const [historySearch, setHistorySearch] = useState("");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const nowTimestampRef = useRef<number>(0);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  const getNow = () => Date.now();
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    nowTimestampRef.current = Date.now();
-  }, []);
 
   // Keyboard shortcuts: Esc to close sidebar, / to focus search
   useEffect(() => {
