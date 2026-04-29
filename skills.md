@@ -324,6 +324,7 @@ ResAgent supports Model Context Protocol (MCP) servers for extended capabilities
 | **azure** | Azure services | `npx @azure/mcp` |
 | **azure-ai** | Azure OpenAI | `npx @azure/ai-mcp` |
 | **azure-vm** | Azure Virtual Machines | `npx @azure/mcp vm` |
+| **netlify** | Netlify deployments | `npx @netlify/mcp` |
 
 ### MCP API Endpoint
 
