@@ -168,6 +168,62 @@ export const defaultMCPConfig: MCPConfig = {
         "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
       }
     },
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@alanxchen/google-workspace-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-calendar"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-docs": {
+      "command": "npx",
+      "args": ["-y", "google-docs-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-sheets-api": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gspread"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-slides": {
+      "command": "npx",
+      "args": ["-y", "google-slides-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
+    "google-people": {
+      "command": "npx",
+      "args": ["-y", "google-people-mcp"],
+      "env": {
+        "GOOGLE_CLIENT_ID": process.env.GOOGLE_CLIENT_ID || "",
+        "GOOGLE_CLIENT_SECRET": process.env.GOOGLE_CLIENT_SECRET || ""
+      }
+    },
     "gcloud": {
       "command": "npx",
       "args": ["-y", "@google-cloud/gcloud-mcp"]
