@@ -166,6 +166,13 @@ export const defaultMCPConfig: MCPConfig = {
         "SUPABASE_PROJECT_REF": process.env.SUPABASE_PROJECT_REF || "",
         "SUPABASE_ACCESS_TOKEN": process.env.SUPABASE_ACCESS_TOKEN || ""
       }
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp"],
+      "env": {
+        "FIGMA_API_KEY": process.env.FIGMA_API_KEY || ""
+      }
     }
   }
 };
