@@ -95,34 +95,48 @@ async function readStream(
           const data = line.slice(6);
           try {
             const parsed = JSON.parse(data);
-            switch (currentEvent) {
-              case "status":
-                callbacks.onStatus(parsed.phase, parsed.message);
-                break;
-              case "token":
-                callbacks.onToken(parsed.text);
-                break;
-              case "result":
-                callbacks.onResult(parsed as ResearchResult);
-                break;
-              case "error":
-                callbacks.onError(parsed.message);
-                break;
-              case "done":
-                callbacks.onDone();
-                break;
-              case "agent_status":
-                callbacks.onAgentStatus(parsed as AgentStatusEvent);
-                break;
-              case "route_decision":
-                callbacks.onRouteDecision(parsed as RouteDecision);
-                break;
-              case "workflow_mode":
-                callbacks.onWorkflowMode(parsed as WorkflowModeEvent);
-                break;
-              case "thinking":
-                callbacks.onThinking(parsed as ThinkingStep);
-                break;
+            if (currentEvent) {
+              switch (currentEvent) {
+                case "status":
+                  callbacks.onStatus(parsed.phase, parsed.message ?? parsed.status);
+                  break;
+                case "token":
+                  callbacks.onToken(parsed.text);
+                  break;
+                case "result":
+                  callbacks.onResult(parsed as ResearchResult);
+                  break;
+                case "error":
+                  callbacks.onError(parsed.message);
+                  break;
+                case "done":
+                  callbacks.onDone();
+                  break;
+                case "agent_status":
+                  callbacks.onAgentStatus(parsed as AgentStatusEvent);
+                  break;
+                case "route_decision":
+                  callbacks.onRouteDecision(parsed as RouteDecision);
+                  break;
+                case "workflow_mode":
+                  callbacks.onWorkflowMode(parsed as WorkflowModeEvent);
+                  break;
+                case "thinking":
+                  callbacks.onThinking(parsed as ThinkingStep);
+                  break;
+              }
+            } else {
+              // Fallback — old format with no `event:` prefix.
+              // Route by the data.type field instead.
+              if (parsed.type === "result" || parsed.data) {
+                callbacks.onResult((parsed.data ?? parsed) as ResearchResult);
+              } else if (parsed.type === "error") {
+                callbacks.onError(parsed.message ?? "Unknown error");
+              } else if (parsed.type === "warning") {
+                callbacks.onStatus(parsed.phase ?? 1, parsed.message ?? parsed.status ?? "");
+              } else if (parsed.phase !== undefined) {
+                callbacks.onStatus(parsed.phase, parsed.status ?? parsed.message ?? "");
+              }
             }
           } catch {
             // skip malformed JSON
