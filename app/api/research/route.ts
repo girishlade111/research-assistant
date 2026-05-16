@@ -33,6 +33,7 @@ export async function POST(req: Request) {
     const encoder = new TextEncoder();
     const stream = new TransformStream();
     const writer = stream.writable.getWriter();
+    let isClosed = false;
 
     const sendSSE = (data: object) => {
       writer.write(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
@@ -53,9 +54,15 @@ export async function POST(req: Request) {
           conversationId,
           researchMode: mode || 'deep',
           apiKeys,
-          onProgress: sendSSE
+          onProgress: (event) => {
+            const eventName = event.type === 'agent_update' ? 'agent_status'
+              : event.type === 'complete' ? 'done'
+              : event.type === 'error' ? 'error'
+              : 'status';
+            sendSSE(event as Record<string, unknown>, eventName);
+          }
         });
-        sendSSE({ type: "result", data: finalReport });
+        sendSSE({ ...finalReport } as Record<string, unknown>, 'result');
       } catch (error: unknown) {
         const msg: string = error instanceof Error ? error.message : String(error);
         console.error('[Pipeline Error]', msg);
@@ -67,10 +74,10 @@ export async function POST(req: Request) {
             message: 'Some sources were unavailable — results may be partial.',
           });
         } else {
-          sendSSE({ type: 'error', message: msg });
+          sendSSE({ message: msg }, 'error');
         }
       } finally {
-        writer.close();
+        isClosed = true; writer.close();
       }
     })();
 
