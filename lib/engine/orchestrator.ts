@@ -89,7 +89,7 @@ function withGracefulTimeout(
 
 export async function runResearchOrchestrator(input: OrchestratorInput): Promise<ResearchResult> {
   const orchestratorStart = Date.now();
-  const { userQuery, userId, conversationId, researchMode, apiKeys, onProgress } = input;
+  const { userQuery, userId, conversationId, researchMode, apiKeys, onProgress, files = [], conversationHistory = [], disabledAgents = [] } = input;
 
   // ━━━ PHASE 1: INITIALIZATION (Sequential) ━━━
   console.log('[Orchestrator]', { phase: 'INIT', status: 'starting', query: userQuery, researchMode, timestamp: orchestratorStart });
@@ -163,6 +163,8 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
         globalSearchContext: plan.globalSearchContext,
         apiKeys,
         researchMode,
+        files,
+        conversationHistory,
         onProgress: (agentProgress) => {
           if (agentProgress.status === "complete") completedCount++;
           onProgress({
