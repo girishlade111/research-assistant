@@ -106,7 +106,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   const userMemory = await buildMemoryContext(userId);
 
   // Step 3: Query Intelligence Agent
-  onProgress({ phase: 1, percent: 5, status: "Analyzing query and building research plan..." });
+  onProgress({ phase: 1, percent: 5, status: "Analyzing query and building research plan...", type: "status" });
   const searchMode = researchMode === "deep" ? "deep" : "pro";
   const queryResult = await runQueryIntelligenceAgent(userQuery, searchMode, apiKeys, {
     userQuery,
@@ -136,7 +136,7 @@ export async function runResearchOrchestrator(input: OrchestratorInput): Promise
   // ━━━ PHASE 2: PARALLEL RESEARCH (All agents simultaneous) ━━━
   console.log('[Orchestrator]', { phase: 'PARALLEL_RESEARCH', status: 'launching_agents', agentCount: plan.dynamicSections.length, timestamp: Date.now() });
 
-  onProgress({ phase: 2, percent: 18, status: "Launching parallel research agents..." });
+  onProgress({ phase: 2, percent: 18, status: "Launching parallel research agents...", type: "status" });
   const totalAgents = plan.dynamicSections.length;
   let completedCount = 0;
 

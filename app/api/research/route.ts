@@ -35,8 +35,15 @@ export async function POST(req: Request) {
     const writer = stream.writable.getWriter();
     let isClosed = false;
 
-    const sendSSE = (data: object) => {
-      writer.write(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+    const sendSSE = (data: Record<string, unknown>, eventName?: string) => {
+      if (isClosed) return;
+      try {
+        const event = eventName || (data.type as string) || 'message';
+        writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+      } catch (err) {
+        isClosed = true;
+        console.warn('[SSE] Write failed:', err);
+      }
     };
 
     // Background execution
@@ -69,10 +76,7 @@ export async function POST(req: Request) {
 
         const isRecoverable = /rate.?limit|429|openrouter|timeout|provider/i.test(msg);
         if (isRecoverable) {
-          sendSSE({
-            type: 'warning',
-            message: 'Some sources were unavailable — results may be partial.',
-          });
+          sendSSE({ message: 'Some sources were unavailable - results may be partial.' }, 'status');
         } else {
           sendSSE({ message: msg }, 'error');
         }
