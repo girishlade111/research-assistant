@@ -11110,109 +11110,52 @@ function mapAgentRoleToChainKey(
 
 **Solution B**: Add a default chain in AGENT_FALLBACK_CHAINS:
 
-```typescript
-balancedResearch: {
-  tiers: [
-    {
-      platform: "nvidia",
-      modelId: "abacusai/dracarys-llama-3.1-70b-instruct",
-      maxTokens: 16384,
-    },
-    {
-      platform: "nvidia",
-      modelId: "nvidia/nemotron-3-super-120b-a12b",
-      maxTokens: 16384,
-    },
-    {
-      platform: "openrouter",
-      modelId: "meta-llama/llama-3.3-70b-instruct:free",
-      maxTokens: 8192,
-    },
-  ];
-}
-```
-
-### PRIORITY 2: Fix SSE Event Format (CRITICAL)
-
-Change sendSSE in route.ts to emit proper SSE events:
-
-```typescript
-const sendSSE = (event: string, data: object) => {
-  writer.write(
-    encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`),
-  );
-};
-```
-
-Then call: sendSSE("progress", { phase, message }) instead of sendSSE({ type: "progress", ... })
-
-### PRIORITY 3: Increase Report Token Budget
-
-In report-synthesis-agent.ts line 160, change maxTokens from 8000 to 16384.
-
-### PRIORITY 4: Wire Up Missing Props
-
-In route.ts, pass files, conversationHistory, disabledAgents to the orchestrator.
-In orchestrator.ts, accept and use these fields.
-
-### PRIORITY 5: Add Real Search
-
-Replace AI-generated search in search-router.ts with a real search API.
-
-### PRIORITY 6: Update .env.example
-
-Add NVIDIA_API_KEY and OPENROUTER_API_KEY to .env.example.
-
-================================================================================
-
-## SECTION 13: DATA FLOW DIAGRAM (COMPLETE)
-
-================================================================================
-
-```
 USER TYPES QUERY
-       │
-       ▼
+│
+▼
 ┌─────────────────┐
-│   page.tsx      │
-│   handleSubmit()│
+│ page.tsx │
+│ handleSubmit()│
 └────────┬────────┘
-         │
-         ├── Check localStorage cache ──→ Cache HIT → revealSections() → DONE
-         │
-         ▼ Cache MISS
+│
+├── Check localStorage cache ──→ Cache HIT → revealSections() → DONE
+│
+▼ Cache MISS
 ┌─────────────────┐
-│   POST          │
-│   /api/research │
+│ POST │
+│ /api/research │
 └────────┬────────┘
-         │
-         ▼
+│
+▼
 ┌──────────────────────────────────────────────────────────────┐
-│   route.ts                                                    │
-│   Creates SSE stream, calls runResearchOrchestrator()         │
+│ route.ts │
+│ Creates SSE stream, calls runResearchOrchestrator() │
 └────────┬─────────────────────────────────────────────────────┘
-         │
-         ▼
+│
+▼
 ┌──────────────────────────────────────────────────────────────┐
-│   orchestrator.ts — runResearchOrchestrator()                 │
-│                                                               │
-│   PHASE 1: INITIALIZATION                                     │
-│   ├── Cache check (mock → null)                               │
-│   ├── Memory fetch (mock → hardcoded string)                  │
-│   ├── Query Intelligence Agent                                │
-│   │   └── LLM call → ResearchPlan (6-8 sections)              │
-│   └── Model Selector Agent                                    │
-│       └── classifySectionTask() → AgentModelAssignment[]      │
-│                                                               │
-│   PHASE 2: PARALLEL RESEARCH                                  │
-│   ├── Section Agent 1 ──┐                                     │
-│   ├── Section Agent 2 ──┤                                     │
-│   ├── Section Agent 3 ──┤ Promise.allSettled()                │
-│   ├── Section Agent 4 ──┤                                     │
-│   ├── Section Agent 5 ──┤                                     │
-│   └── Section Agent N ──┘                                     │
-│       Each agent:                                             │
-│       ├── searchWithFallback() → SearchResult[]               │
-│       ├── buildSearchContext() → string                       │
-│       ├── executeWithFallback() → LLM response               │
+│ orchestrator.ts — runResearchOrchestrator() │
+│ │
+│ PHASE 1: INITIALIZATION │
+│ ├── Cache check (mock → null) │
+│ ├── Memory fetch (mock → hardcoded string) │
+│ ├── Query Intelligence Agent │
+│ │ └── LLM call → ResearchPlan (6-8 sections) │
+│ └── Model Selector Agent │
+│ └── classifySectionTask() → AgentModelAssignment[] │
+│ │
+│ PHASE 2: PARALLEL RESEARCH │
+│ ├── Section Agent 1 ──┐ │
+│ ├── Section Agent 2 ──┤ │
+│ ├── Section Agent 3 ──┤ Promise.allSettled() │
+│ ├── Section Agent 4 ──┤ │
+│ ├── Section Agent 5 ──┤ │
+│ └── Section Agent N ──┘ │
+│ Each agent: │
+│ ├── searchWithFallback() → SearchResult[] │
+│ ├── buildSearchContext() → string │
+│ ├── executeWithFallback() → LLM response │
+
+```
+
 ```
