@@ -288,18 +288,51 @@ function emitProgress(
 
 function mapAgentRoleToChainKey(agentRole: string): keyof typeof AGENT_FALLBACK_CHAINS {
   const role = agentRole.toLowerCase();
-  if (role.includes("financial") || role.includes("valuation") || role.includes("revenue") || role.includes("investment")) return "financialAnalysis";
-  if (role.includes("market") || role.includes("forecast") || role.includes("consumer") || role.includes("demand")) return "marketResearch";
-  if (role.includes("risk") || role.includes("threat") || role.includes("danger") || role.includes("hazard")) return "riskAnalysis";
-  if (role.includes("tech") || role.includes("engineer") || role.includes("architect") || role.includes("system")) return "technicalAnalysis";
-  if (role.includes("code") || role.includes("coding") || role.includes("developer") || role.includes("software")) return "codeGeneration";
-  if (role.includes("fact") || role.includes("verify") || role.includes("check") || role.includes("validate")) return "factChecking";
-  if (role.includes("summar") || role.includes("overview") || role.includes("brief")) return "summarization";
-  if (role.includes("report") || role.includes("compil") || role.includes("synthesis")) return "reportSynthesis";
-  if (role.includes("search") || role.includes("web") || role.includes("source")) return "webSearch";
-  if (role.includes("competit") || role.includes("landscape") || role.includes("benchmark")) return "marketResearch";
-  if (role.includes("regulat") || role.includes("policy") || role.includes("compliance") || role.includes("legal")) return "riskAnalysis";
-  if (role.includes("supply") || role.includes("chain") || role.includes("logistics") || role.includes("esg")) return "marketResearch";
+
+  if (role.includes("financial") || role.includes("valuation") ||
+      role.includes("revenue") || role.includes("investment") ||
+      role.includes("earning") || role.includes("profit"))
+    return "financialAnalysis";
+
+  if (role.includes("market") || role.includes("forecast") ||
+      role.includes("consumer") || role.includes("demand") ||
+      role.includes("competit") || role.includes("landscape") ||
+      role.includes("benchmark") || role.includes("industry"))
+    return "marketResearch";
+
+  if (role.includes("risk") || role.includes("threat") ||
+      role.includes("regulat") || role.includes("policy") ||
+      role.includes("compliance") || role.includes("esg") ||
+      role.includes("sustainab") || role.includes("supply chain"))
+    return "riskAnalysis";
+
+  if (role.includes("tech") || role.includes("engineer") ||
+      role.includes("architect") || role.includes("battery") ||
+      role.includes("infrastructure") || role.includes("platform"))
+    return "technicalAnalysis";
+
+  if (role.includes("code") || role.includes("coding") ||
+      role.includes("developer") || role.includes("software") ||
+      role.includes("programming"))
+    return "codeGeneration";
+
+  if (role.includes("fact") || role.includes("verify") ||
+      role.includes("check") || role.includes("validate"))
+    return "factChecking";
+
+  if (role.includes("summar") || role.includes("overview") ||
+      role.includes("brief"))
+    return "summarization";
+
+  if (role.includes("report") || role.includes("compil") ||
+      role.includes("synthesis") || role.includes("editor"))
+    return "reportSynthesis";
+
+  if (role.includes("search") || role.includes("web") ||
+      role.includes("source") || role.includes("retriev"))
+    return "webSearch";
+
+  // Default — never fail
   return "webSearch";
 }
 export async function runSectionAgent(config: SectionAgentConfig): Promise<SectionResult> {
