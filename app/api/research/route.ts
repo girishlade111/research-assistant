@@ -38,11 +38,27 @@ export async function POST(req: Request) {
     const sendSSE = (data: Record<string, unknown>, eventName?: string) => {
       if (isClosed) return;
       try {
-        const event = eventName || (data.type as string) || 'message';
-        writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+        // Map backend `type` literals to the small set of event names
+        // the frontend readStream() switch handles. Anything unknown falls
+        // through to 'status' so the UI still updates.
+        const type = (data.type as string) || '';
+        const event = eventName || (
+          type === 'agent_update' ? 'agent_status' :
+          type === 'plan_ready' ? 'status' :
+          type === 'models_assigned' ? 'status' :
+          type === 'phase_complete' ? 'status' :
+          type === 'complete' ? 'done' :
+          type === 'error' ? 'error' :
+          type === 'warning' ? 'status' :
+          type === 'result' ? 'result' :
+          'status'
+        );
+
+        const sseString = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+        writer.write(encoder.encode(sseString));
       } catch (err) {
         isClosed = true;
-        console.warn('[SSE] Write failed:', err);
+        console.warn('[SSE] Write failed — stream closed:', err);
       }
     };
 
@@ -66,14 +82,11 @@ export async function POST(req: Request) {
           disabledAgents: disabledAgents || [],
           apiKeys,
           onProgress: (event) => {
-            const eventName = event.type === 'agent_update' ? 'agent_status'
-              : event.type === 'complete' ? 'done'
-              : event.type === 'error' ? 'error'
-              : 'status';
-            sendSSE(event as Record<string, unknown>, eventName);
+            // sendSSE derives the event name from event.type
+            sendSSE(event as Record<string, unknown>);
           }
         });
-        sendSSE({ ...finalReport } as Record<string, unknown>, 'result');
+        sendSSE({ type: 'result', ...finalReport } as Record<string, unknown>, 'result');
       } catch (error: unknown) {
         const msg: string = error instanceof Error ? error.message : String(error);
         console.error('[Pipeline Error]', msg);
