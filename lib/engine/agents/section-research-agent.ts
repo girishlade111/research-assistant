@@ -369,7 +369,7 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   try {
     const userMessage = `${searchContext}\n\nAnalyze and write your section`;
     const chainKey = mapAgentRoleToChainKey(section.agentRole);
-    console.log([SectionAgent] ${section.agentRole} ? chain: ${chainKey});
+    console.log(`[SectionAgent] ${section.agentRole} -> chain: ${chainKey}`);
     const result = await executeWithFallback(chainKey, {
       systemPrompt,
       userMessage,
