@@ -8530,4 +8530,292 @@ research-assistant/
 ```typescript
 type SearchMode = "pro" | "deep" | "corpus";
 type WorkflowMode = "chat" | "planning" | "research";
+type IntentType =
+  | "coding"
+  | "research"
+  | "comparison"
+  | "explanation"
+  | "factual"
+  | "general";
+```
+
+### 4.2 Provider Types
+
+```typescript
+type ModelProvider = "nvidia" | "openrouter";
+type SearchProvider = "nvidia" | "openrouter";
+```
+
+### 4.3 Task Types (for model routing)
+
+```typescript
+type TaskType =
+  | "search"
+  | "query"
+  | "analysis"
+  | "coding"
+  | "summary"
+  | "fact-check"
+  | "report"
+  | "default";
+```
+
+### 4.4 Agent Names
+
+```typescript
+type AgentName =
+  | "web-search-agent"
+  | "query-intelligence-agent"
+  | "analysis-agent"
+  | "coding-agent"
+  | "summary-agent"
+  | "fact-check-agent"
+  | "report-agent";
+type AgentStatus = "pending" | "running" | "done" | "failed" | "skipped";
+```
+
+### 4.5 AgentContext (shared input to all agents)
+
+```typescript
+interface AgentContext {
+  query: string; // Original user query
+  enhanced_query: string; // Expanded query with mode/intent suffix
+  intent: IntentType; // Detected intent
+  subtopics: string[]; // Generated subtopics
+  search_terms: string[]; // Search terms from plan
+  web_results: SearchResult[]; // Retrieved search results
+  file_context: FileContext[]; // Uploaded file contents
+  conversationHistory?: LLMMessage[]; // Multi-turn history
+}
+```
+
+### 4.6 AgentResult (output from any agent)
+
+```typescript
+interface AgentResult {
+  agent: AgentName;
+  output: Record<string, any>; // Agent-specific structured output
+  model_used: string;
+  provider: string;
+  durationMs: number;
+  isFallback: boolean;
+  error?: string;
+}
+```
+
+### 4.7 ResearchPlan (Query Intelligence Agent output)
+
+```typescript
+interface ResearchPlan {
+  queryId: string; // Slug from query
+  originalQuery: string;
+  researchType: ResearchType; // financial|technical|scientific|news|comparative|general
+  reportTitle: string;
+  estimatedPages: number; // Minimum 7
+  fixedSections: FixedSection[]; // Always 3: overview, keyInsights, conclusion
+  dynamicSections: DynamicSection[]; // 6-8 query-specific sections
+  globalSearchContext: string;
+  totalAgentsNeeded: number;
+}
+
+interface FixedSection {
+  id: string; // "overview" | "keyInsights" | "conclusion"
+  title: string;
+  order: number; // 1, 99, 100
+}
+
+interface DynamicSection {
+  id: string; // "section_<topic>"
+  agentRole: string; // "Financial Analysis Specialist"
+  sectionTitle: string; // "Revenue Analysis"
+  focusArea: string; // What this section investigates
+  priority: "high" | "medium" | "low";
+  searchQueries: string[]; // 3 specific search queries
+  outputLength: "long" | "medium" | "short";
+  requiresWebSearch: boolean;
+}
+```
+
+### 4.8 Model Assignment Types
+
+```typescript
+interface ModelAssignment {
+  platform: "nvidia" | "openrouter";
+  modelId: string;
+}
+
+interface AgentModelAssignment {
+  sectionId: string;
+  agentRole: string;
+  primaryModel: ModelAssignment;
+  fallbackModel: ModelAssignment;
+  taskType: SectionTaskType;
+  maxTokens: number;
+}
+
+type SectionTaskType =
+  | "web_search"
+  | "deep_reasoning"
+  | "code_generation"
+  | "fast_summary"
+  | "financial_analysis"
+  | "report_compilation"
+  | "fact_checking"
+  | "balanced_research";
+```
+
+### 4.9 SectionResult (Phase 2 output per section)
+
+```typescript
+interface SectionResult {
+  sectionId: string;
+  sectionTitle: string;
+  agentRole: string;
+  content: string; // 600-900 words of markdown
+  keyFindings: string[];
+  dataPoints: SectionDataPoint[];
+  sourcesUsed: SectionSourceRef[];
+  confidenceScore: number; // 0-1
+  dataQuality: "rich" | "moderate" | "limited";
+  wordCount: number;
+  modelUsed: string;
+  provider: string;
+  isFallback: boolean;
+  durationMs: number;
+  tokensUsed: number;
+  error?: string;
+}
+
+interface SectionDataPoint {
+  metric: string;
+  value: string;
+  year?: string;
+  source?: string;
+}
+
+interface SectionSourceRef {
+  title: string;
+  url: string;
+  relevance: "high" | "medium" | "low";
+}
+```
+
+### 4.10 FinalReport (Phase 3 output)
+
+```typescript
+interface FinalReport {
+  reportId: string;
+  title: string;
+  subtitle: string;
+  generatedAt: string;
+  originalQuery: string;
+  estimatedReadTime: string;
+  totalWords: number;
+  totalPages: number;
+  sections: ReportSections;
+  sources: ResearchSource[];
+  metadata: ReportMetadata;
+}
+
+interface ReportSections {
+  executiveSummary: string;
+  dynamic: { id: string; title: string; content: string; order: number }[];
+  crossSectionAnalysis: string;
+  keyFindings: string[];
+  conclusions: string;
+  confidenceAssessment: string;
+}
+
+interface ReportMetadata {
+  totalAgentsUsed: number;
+  successfulAgents: number;
+  failedAgents: number;
+  totalSourcesAnalyzed: number;
+  modelsUsed: string[];
+}
+```
+
+### 4.11 ResearchResult (final API response)
+
+```typescript
+interface ResearchResult {
+  overview: string;
+  keyInsights: string[];
+  details: string;
+  comparison: string;
+  expertInsights: string[];
+  conclusion: string;
+  code?: string;
+  factCheck?: string;
+  sources: ResearchSource[];
+  references: ResearchSource[];
+  agentResults?: AgentResult[];
+  metadata: {
+    model: string;
+    provider: string;
+    searchProvider: string;
+    intent: IntentType;
+    workflowMode?: WorkflowMode;
+    switchedFromPlanning?: boolean;
+    tokensUsed: number;
+    durationMs: number;
+    isFallback?: boolean;
+    agentTrace?: AgentStatusEvent[];
+  };
+}
+```
+
+### 4.12 SSE Event Types
+
+```typescript
+interface AgentStatusEvent {
+  agent: AgentName;
+  status: AgentStatus;
+  model?: string;
+  provider?: string;
+  durationMs?: number;
+  isFallback?: boolean;
+  error?: string;
+}
+
+interface ThinkingStep {
+  id: string;
+  phase: string;
+  agent?: AgentName;
+  text: string;
+  timestamp: number;
+}
+
+interface OrchestratorProgressEvent {
+  phase: 1 | 2 | 3;
+  type?:
+    | "plan_ready"
+    | "models_assigned"
+    | "agent_update"
+    | "phase_complete"
+    | "complete"
+    | "error";
+  percent: number;
+  status: string;
+  sectionId?: string;
+  agentRole?: string;
+  completedSections?: string[];
+  failedSections?: number;
+  error?: string;
+}
+```
+
+### 4.13 Chat Message Types
+
+```typescript
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  timestamp: number;
+  query?: string;
+  files?: FileContext[];
+  sections: ResponseSection[];
+  sources: ResearchSource[];
+  fullResult: ResearchResult | null;
+
 ```
