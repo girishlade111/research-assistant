@@ -1,8 +1,11 @@
 # ResAgent — ULTIMATE DETAILED PROJECT CONTEXT FOR AI
+
 # Every structure, every function, every data flow explained
 
 ================================================================================
+
 ## SECTION 1: PROJECT IDENTITY
+
 ================================================================================
 
 **Name**: ResAgent (Research Agent)
@@ -15,10 +18,13 @@
 **Repository**: research-assistant (local)
 
 ================================================================================
+
 ## SECTION 2: COMPLETE TECHNOLOGY STACK
+
 ================================================================================
 
 ### Frontend
+
 - React 19.2.4 (useState, useCallback, useRef, useEffect, memo)
 - Framer Motion 12.38 (page transitions, micro-interactions, staggered reveals)
 - Lucide React 1.8 (icons)
@@ -27,16 +33,19 @@
 - No Redux, no Zustand — all state is local React state
 
 ### Backend
+
 - Next.js API Routes (App Router, Route Handlers)
 - Server-Sent Events (SSE) for real-time streaming
 - Node.js crypto module for SHA-256 hashing
 
 ### AI Providers
+
 - NVIDIA NIM (primary) — https://integrate.api.nvidia.com/v1
 - OpenRouter (fallback) — https://openrouter.ai/api/v1
 - No OpenAI, no Anthropic, no Google AI
 
 ### File Processing
+
 - pdfjs-dist 5.6 (PDF text extraction)
 - mammoth 1.12 (DOCX text extraction)
 - papaparse 5.5 (CSV parsing)
@@ -44,11 +53,13 @@
 - Supports: PDF, DOCX, CSV, TXT, MD, JSON, PNG, JPG
 
 ### Export
+
 - jspdf 4.2 + jspdf-autotable 5.0 (PDF generation)
 - html-to-image 1.11 (screenshot export)
 - Markdown and TXT export (client-side Blob)
 
 ### Database/Cache
+
 - ALL MOCK — no real database connected
 - getCachedResponse() → always returns null
 - buildMemoryContext() → returns hardcoded string
@@ -56,7 +67,9 @@
 - Client-side: localStorage (30min TTL, 50 max entries)
 
 ================================================================================
+
 ## SECTION 3: COMPLETE FILE TREE WITH PURPOSE
+
 ================================================================================
 
 ```
@@ -391,49 +404,77 @@ research-assistant/
 ```
 
 ================================================================================
+
 ## SECTION 4: COMPLETE TYPE SYSTEM (types.ts — 507 lines)
+
 ================================================================================
 
 ### 4.1 Intent & Mode Types
+
 ```typescript
-type SearchMode = "pro" | "deep" | "corpus"
-type WorkflowMode = "chat" | "planning" | "research"
-type IntentType = "coding" | "research" | "comparison" | "explanation" | "factual" | "general"
+type SearchMode = "pro" | "deep" | "corpus";
+type WorkflowMode = "chat" | "planning" | "research";
+type IntentType =
+  | "coding"
+  | "research"
+  | "comparison"
+  | "explanation"
+  | "factual"
+  | "general";
 ```
 
 ### 4.2 Provider Types
+
 ```typescript
-type ModelProvider = "nvidia" | "openrouter"
-type SearchProvider = "nvidia" | "openrouter"
+type ModelProvider = "nvidia" | "openrouter";
+type SearchProvider = "nvidia" | "openrouter";
 ```
 
 ### 4.3 Task Types (for model routing)
+
 ```typescript
-type TaskType = "search" | "query" | "analysis" | "coding" | "summary" | "fact-check" | "report" | "default"
+type TaskType =
+  | "search"
+  | "query"
+  | "analysis"
+  | "coding"
+  | "summary"
+  | "fact-check"
+  | "report"
+  | "default";
 ```
 
 ### 4.4 Agent Names
+
 ```typescript
-type AgentName = "web-search-agent" | "query-intelligence-agent" | "analysis-agent" |
-                 "coding-agent" | "summary-agent" | "fact-check-agent" | "report-agent"
-type AgentStatus = "pending" | "running" | "done" | "failed" | "skipped"
+type AgentName =
+  | "web-search-agent"
+  | "query-intelligence-agent"
+  | "analysis-agent"
+  | "coding-agent"
+  | "summary-agent"
+  | "fact-check-agent"
+  | "report-agent";
+type AgentStatus = "pending" | "running" | "done" | "failed" | "skipped";
 ```
 
 ### 4.5 AgentContext (shared input to all agents)
+
 ```typescript
 interface AgentContext {
-  query: string;              // Original user query
-  enhanced_query: string;     // Expanded query with mode/intent suffix
-  intent: IntentType;         // Detected intent
-  subtopics: string[];        // Generated subtopics
-  search_terms: string[];     // Search terms from plan
-  web_results: SearchResult[];// Retrieved search results
-  file_context: FileContext[];// Uploaded file contents
+  query: string; // Original user query
+  enhanced_query: string; // Expanded query with mode/intent suffix
+  intent: IntentType; // Detected intent
+  subtopics: string[]; // Generated subtopics
+  search_terms: string[]; // Search terms from plan
+  web_results: SearchResult[]; // Retrieved search results
+  file_context: FileContext[]; // Uploaded file contents
   conversationHistory?: LLMMessage[]; // Multi-turn history
 }
 ```
 
 ### 4.6 AgentResult (output from any agent)
+
 ```typescript
 interface AgentResult {
   agent: AgentName;
@@ -447,38 +488,40 @@ interface AgentResult {
 ```
 
 ### 4.7 ResearchPlan (Query Intelligence Agent output)
+
 ```typescript
 interface ResearchPlan {
-  queryId: string;                    // Slug from query
+  queryId: string; // Slug from query
   originalQuery: string;
-  researchType: ResearchType;         // financial|technical|scientific|news|comparative|general
+  researchType: ResearchType; // financial|technical|scientific|news|comparative|general
   reportTitle: string;
-  estimatedPages: number;             // Minimum 7
-  fixedSections: FixedSection[];      // Always 3: overview, keyInsights, conclusion
-  dynamicSections: DynamicSection[];  // 6-8 query-specific sections
+  estimatedPages: number; // Minimum 7
+  fixedSections: FixedSection[]; // Always 3: overview, keyInsights, conclusion
+  dynamicSections: DynamicSection[]; // 6-8 query-specific sections
   globalSearchContext: string;
   totalAgentsNeeded: number;
 }
 
 interface FixedSection {
-  id: string;       // "overview" | "keyInsights" | "conclusion"
+  id: string; // "overview" | "keyInsights" | "conclusion"
   title: string;
-  order: number;    // 1, 99, 100
+  order: number; // 1, 99, 100
 }
 
 interface DynamicSection {
-  id: string;                    // "section_<topic>"
-  agentRole: string;             // "Financial Analysis Specialist"
-  sectionTitle: string;          // "Revenue Analysis"
-  focusArea: string;             // What this section investigates
+  id: string; // "section_<topic>"
+  agentRole: string; // "Financial Analysis Specialist"
+  sectionTitle: string; // "Revenue Analysis"
+  focusArea: string; // What this section investigates
   priority: "high" | "medium" | "low";
-  searchQueries: string[];       // 3 specific search queries
+  searchQueries: string[]; // 3 specific search queries
   outputLength: "long" | "medium" | "short";
   requiresWebSearch: boolean;
 }
 ```
 
 ### 4.8 Model Assignment Types
+
 ```typescript
 interface ModelAssignment {
   platform: "nvidia" | "openrouter";
@@ -494,22 +537,29 @@ interface AgentModelAssignment {
   maxTokens: number;
 }
 
-type SectionTaskType = "web_search" | "deep_reasoning" | "code_generation" |
-                       "fast_summary" | "financial_analysis" | "report_compilation" |
-                       "fact_checking" | "balanced_research"
+type SectionTaskType =
+  | "web_search"
+  | "deep_reasoning"
+  | "code_generation"
+  | "fast_summary"
+  | "financial_analysis"
+  | "report_compilation"
+  | "fact_checking"
+  | "balanced_research";
 ```
 
 ### 4.9 SectionResult (Phase 2 output per section)
+
 ```typescript
 interface SectionResult {
   sectionId: string;
   sectionTitle: string;
   agentRole: string;
-  content: string;               // 600-900 words of markdown
+  content: string; // 600-900 words of markdown
   keyFindings: string[];
   dataPoints: SectionDataPoint[];
   sourcesUsed: SectionSourceRef[];
-  confidenceScore: number;       // 0-1
+  confidenceScore: number; // 0-1
   dataQuality: "rich" | "moderate" | "limited";
   wordCount: number;
   modelUsed: string;
@@ -535,6 +585,7 @@ interface SectionSourceRef {
 ```
 
 ### 4.10 FinalReport (Phase 3 output)
+
 ```typescript
 interface FinalReport {
   reportId: string;
@@ -569,6 +620,7 @@ interface ReportMetadata {
 ```
 
 ### 4.11 ResearchResult (final API response)
+
 ```typescript
 interface ResearchResult {
   overview: string;
@@ -598,6 +650,7 @@ interface ResearchResult {
 ```
 
 ### 4.12 SSE Event Types
+
 ```typescript
 interface AgentStatusEvent {
   agent: AgentName;
@@ -619,7 +672,13 @@ interface ThinkingStep {
 
 interface OrchestratorProgressEvent {
   phase: 1 | 2 | 3;
-  type?: "plan_ready" | "models_assigned" | "agent_update" | "phase_complete" | "complete" | "error";
+  type?:
+    | "plan_ready"
+    | "models_assigned"
+    | "agent_update"
+    | "phase_complete"
+    | "complete"
+    | "error";
   percent: number;
   status: string;
   sectionId?: string;
@@ -631,6 +690,7 @@ interface OrchestratorProgressEvent {
 ```
 
 ### 4.13 Chat Message Types
+
 ```typescript
 interface ChatMessage {
   id: string;
@@ -662,6 +722,7 @@ interface ResponseSection {
 ```
 
 ### 4.14 LLM Types
+
 ```typescript
 interface LLMMessage {
   role: "system" | "user" | "assistant";
@@ -670,7 +731,11 @@ interface LLMMessage {
 
 interface LLMResponse {
   content: string;
-  usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
   model_used: string;
   provider: string;
 }
@@ -687,6 +752,7 @@ interface LLMRequestOptions {
 ```
 
 ### 4.15 File & Search Types
+
 ```typescript
 interface FileContext {
   fileName: string;
@@ -713,6 +779,7 @@ interface SearchOptions {
 ```
 
 ### 4.16 API Types
+
 ```typescript
 interface ApiKeys {
   nvidiaKey?: string;
@@ -754,7 +821,9 @@ interface OrchestratorInput {
 ```
 
 ================================================================================
+
 ## SECTION 5: COMPLETE WORKING LOGIC — STEP BY STEP
+
 ================================================================================
 
 ### 5.1 USER SUBMITS QUERY (page.tsx)
@@ -1037,33 +1106,38 @@ runReportSynthesisAgent(input):
 ```
 
 ================================================================================
+
 ## SECTION 6: MODEL REGISTRY — COMPLETE
+
 ================================================================================
 
 ### NVIDIA NIM Models (Primary Platform)
-| Model ID | Type | Context | Cost Priority | Used By |
-|----------|------|---------|---------------|---------|
-| minimaxai/minimax-m2.7 | fast | 32K | 1 | Summary Agent |
-| moonshotai/kimi-k2-thinking | reasoning | 32K | 2 | Report, Fact-Check, Risk Analysis |
-| abacusai/dracarys-llama-3.1-70b-instruct | balanced | 32K | 2 | Web Search, Default |
-| mistralai/mistral-large-3-675b-instruct-2512 | balanced | 32K | 3 | Query Intelligence, Fact-Check |
-| deepseek-ai/deepseek-v3.2 | reasoning | 32K | 3 | Financial, Technical Analysis |
-| z-ai/glm4.7 | balanced | 32K | 2 | Market Research |
-| qwen/qwen3-coder-480b-a35b-instruct | coding | 32K | 3 | Code Generation |
-| nvidia/nemotron-3-super-120b-a12b | balanced | 32K | 2 | Report Synthesis |
+
+| Model ID                                     | Type      | Context | Cost Priority | Used By                           |
+| -------------------------------------------- | --------- | ------- | ------------- | --------------------------------- |
+| minimaxai/minimax-m2.7                       | fast      | 32K     | 1             | Summary Agent                     |
+| moonshotai/kimi-k2-thinking                  | reasoning | 32K     | 2             | Report, Fact-Check, Risk Analysis |
+| abacusai/dracarys-llama-3.1-70b-instruct     | balanced  | 32K     | 2             | Web Search, Default               |
+| mistralai/mistral-large-3-675b-instruct-2512 | balanced  | 32K     | 3             | Query Intelligence, Fact-Check    |
+| deepseek-ai/deepseek-v3.2                    | reasoning | 32K     | 3             | Financial, Technical Analysis     |
+| z-ai/glm4.7                                  | balanced  | 32K     | 2             | Market Research                   |
+| qwen/qwen3-coder-480b-a35b-instruct          | coding    | 32K     | 3             | Code Generation                   |
+| nvidia/nemotron-3-super-120b-a12b            | balanced  | 32K     | 2             | Report Synthesis                  |
 
 ### OpenRouter Models (Fallback, Free Tier)
-| Model ID | Type | Context | Cost Priority | Used By |
-|----------|------|---------|---------------|---------|
-| nvidia/nemotron-3-super-120b-a12b:free | balanced | 32K | 1 | Report Synthesis fallback |
-| qwen/qwen3-coder:free | coding | 32K | 1 | Code Generation fallback |
-| meta-llama/llama-3.3-70b-instruct:free | balanced | 131K | 1 | Web Search, Default fallback |
-| openai/gpt-oss-120b:free | reasoning | 32K | 1 | Query, Financial, Technical fallback |
-| z-ai/glm-4.5-air:free | fast | 32K | 1 | Summary fallback |
-| google/gemma-4-31b-it:free | fast | 32K | 1 | Summary fallback |
-| minimax/minimax-m2.5:free | fast | 32K | 1 | Summary fallback |
+
+| Model ID                               | Type      | Context | Cost Priority | Used By                              |
+| -------------------------------------- | --------- | ------- | ------------- | ------------------------------------ |
+| nvidia/nemotron-3-super-120b-a12b:free | balanced  | 32K     | 1             | Report Synthesis fallback            |
+| qwen/qwen3-coder:free                  | coding    | 32K     | 1             | Code Generation fallback             |
+| meta-llama/llama-3.3-70b-instruct:free | balanced  | 131K    | 1             | Web Search, Default fallback         |
+| openai/gpt-oss-120b:free               | reasoning | 32K     | 1             | Query, Financial, Technical fallback |
+| z-ai/glm-4.5-air:free                  | fast      | 32K     | 1             | Summary fallback                     |
+| google/gemma-4-31b-it:free             | fast      | 32K     | 1             | Summary fallback                     |
+| minimax/minimax-m2.5:free              | fast      | 32K     | 1             | Summary fallback                     |
 
 ### Section Model Map (model-config.ts)
+
 ```
 queryIntelligence:  primary=nvidia/mistral,      fallback=or/gptOss,      tokens=16384
 webSearch:          primary=nvidia/dracarys,      fallback=or/llama,       tokens=16384
@@ -1078,6 +1152,7 @@ reportSynthesis:    primary=nvidia/nemotron,      fallback=or/nemotron,    token
 ```
 
 ### 3-Tier Fallback Chains (fallback-config.ts)
+
 ```
 queryIntelligence:  [nvidia/mistral, nvidia/nemotron, or/gptOss]
 webSearch:          [nvidia/dracarys, nvidia/glm, or/glmAir]
@@ -1092,23 +1167,28 @@ reportSynthesis:    [nvidia/nemotron, nvidia/mistral, or/nemotron]
 ```
 
 ================================================================================
+
 ## SECTION 7: TOKEN GOVERNANCE
-================================================================================
-
-| Component | Config Value | Actual Usage |
-|-----------|-------------|--------------|
-| Context Window | 131,072 tokens | Used by context-builder.ts |
-| Max Response | 32,768 tokens | Config only |
-| Agent Max | 16,384 tokens | Used by orchestrator for query intelligence |
-| Report Max | 32,768 tokens | **BUT report-synthesis-agent.ts hardcodes 8000** |
-| Per-Section | 8,192 tokens | Used by section-research-agent.ts |
-| Words→Tokens | 1.3 ratio | Used for estimation |
 
 ================================================================================
+
+| Component      | Config Value   | Actual Usage                                     |
+| -------------- | -------------- | ------------------------------------------------ |
+| Context Window | 131,072 tokens | Used by context-builder.ts                       |
+| Max Response   | 32,768 tokens  | Config only                                      |
+| Agent Max      | 16,384 tokens  | Used by orchestrator for query intelligence      |
+| Report Max     | 32,768 tokens  | **BUT report-synthesis-agent.ts hardcodes 8000** |
+| Per-Section    | 8,192 tokens   | Used by section-research-agent.ts                |
+| Words→Tokens   | 1.3 ratio      | Used for estimation                              |
+
+================================================================================
+
 ## SECTION 8: SSE EVENT FORMAT — THE MISMATCH
+
 ================================================================================
 
 ### What Orchestrator Sends (via sendSSE in route.ts):
+
 ```
 data: {"type":"progress","phase":1,"percent":5,"status":"Analyzing query..."}
 
@@ -1120,6 +1200,7 @@ data: {"type":"error","message":"..."}
 ```
 
 ### What Frontend Expects (readStream in page.tsx):
+
 ```
 event: status
 data: {"phase":"1","message":"Analyzing query..."}
@@ -1132,16 +1213,20 @@ data: {"message":"..."}
 ```
 
 ### The Problem:
+
 - Orchestrator sends `data: {"type":"progress",...}` (type field inside data)
 - Frontend reads `event: status` (SSE event prefix)
 - **These don't match** — frontend never routes progress events correctly
 - The `event:` prefix is never set by the orchestrator
 
 ================================================================================
+
 ## SECTION 9: ALL KNOWN BUGS AND ISSUES
+
 ================================================================================
 
 ### BUG 1: Fallback Chain Key Mismatch (CRITICAL)
+
 **File**: section-research-agent.ts line 355, fallback-executor.ts line 38
 **Problem**: executeWithFallback() is called with `section.agentRole` as the key
 (e.g., "Financial Analysis Specialist"), but AGENT_FALLBACK_CHAINS has static keys
@@ -1150,6 +1235,7 @@ like "financialAnalysis". These never match.
 **Fix**: Either map agentRole to a known key, or add a default fallback chain.
 
 ### BUG 2: SSE Event Format Mismatch (CRITICAL)
+
 **File**: route.ts line 37-38, page.tsx line 91-131
 **Problem**: sendSSE() writes `data: {"type":"...",...}\n\n` but readStream() expects
 `event: ...\ndata: {...}\n\n` format.
@@ -1157,24 +1243,28 @@ like "financialAnalysis". These never match.
 **Fix**: Either change sendSSE to use `event:` prefix, or change readStream to read `type` field.
 
 ### BUG 3: Search is AI-Generated (DESIGN ISSUE)
+
 **File**: search-router.ts
 **Problem**: No real web search. LLM generates fake search results with made-up URLs.
 **Impact**: Sources in reports may be fabricated. URLs may not exist.
 **Fix**: Integrate real search API (Tavily, SerpAPI, Brave Search).
 
 ### BUG 4: Report Synthesis Token Limit (MODERATE)
+
 **File**: report-synthesis-agent.ts line 160
 **Problem**: maxTokens hardcoded to 8000, but config.ts says reportMaxTokens: 32768.
 **Impact**: Reports are shorter and less detailed than intended.
 **Fix**: Change maxTokens to 16384 or 32768.
 
 ### BUG 5: Mock Infrastructure (DESIGN)
+
 **File**: orchestrator.ts lines 17-33
 **Problem**: getCachedResponse, setCachedResponse, buildMemoryContext, saveReport are all no-ops.
 **Impact**: No caching, no persistence, no user memory.
 **Fix**: Connect real Redis/Supabase or implement in-memory cache.
 
 ### BUG 6: Frontend Props Not Passed to API (MODERATE)
+
 **File**: route.ts line 16, orchestrator.ts
 **Problem**: API receives workflowMode, disabledAgents, conversationHistory, files but
 doesn't forward them to the orchestrator. Orchestrator ignores these fields.
@@ -1182,31 +1272,37 @@ doesn't forward them to the orchestrator. Orchestrator ignores these fields.
 **Fix**: Pass all props through to orchestrator.
 
 ### BUG 7: selectedModel Ignored (MINOR)
+
 **File**: route.ts, orchestrator.ts
 **Problem**: Frontend sends selectedModel but API ignores it. Model selection is entirely server-side.
 **Impact**: User model choice has no effect.
 **Fix**: Either remove from UI or wire up to orchestrator.
 
 ### BUG 8: Planning Mode Not Connected (MINOR)
+
 **File**: planning-workflow.ts, route.ts
 **Problem**: Planning mode exists but is never called from the API route.
 **Impact**: Planning workflow mode does nothing.
 **Fix**: Add planning mode routing to API route.
 
 ### BUG 9: Legacy Agents Unused (MINOR)
+
 **Files**: web-search-agent.ts, analysis-agent.ts, coding-agent.ts, fact-check-agent.ts, summary-agent.ts, report-agent.ts
 **Problem**: These agents exist but are not called by the current orchestrator.
 **Impact**: Dead code, but report-assembler.ts depends on them.
 **Fix**: Either integrate or remove.
 
 ### BUG 10: .env.example Incomplete (MINOR)
+
 **File**: .env.example
 **Problem**: Only shows NEXT_PUBLIC_APP_URL, not NVIDIA_API_KEY or OPENROUTER_API_KEY.
 **Impact**: New developers won't know what env vars to set.
 **Fix**: Add all required env vars to .env.example.
 
 ================================================================================
+
 ## SECTION 10: ENVIRONMENT VARIABLES
+
 ================================================================================
 
 ```
@@ -1221,7 +1317,9 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 ================================================================================
+
 ## SECTION 11: COMMANDS
+
 ================================================================================
 
 ```bash
@@ -1233,16 +1331,22 @@ npm run lint         # Run ESLint
 ```
 
 ================================================================================
+
 ## SECTION 12: HOW TO FIX — PRIORITY ORDER
+
 ================================================================================
 
 ### PRIORITY 1: Fix Fallback Chain Mismatch (CRITICAL)
+
 The section-research-agent.ts calls executeWithFallback() with dynamic agentRole strings
 that don't match AGENT_FALLBACK_CHAINS keys. This causes most sections to fail.
 
 **Solution A**: Add a mapping function in section-research-agent.ts:
+
 ```typescript
-function mapAgentRoleToChainKey(agentRole: string): keyof typeof AGENT_FALLBACK_CHAINS {
+function mapAgentRoleToChainKey(
+  agentRole: string,
+): keyof typeof AGENT_FALLBACK_CHAINS {
   const role = agentRole.toLowerCase();
   if (role.includes("financial")) return "financialAnalysis";
   if (role.includes("market")) return "marketResearch";
@@ -1258,40 +1362,64 @@ function mapAgentRoleToChainKey(agentRole: string): keyof typeof AGENT_FALLBACK_
 ```
 
 **Solution B**: Add a default chain in AGENT_FALLBACK_CHAINS:
+
 ```typescript
 balancedResearch: {
   tiers: [
-    { platform: 'nvidia', modelId: 'abacusai/dracarys-llama-3.1-70b-instruct', maxTokens: 16384 },
-    { platform: 'nvidia', modelId: 'nvidia/nemotron-3-super-120b-a12b', maxTokens: 16384 },
-    { platform: 'openrouter', modelId: 'meta-llama/llama-3.3-70b-instruct:free', maxTokens: 8192 }
-  ]
+    {
+      platform: "nvidia",
+      modelId: "abacusai/dracarys-llama-3.1-70b-instruct",
+      maxTokens: 16384,
+    },
+    {
+      platform: "nvidia",
+      modelId: "nvidia/nemotron-3-super-120b-a12b",
+      maxTokens: 16384,
+    },
+    {
+      platform: "openrouter",
+      modelId: "meta-llama/llama-3.3-70b-instruct:free",
+      maxTokens: 8192,
+    },
+  ];
 }
 ```
 
 ### PRIORITY 2: Fix SSE Event Format (CRITICAL)
+
 Change sendSSE in route.ts to emit proper SSE events:
+
 ```typescript
 const sendSSE = (event: string, data: object) => {
-  writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+  writer.write(
+    encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`),
+  );
 };
 ```
+
 Then call: sendSSE("progress", { phase, message }) instead of sendSSE({ type: "progress", ... })
 
 ### PRIORITY 3: Increase Report Token Budget
+
 In report-synthesis-agent.ts line 160, change maxTokens from 8000 to 16384.
 
 ### PRIORITY 4: Wire Up Missing Props
+
 In route.ts, pass files, conversationHistory, disabledAgents to the orchestrator.
 In orchestrator.ts, accept and use these fields.
 
 ### PRIORITY 5: Add Real Search
+
 Replace AI-generated search in search-router.ts with a real search API.
 
 ### PRIORITY 6: Update .env.example
+
 Add NVIDIA_API_KEY and OPENROUTER_API_KEY to .env.example.
 
 ================================================================================
+
 ## SECTION 13: DATA FLOW DIAGRAM (COMPLETE)
+
 ================================================================================
 
 ```
@@ -1371,44 +1499,51 @@ USER TYPES QUERY
 ```
 
 ================================================================================
+
 ## SECTION 14: FRONTEND STATE MANAGEMENT
+
 ================================================================================
 
 ### State Variables in page.tsx:
+
 ```typescript
 // UI State
-const [sidebarOpen, setSidebarOpen] = useState(false)
-const [sidebarView, setSidebarView] = useState<"home" | "history">("home")
-const [history, setHistory] = useState<HistoryEntry[]>([])
+const [sidebarOpen, setSidebarOpen] = useState(false);
+const [sidebarView, setSidebarView] = useState<"home" | "history">("home");
+const [history, setHistory] = useState<HistoryEntry[]>([]);
 
 // Search State
-const [query, setQuery] = useState("")
-const [workflowMode, setWorkflowMode] = useState<WorkflowMode>("research")
-const [mode, setMode] = useState<SearchMode>("pro")
-const [selectedModel, setSelectedModel] = useState("balanced-1")
-const [disabledAgents, setDisabledAgents] = useState<AgentName[]>([])
+const [query, setQuery] = useState("");
+const [workflowMode, setWorkflowMode] = useState<WorkflowMode>("research");
+const [mode, setMode] = useState<SearchMode>("pro");
+const [selectedModel, setSelectedModel] = useState("balanced-1");
+const [disabledAgents, setDisabledAgents] = useState<AgentName[]>([]);
 
 // Chat State
-const [messages, setMessages] = useState<ChatMessage[]>([])
-const abortRef = useRef<AbortController | null>(null)
-const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
-const scrollAnchorRef = useRef<HTMLDivElement>(null)
-const scrollContainerRef = useRef<HTMLDivElement>(null)
-const isNearBottomRef = useRef(true)
+const [messages, setMessages] = useState<ChatMessage[]>([]);
+const abortRef = useRef<AbortController | null>(null);
+const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+const scrollAnchorRef = useRef<HTMLDivElement>(null);
+const scrollContainerRef = useRef<HTMLDivElement>(null);
+const isNearBottomRef = useRef(true);
 
 // Mobile
-const [viewportBottom, setViewportBottom] = useState(0)
+const [viewportBottom, setViewportBottom] = useState(0);
 ```
 
 ### Derived State:
+
 ```typescript
-const hasMessages = messages.length > 0
-const lastMessage = messages[messages.length - 1]
-const isAnyLoading = lastMessage?.role === "assistant" && (lastMessage.isLoading || lastMessage.isStreaming)
-const showHero = !hasMessages && !isAnyLoading
+const hasMessages = messages.length > 0;
+const lastMessage = messages[messages.length - 1];
+const isAnyLoading =
+  lastMessage?.role === "assistant" &&
+  (lastMessage.isLoading || lastMessage.isStreaming);
+const showHero = !hasMessages && !isAnyLoading;
 ```
 
 ### Key Callbacks:
+
 - handleSubmit(files) — submit query, check cache, call API, handle SSE
 - handleNewThread() — abort, clear messages, reset
 - handleSelectHistory(query, workflowMode, mode) — load from history
@@ -1419,10 +1554,13 @@ const showHero = !hasMessages && !isAnyLoading
 - revealSections(sections, sources) — progressive reveal with 150ms delay
 
 ================================================================================
+
 ## SECTION 15: CSS DESIGN SYSTEM
+
 ================================================================================
 
 ### Glass Effects:
+
 - `.glass` — semi-transparent background with blur
 - `.glass-card` — card-style glass with border
 - `.glass-strong` — more opaque glass for bottom bar
@@ -1430,6 +1568,7 @@ const showHero = !hasMessages && !isAnyLoading
 - `.gold-glow` — golden glow effect for hero state
 
 ### Color System:
+
 - `--background` — main background (dark: #0a0a0a, light: #ffffff)
 - `--foreground` — main text
 - `--primary` — accent color (blue/purple)
@@ -1440,20 +1579,25 @@ const showHero = !hasMessages && !isAnyLoading
 - `--destructive` — error/red color
 
 ### Typography:
+
 - `--font-inter` — body text (Inter)
 - `--font-playfair` — headings (Playfair Display)
 - `--font-geist-mono` — code/monospace (Geist Mono)
 
 ### Animations:
+
 - `animate-pulse` — pulsing dot for loading
 - `streak-container` + `streak-1/2/3` — decorative streak effects
 - Framer Motion: fade-in, slide-up, stagger reveals
 
 ================================================================================
+
 ## SECTION 16: CURRENT STATE SUMMARY
+
 ================================================================================
 
 ### What Works:
+
 - Multi-agent architecture is fully implemented
 - 3-phase orchestrator with parallel section research
 - SSE streaming from API to frontend
@@ -1470,6 +1614,7 @@ const showHero = !hasMessages && !isAnyLoading
 - Graceful degradation for timeouts
 
 ### What Doesn't Work:
+
 - Search generates fake/hallucinated results (not real web search)
 - SSE events don't match frontend expectations (progress never displays)
 - Fallback chain keys don't match agent roles (sections fail silently)
@@ -1482,4 +1627,3 @@ const showHero = !hasMessages && !isAnyLoading
 
 ================================================================================
 END OF PROJECT CONTEXT
-================================================================================
