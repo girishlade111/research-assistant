@@ -78,6 +78,14 @@ export const AGENT_FALLBACK_CHAINS: Record<string, FallbackChain> = {
       { platform: 'nvidia', modelId: 'mistralai/mistral-large-3-675b-instruct-2512', maxTokens: 16384 },
       { platform: 'openrouter', modelId: 'nvidia/nemotron-3-super-120b-a12b:free', maxTokens: 16384 }
     ]
+  },
+
+  balancedResearch: {
+    tiers: [
+      { platform: 'nvidia', modelId: 'abacusai/dracarys-llama-3.1-70b-instruct', maxTokens: 16384 },
+      { platform: 'nvidia', modelId: 'nvidia/nemotron-3-super-120b-a12b', maxTokens: 16384 },
+      { platform: 'openrouter', modelId: 'meta-llama/llama-3.3-70b-instruct:free', maxTokens: 8192 }
+    ]
   }
 };
 
