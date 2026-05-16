@@ -286,6 +286,22 @@ function emitProgress(
 
 // ── Public API ────────────────────────────────────────────────
 
+function mapAgentRoleToChainKey(agentRole: string): keyof typeof AGENT_FALLBACK_CHAINS {
+  const role = agentRole.toLowerCase();
+  if (role.includes("financial") || role.includes("valuation") || role.includes("revenue") || role.includes("investment")) return "financialAnalysis";
+  if (role.includes("market") || role.includes("forecast") || role.includes("consumer") || role.includes("demand")) return "marketResearch";
+  if (role.includes("risk") || role.includes("threat") || role.includes("danger") || role.includes("hazard")) return "riskAnalysis";
+  if (role.includes("tech") || role.includes("engineer") || role.includes("architect") || role.includes("system")) return "technicalAnalysis";
+  if (role.includes("code") || role.includes("coding") || role.includes("developer") || role.includes("software")) return "codeGeneration";
+  if (role.includes("fact") || role.includes("verify") || role.includes("check") || role.includes("validate")) return "factChecking";
+  if (role.includes("summar") || role.includes("overview") || role.includes("brief")) return "summarization";
+  if (role.includes("report") || role.includes("compil") || role.includes("synthesis")) return "reportSynthesis";
+  if (role.includes("search") || role.includes("web") || role.includes("source")) return "webSearch";
+  if (role.includes("competit") || role.includes("landscape") || role.includes("benchmark")) return "marketResearch";
+  if (role.includes("regulat") || role.includes("policy") || role.includes("compliance") || role.includes("legal")) return "riskAnalysis";
+  if (role.includes("supply") || role.includes("chain") || role.includes("logistics") || role.includes("esg")) return "marketResearch";
+  return "webSearch";
+}
 export async function runSectionAgent(config: SectionAgentConfig): Promise<SectionResult> {
   const start = Date.now();
   const { section, assignedModel, originalQuery, apiKeys, researchMode } = config;
@@ -352,11 +368,13 @@ export async function runSectionAgent(config: SectionAgentConfig): Promise<Secti
   let llmResult: { content: string; modelUsed: string; provider: string; isFallback: boolean; tokensUsed: number };
   try {
     const userMessage = `${searchContext}\n\nAnalyze and write your section`;
-    const result = await executeWithFallback(section.agentRole as keyof typeof AGENT_FALLBACK_CHAINS, {
+    const chainKey = mapAgentRoleToChainKey(section.agentRole);
+    console.log([SectionAgent] ${section.agentRole} ? chain: ${chainKey});
+    const result = await executeWithFallback(chainKey, {
       systemPrompt,
       userMessage,
       temperature: 0.3,
-      maxTokens: 8192
+      maxTokens: config.assignedModel?.maxTokens || 8192
     });
 
     console.log(`[SectionAgent] ${section.sectionTitle}:`, {
