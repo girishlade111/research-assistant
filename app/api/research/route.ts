@@ -13,7 +13,7 @@ function getApiKeys(): ApiKeys {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { query, userId, conversationId, mode } = body;
+    const { query, userId, conversationId, mode, workflowMode, files, conversationHistory, disabledAgents } = body;
 
     const apiKeys = getApiKeys();
     if (!apiKeys.nvidiaKey && !apiKeys.openrouterKey) {
@@ -60,6 +60,10 @@ export async function POST(req: Request) {
           userId,
           conversationId,
           researchMode: mode || 'deep',
+          mode: workflowMode || mode || 'pro',
+          files: files || [],
+          conversationHistory: conversationHistory || [],
+          disabledAgents: disabledAgents || [],
           apiKeys,
           onProgress: (event) => {
             const eventName = event.type === 'agent_update' ? 'agent_status'

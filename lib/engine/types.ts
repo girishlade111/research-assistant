@@ -215,6 +215,8 @@ export interface SectionAgentConfig {
   existingSearchResults?: SearchResult[];
   apiKeys: ApiKeys;
   researchMode?: "fast" | "deep";
+  files?: FileContext[];
+  conversationHistory?: LLMMessage[];
   onProgress?: (event: SectionProgressEvent) => void;
 }
 
