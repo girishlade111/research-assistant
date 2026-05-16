@@ -10902,45 +10902,7 @@ reportSynthesis:    primary=nvidia/nemotron,      fallback=or/nemotron,    token
 
 ```
 queryIntelligence:  [nvidia/mistral, nvidia/nemotron, or/gptOss]
-webSearch:          [nvidia/dracarys, nvidia/glm, or/glmAir]
-financialAnalysis:  [nvidia/deepseek, nvidia/kimi, or/gptOss]
-riskAnalysis:       [nvidia/kimi, nvidia/deepseek, or/gptOss]
-marketResearch:     [nvidia/glm, nvidia/mistral, or/nemotron]
-technicalAnalysis:  [nvidia/deepseek, nvidia/nemotron, or/gptOss]
-codeGeneration:     [nvidia/qwen, nvidia/deepseek, or/qwen]
-factChecking:       [nvidia/kimi, nvidia/mistral, or/gptOss]
-summarization:      [nvidia/minimax, nvidia/glm, or/glmAir]
-reportSynthesis:    [nvidia/nemotron, nvidia/mistral, or/nemotron]
-```
 
-================================================================================
-
-## SECTION 7: TOKEN GOVERNANCE
-
-================================================================================
-
-| Component      | Config Value   | Actual Usage                                     |
-| -------------- | -------------- | ------------------------------------------------ |
-| Context Window | 131,072 tokens | Used by context-builder.ts                       |
-| Max Response   | 32,768 tokens  | Config only                                      |
-| Agent Max      | 16,384 tokens  | Used by orchestrator for query intelligence      |
-| Report Max     | 32,768 tokens  | **BUT report-synthesis-agent.ts hardcodes 8000** |
-| Per-Section    | 8,192 tokens   | Used by section-research-agent.ts                |
-
-```
-
-**Solution B**: Add a default chain in AGENT_FALLBACK_CHAINS:
-
-USER TYPES QUERY
-│
-▼
-┌─────────────────┐
-│ page.tsx │
-│ handleSubmit()│
-└────────┬────────┘
-│
-├── Check localStorage cache ──→ Cache HIT → revealSections() → DONE
-│
 ▼ Cache MISS
 ┌─────────────────┐
 │ POST │
