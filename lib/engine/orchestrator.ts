@@ -88,50 +88,72 @@ function withGracefulTimeout(
 // ── Orchestrator ────────────────────────────────────────────────────
 
 export async function runResearchOrchestrator(input: OrchestratorInput): Promise<ResearchResult> {
+  // TEMP DEBUG — surface preconditions before any other work
+  console.log('[ORCHESTRATOR START]', {
+    userQuery: input.userQuery,
+    researchMode: input.researchMode,
+    hasNvidiaKey: !!input.apiKeys?.nvidiaKey,
+    hasOpenRouterKey: !!input.apiKeys?.openrouterKey,
+    timestamp: new Date().toISOString()
+  });
+
   const orchestratorStart = Date.now();
   const { userQuery, userId, conversationId, researchMode, apiKeys, onProgress, files = [], conversationHistory = [], disabledAgents = [] } = input;
 
   // ━━━ PHASE 1: INITIALIZATION (Sequential) ━━━
   console.log('[Orchestrator]', { phase: 'INIT', status: 'starting', query: userQuery, researchMode, timestamp: orchestratorStart });
 
-  // Step 1: Cache Check
-  const queryHash = generateHash(userQuery + (researchMode || ""));
-  const cachedReport = await getCachedResponse(queryHash);
-  if (cachedReport) {
-    onProgress({ phase: 3, percent: 100, status: "Returning cached report...", type: "complete" });
-    return cachedReport;
+  let plan: ResearchPlan;
+  let modelAssignments: Awaited<ReturnType<typeof selectModelsForPlan>>;
+  let userMemory: string;
+  let queryHash: string;
+
+  try {
+    // Step 1: Cache Check
+    queryHash = generateHash(userQuery + (researchMode || ""));
+    const cachedReport = await getCachedResponse(queryHash);
+    if (cachedReport) {
+      onProgress({ phase: 3, percent: 100, status: "Returning cached report...", type: "complete" });
+      return cachedReport;
+    }
+
+    // Step 2: Memory Fetch
+    userMemory = await buildMemoryContext(userId);
+
+    // Step 3: Query Intelligence Agent
+    onProgress({ phase: 1, percent: 5, status: "Analyzing query and building research plan...", type: "status" });
+    const searchMode = researchMode === "deep" ? "deep" : "pro";
+    const queryResult = await runQueryIntelligenceAgent(userQuery, searchMode, apiKeys, {
+      userQuery,
+      userMemory,
+      researchMode,
+    });
+
+    if (queryResult.error || !queryResult.plan) {
+      throw new Error(queryResult.error || "Failed to generate research plan");
+    }
+
+    plan = queryResult.plan;
+    console.log('[Orchestrator]', {
+      phase: 'PLAN_READY',
+      status: 'plan_created',
+      sectionsCount: plan.dynamicSections.length,
+      researchType: plan.researchType,
+      estimatedPages: plan.estimatedPages,
+      timestamp: Date.now(),
+    });
+    onProgress({ phase: 1, percent: 10, status: "Research plan created", type: "plan_ready" });
+
+    // Step 4: Model Selection
+    modelAssignments = await selectModelsForPlan(plan, userQuery, apiKeys.nvidiaKey);
+    onProgress({ phase: 1, percent: 15, status: "AI models assigned", type: "models_assigned" });
+  } catch (phase1Error) {
+    console.error('[ORCHESTRATOR PHASE1 CRASH]', {
+      error: phase1Error instanceof Error ? phase1Error.message : String(phase1Error),
+      stack: phase1Error instanceof Error ? phase1Error.stack?.slice(0, 500) : undefined
+    });
+    throw phase1Error; // re-throw so route.ts catches it
   }
-
-  // Step 2: Memory Fetch
-  const userMemory = await buildMemoryContext(userId);
-
-  // Step 3: Query Intelligence Agent
-  onProgress({ phase: 1, percent: 5, status: "Analyzing query and building research plan...", type: "status" });
-  const searchMode = researchMode === "deep" ? "deep" : "pro";
-  const queryResult = await runQueryIntelligenceAgent(userQuery, searchMode, apiKeys, {
-    userQuery,
-    userMemory,
-    researchMode,
-  });
-
-  if (queryResult.error || !queryResult.plan) {
-    throw new Error(queryResult.error || "Failed to generate research plan");
-  }
-
-  const plan = queryResult.plan;
-  console.log('[Orchestrator]', {
-    phase: 'PLAN_READY',
-    status: 'plan_created',
-    sectionsCount: plan.dynamicSections.length,
-    researchType: plan.researchType,
-    estimatedPages: plan.estimatedPages,
-    timestamp: Date.now(),
-  });
-  onProgress({ phase: 1, percent: 10, status: "Research plan created", type: "plan_ready" });
-
-  // Step 4: Model Selection
-  const modelAssignments = await selectModelsForPlan(plan, userQuery, apiKeys.nvidiaKey);
-  onProgress({ phase: 1, percent: 15, status: "AI models assigned", type: "models_assigned" });
 
   // ━━━ PHASE 2: PARALLEL RESEARCH (All agents simultaneous) ━━━
   console.log('[Orchestrator]', { phase: 'PARALLEL_RESEARCH', status: 'launching_agents', agentCount: plan.dynamicSections.length, timestamp: Date.now() });
