@@ -377,7 +377,7 @@ export type ThinkingCallback = (step: ThinkingStep) => void;
 
 export interface OrchestratorProgressEvent {
   phase: 1 | 2 | 3;
-  type?: "plan_ready" | "models_assigned" | "agent_update" | "phase_complete" | "complete" | "error";
+  type?: "status" | "plan_ready" | "models_assigned" | "agent_update" | "phase_complete" | "complete" | "error";
   percent: number;
   status: string;
   sectionId?: string;
@@ -385,6 +385,9 @@ export interface OrchestratorProgressEvent {
   completedSections?: string[];
   failedSections?: number;
   error?: string;
+  // Index signature so SSE serializers can treat events as Record<string, unknown>
+  // without TS2352 — agent-specific events may carry extra fields.
+  [key: string]: unknown;
 }
 
 export interface OrchestratorInput {
