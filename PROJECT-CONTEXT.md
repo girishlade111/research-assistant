@@ -1624,6 +1624,3 @@ const showHero = !hasMessages && !isAnyLoading;
 - Server-side caching and persistence are mocked
 - Legacy agents are dead code
 - .env.example is incomplete
-
-================================================================================
-END OF PROJECT CONTEXT
